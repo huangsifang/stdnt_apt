@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hsf.stdntapt.dao.DormDao">
+    <select id="getDormDailyScore" parameterType="int" resultType="Dorm">
+        select dormID, score from dormitoryhygiene where created like '2017-12-06%'
+    </select>
+    <select id="getOneDormScore" parameterType="int" resultType="Dorm">
+        select created, score from dormitoryhygiene where dormID=1
+    </select>
+</mapper>
