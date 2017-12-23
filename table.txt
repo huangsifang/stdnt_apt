@@ -1,0 +1,113 @@
+create table user(
+	id int(20) unsigned not null primary key auto_increment,
+	userID int(20) not null,
+	userType int(1) not null,
+	password varchar(20) not null default '123456',
+	deleted bit not null default 0
+);
+
+create table college(
+	collegeID int(4) unsigned not null primary key,
+	collegeName varchar(11) not null,
+	deleted bit not null default 0
+);
+
+create table speYears(
+	speYearsID int(2) unsigned not null primary key,
+	speYearsName varchar(11) not null,
+	speYearsLength int(1) not null,
+	deleted bit not null default 0
+);
+
+create table speciality(
+	speciID int(5) unsigned not null primary key,
+	speciName varchar(11) not null,
+	collegeID int(4) not null foreign key references college(collegeID),
+	speYearsID int(2) not null foreign key references speYears(speYearsID),
+	deleted bit not null default 0
+);
+
+create table consellors(
+	consellID int(20) unsigned not null primary key,
+	consellName varchar(20) not null,
+	consellSex int(1),
+	consellTel int,
+	deleted bit not null default 0
+);
+
+create table staff(
+	staffID int(20) unsigned not null primary key,
+	staffName varchar(11) not null,
+	staffSex int(1),
+	staffTel int,
+	hiredate datetime not null dafault current_timestamp,
+	leavedate datetime default null,
+	deleted bit not null default 0
+);
+
+create table class(
+	classID int(6) unsigned not null primary key,
+	className varchar(11) not null,
+	speciID int(5) not null foreign key references speciality(speciID),
+	consellorID int(5) foreign key references consellor(consellorID),
+	deleted bit not null default 0
+);
+
+create table student(
+	stdID int(20) unsigned not null primary key,
+	stdName varchar(11) not null,
+	stdSex int(1),
+	stdTel int(11),
+	enterTime date,
+	isParty bit,
+	classID int(6) foreign key references class(classID),
+	deleted bit not null default 0
+);
+
+create table apartment(
+	apartID int(3) unsigned not null primary key,
+	apartName varchar(11) not null,
+	apartNum int(2) not null,
+	staffID int(20) foreign key references staff(staffID),
+	deleted bit not null default 0
+);
+
+create table apartStaffRelation(	
+	relationID int(20) unsigned not null primary key auto_increment,
+	apartID int(3) not null foreign key references apartment(apartID),
+	staffID int(20) not null foreign key references staff(staffID),
+	create datetime not null default current_timestamp,
+	leave datetime default null,
+	deleted bit not null default 0
+);
+
+create table floor(
+	floorID int(11) unsigned not null primary key,
+	apartID int(3) not null foreign key references apartment(apartID),
+	floorNo int(2) not null,
+	deleted bit not null default 0
+);
+
+create table floorLeaderRelation(
+	relationID int(20) unsigned not null primary key auto_increment,
+	floorID int(2) not null foreign key references floor(floorID),
+	stdID int(20) not null foreign key references student(stdID),
+	create datetime not null default current_timestamp,
+	leave datetime default null,
+	deleted bit not null default 0
+);
+
+create table dormitory(
+	dormID int(11) unsigned not null primary key,
+	dormNo int(2) not null,
+	floorID int(11) not null foreign key references floor(floorID),
+	fee decimal(6,2) not null,
+	stdID int(20) foreign key references student(stdID),
+	deleted bit not null default 0
+);
+
+create table bed(
+	bedID int(11) unsigned not null primary key,
+	dormID int(11) not null foreign key references dormitory(dormID),
+	deleted bit not null default 0
+);
