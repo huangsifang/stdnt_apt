@@ -9,8 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.hsf.stdntapt.dao.ClassDao;
 import com.hsf.stdntapt.dao.CollegeDao;
+import com.hsf.stdntapt.dao.SpeYearsDao;
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
+import com.hsf.stdntapt.entity.SpeYears;
 import com.hsf.stdntapt.service.InfoService;
 
 @Service
@@ -18,6 +20,9 @@ public class InfoImpl implements InfoService {
 
 	@Resource
 	CollegeDao collegeDao;
+
+	@Resource
+	SpeYearsDao speYearsDao;
 
 	@Resource
 	ClassDao classDao;
@@ -32,6 +37,18 @@ public class InfoImpl implements InfoService {
 	@Override
 	public void insertCollegeList(int collegeID, String collegeName) {
 		collegeDao.insertCollegeList(collegeID, collegeName);
+	}
+
+	@Override
+	public List<SpeYears> getSpeYearsInfo(String name, MultipartFile file) {
+		ReadExcel ReadExcel = new ReadExcel();
+		List<SpeYears> excelInfo = ReadExcel.getSpeYearsExcelInfo(name, file);
+		return excelInfo;
+	}
+
+	@Override
+	public void insertSpeYearsList(int speYearsID, String speYearsName, int speYearsLength) {
+		speYearsDao.insertSpeYearsList(speYearsID, speYearsName, speYearsLength);
 	}
 
 	@Override

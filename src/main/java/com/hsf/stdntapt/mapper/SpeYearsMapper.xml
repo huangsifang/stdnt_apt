@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hsf.stdntapt.dao.SpeYearsDao">
+    <insert id="insertSpeYearsList" parameterType="int">
+        INSERT INTO speYears(
+        	<if test="speYearsID != null">speYearsID,</if>
+	        <if test="speYearsName != null">speYearsName,</if>
+	        <if test="speYearsLength != null">speYearsLength</if>
+		) VALUES (
+	        <if test="speYearsID != null">#{speYearsID},</if>
+	        <if test="speYearsName != null">#{speYearsName},</if>
+	        <if test="speYearsLength != null">#{speYearsLength}</if>
+		)
+    </insert>
+</mapper>

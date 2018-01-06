@@ -4,13 +4,13 @@
     <insert id="insertClassList" parameterType="int">
         INSERT INTO class(
         	<if test="classID != null">classID,</if>
-	        <if test="className != null">className</if>
-	        <if test="speciID != null">speciID</if>
+	        <if test="className != null">className,</if>
+	        <if test="speciID != null">speciID,</if>
 	        consellID
 		) VALUES (
 	        <if test="classID != null">#{classID},</if>
-	        <if test="className != null">#{className}</if>
-	        <if test="speciID != null">#{speciID}</if>
+	        <if test="className != null">#{className},</if>
+	        <if test="speciID != null">#{speciID},</if>
 	        #{consellID}
 		)
     </insert>

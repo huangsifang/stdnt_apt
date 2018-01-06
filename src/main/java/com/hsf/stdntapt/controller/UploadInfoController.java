@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
+import com.hsf.stdntapt.entity.SpeYears;
 import com.hsf.stdntapt.service.InfoService;
 
 @Controller
@@ -41,6 +42,13 @@ public class UploadInfoController {
 							collegeList.get(i).getCollegeName());
 				}
 				msg = "解析成功,总共" + collegeList.size() + "条!";
+			} else if (type.equals("speYears")) {
+				List<SpeYears> speYearsList = infoService.getSpeYearsInfo(name, file);
+				for (int i = 0; i < speYearsList.size(); i++) {
+					infoService.insertSpeYearsList(speYearsList.get(i).getSpeYearsID(),
+							speYearsList.get(i).getSpeYearsName(), speYearsList.get(i).getSpeYearsLength());
+				}
+				msg = "解析成功,总共" + speYearsList.size() + "条!";
 			} else if (type.equals("class")) {
 				List<Class> classList = infoService.getClassInfo(name, file);
 				for (int i = 0; i < classList.size(); i++) {
