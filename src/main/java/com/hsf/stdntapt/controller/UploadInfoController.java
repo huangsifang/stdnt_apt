@@ -12,7 +12,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
+import com.hsf.stdntapt.entity.Consellor;
 import com.hsf.stdntapt.entity.SpeYears;
+import com.hsf.stdntapt.entity.Speciality;
+import com.hsf.stdntapt.entity.Staff;
+import com.hsf.stdntapt.entity.Student;
 import com.hsf.stdntapt.service.InfoService;
 
 @Controller
@@ -49,6 +53,22 @@ public class UploadInfoController {
 							speYearsList.get(i).getSpeYearsName(), speYearsList.get(i).getSpeYearsLength());
 				}
 				msg = "解析成功,总共" + speYearsList.size() + "条!";
+			} else if (type.equals("speciality")) {
+				List<Speciality> speciList = infoService.getSpecialityInfo(name, file);
+				for (int i = 0; i < speciList.size(); i++) {
+					infoService.insertSpecialityList(speciList.get(i).getSpeciID(), speciList.get(i).getSpeciName(),
+							speciList.get(i).getCollegeID(), speciList.get(i).getSpeYearsID());
+				}
+				msg = "解析成功,总共" + speciList.size() + "条!";
+			} else if (type.equals("consellor")) {
+				List<Consellor> consellList = infoService.getConsellorInfo(name, file);
+				for (int i = 0; i < consellList.size(); i++) {
+					infoService.insertConsellorList(consellList.get(i).getConsellID(),
+							consellList.get(i).getConsellName(), consellList.get(i).getConsellSex(),
+							consellList.get(i).getConsellTel());
+					infoService.insertUserList(consellList.get(i).getConsellID(), 2, "123456");
+				}
+				msg = "解析成功,总共" + consellList.size() + "条!";
 			} else if (type.equals("class")) {
 				List<Class> classList = infoService.getClassInfo(name, file);
 				for (int i = 0; i < classList.size(); i++) {
@@ -56,7 +76,29 @@ public class UploadInfoController {
 							classList.get(i).getSpeciID(), classList.get(i).getConsellID());
 				}
 				msg = "解析成功,总共" + classList.size() + "条!";
+			} else if (type.equals("student")) {
+				List<Student> studentList = infoService.getStudentInfo(name, file);
+				for (int i = 0; i < studentList.size(); i++) {
+					infoService.insertStudentList(studentList.get(i).getStdID(), studentList.get(i).getStdName(),
+							studentList.get(i).getStdSex(), studentList.get(i).getStdTel(),
+							studentList.get(i).getEnterTime(), studentList.get(i).isParty(),
+							studentList.get(i).getClassID());
+					infoService.insertUserList(studentList.get(i).getStdID(), 1, "123456");
+				}
+				msg = "解析成功,总共" + studentList.size() + "条!";
+			} else if (type.equals("staff")) {
+				List<Staff> staffList = infoService.getStaffInfo(name, file);
+				for (int i = 0; i < staffList.size(); i++) {
+					infoService.insertStaffList(staffList.get(i).getStaffID(), staffList.get(i).getStaffName(),
+							staffList.get(i).getStaffSex(), staffList.get(i).getStaffTel(),
+							staffList.get(i).getHiredate(), staffList.get(i).getLeavedate());
+					infoService.insertUserList(staffList.get(i).getStaffID(), 3, "123456");
+				}
+				msg = "解析成功,总共" + staffList.size() + "条!";
 			}
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			msg = "请确认文件内容没有空缺";
 		} catch (Exception e) {
 			e.printStackTrace();
 			msg = "导入失败......";

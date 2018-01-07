@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hsf.stdntapt.dao.StaffDao">
+    <insert id="insertStaffList" parameterType="int">
+        INSERT INTO staff(
+        	<if test="staffID != null">staffID,</if>
+	        <if test="staffName != null">staffName,</if>
+	        staffSex,
+	        staffTel,
+	        <if test="hiredate != null">hiredate,</if>
+	        leavedate
+		) VALUES (
+	        <if test="staffID != null">#{staffID},</if>
+	        <if test="staffName != null">#{staffName},</if>
+	        #{staffSex},
+	        #{staffTel},
+	        <if test="hiredate != null">#{hiredate},</if>
+	        #{leavedate}
+		)
+    </insert>
+</mapper>

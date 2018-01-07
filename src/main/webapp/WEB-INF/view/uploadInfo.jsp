@@ -15,11 +15,11 @@
 		        	<div class="box-header with-border">
 		            	<h3 class="box-title">请选择上传的学院文件:</h3>
 		                <div class="box-body">
-		　　　　　　　　　　　　  	<input id="excel_file" class="form-control" type="file" name="filename" accept="xlsx" size="80" />
-							<input id="file_type" class="form-control" name="filetype" value="college" hidden/>
+		　　　　　　　　　　　　  	<input class="excel_file" class="form-control" type="file" name="filename" accept="xlsx" size="80" />
+							<input class="file_type" class="form-control" name="filetype" value="college" hidden/>
 		                </div>
 		                <span class="box-title"><c:if test="${msg !=''}">${msg}</c:if></span>
-		 				<input class="btn btn-primary pull-right" id="excel_button" type="submit" value="导入" />
+		 				<input class="btn btn-primary pull-right" class="excel_button" type="submit" value="导入" />
 					</div>
 				</div>
 			</div>
@@ -33,11 +33,47 @@
 		        	<div class="box-header with-border">
 		            	<h3 class="box-title">请选择上传的学制文件:</h3>
 		                <div class="box-body">
-		　　　　　　　　　　　　  	<input id="excel_file" class="form-control" type="file" name="filename" accept="xlsx" size="80" />
-							<input id="file_type" class="form-control" name="filetype" value="speYears" hidden/>
+		　　　　　　　　　　　　  	<input class="excel_file" class="form-control" type="file" name="filename" accept="xlsx" size="80" />
+							<input class="file_type" class="form-control" name="filetype" value="speYears" hidden/>
 		                </div>
 		                <span class="box-title"><c:if test="${msg !=''}">${msg}</c:if></span>
-		 				<input class="btn btn-primary pull-right" id="excel_button" type="submit" value="导入" />
+		 				<input class="btn btn-primary pull-right" class="excel_button" type="submit" value="导入" />
+					</div>
+				</div>
+			</div>
+       </div>
+	</form>
+	
+	<form id="QueryForm" action="uploadInfoFromType.do" method="post" enctype="multipart/form-data" onsubmit="return check();">
+		<div class="row">
+		　　	<div class="col-sm-6" style="width: 50%;">
+		   		<div class="box box-primary">
+		        	<div class="box-header with-border">
+		            	<h3 class="box-title">请选择上传的专业文件:</h3>
+		                <div class="box-body">
+		　　　　　　　　　　　　  	<input class="excel_file" class="form-control" type="file" name="filename" accept="xlsx" size="80" />
+							<input class="file_type" class="form-control" name="filetype" value="speciality" hidden/>
+		                </div>
+		                <span class="box-title"><c:if test="${msg !=''}">${msg}</c:if></span>
+		 				<input class="btn btn-primary pull-right" class="excel_button" type="submit" value="导入" />
+					</div>
+				</div>
+			</div>
+       </div>
+	</form>
+	
+	<form id="QueryForm" action="uploadInfoFromType.do" method="post" enctype="multipart/form-data" onsubmit="return check();">
+		<div class="row">
+		　　	<div class="col-sm-6" style="width: 50%;">
+		   		<div class="box box-primary">
+		        	<div class="box-header with-border">
+		            	<h3 class="box-title">请选择上传的辅导员文件:</h3>
+		                <div class="box-body">
+		　　　　　　　　　　　　  	<input class="excel_file" class="form-control" type="file" name="filename" accept="xlsx" size="80" />
+							<input class="file_type" class="form-control" name="filetype" value="consellor" hidden/>
+		                </div>
+		                <span class="box-title"><c:if test="${msg !=''}">${msg}</c:if></span>
+		 				<input class="btn btn-primary pull-right" class="excel_button" type="submit" value="导入" />
 					</div>
 				</div>
 			</div>
@@ -51,11 +87,47 @@
 		        	<div class="box-header with-border">
 		            	<h3 class="box-title">请选择上传的班级文件:</h3>
 		                <div class="box-body">
-		　　　　　　　　　　　　  	<input id="excel_file" class="form-control" type="file" name="filename" accept="xlsx" size="80" />
-							<input id="file_type" class="form-control" name="filetype" value="class" hidden/>
+		　　　　　　　　　　　　  	<input class="excel_file" class="form-control" type="file" name="filename" accept="xlsx" size="80" />
+							<input class="file_type" class="form-control" name="filetype" value="class" hidden/>
 		                </div>
 		                <span class="box-title"><c:if test="${msg !=''}">${msg}</c:if></span>
-		 				<input class="btn btn-primary pull-right" id="excel_button" type="submit" value="导入" />
+		 				<input class="btn btn-primary pull-right" class="excel_button" type="submit" value="导入" />
+					</div>
+				</div>
+			</div>
+       </div>
+	</form>
+	
+	<form id="QueryForm" action="uploadInfoFromType.do" method="post" enctype="multipart/form-data" onsubmit="return check();">
+		<div class="row">
+		　　	<div class="col-sm-6" style="width: 50%;">
+		   		<div class="box box-primary">
+		        	<div class="box-header with-border">
+		            	<h3 class="box-title">请选择上传的学生文件:</h3>
+		                <div class="box-body">
+		　　　　　　　　　　　　  	<input class="excel_file" class="form-control" type="file" name="filename" accept="xlsx" size="80" />
+							<input class="file_type" class="form-control" name="filetype" value="student" hidden/>
+		                </div>
+		                <span class="box-title"><c:if test="${msg !=''}">${msg}</c:if></span>
+		 				<input class="btn btn-primary pull-right" class="excel_button" type="submit" value="导入" />
+					</div>
+				</div>
+			</div>
+       </div>
+	</form>
+	
+	<form id="QueryForm" action="uploadInfoFromType.do" method="post" enctype="multipart/form-data" onsubmit="return check();">
+		<div class="row">
+		　　	<div class="col-sm-6" style="width: 50%;">
+		   		<div class="box box-primary">
+		        	<div class="box-header with-border">
+		            	<h3 class="box-title">请选择上传的职工文件:</h3>
+		                <div class="box-body">
+		　　　　　　　　　　　　  	<input class="excel_file" class="form-control" type="file" name="filename" accept="xlsx" size="80" />
+							<input class="file_type" class="form-control" name="filetype" value="staff" hidden/>
+		                </div>
+		                <span class="box-title"><c:if test="${msg !=''}">${msg}</c:if></span>
+		 				<input class="btn btn-primary pull-right" class="excel_button" type="submit" value="导入" />
 					</div>
 				</div>
 			</div>

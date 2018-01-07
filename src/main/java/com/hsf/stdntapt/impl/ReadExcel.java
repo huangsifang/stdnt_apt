@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -15,7 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
+import com.hsf.stdntapt.entity.Consellor;
 import com.hsf.stdntapt.entity.SpeYears;
+import com.hsf.stdntapt.entity.Speciality;
+import com.hsf.stdntapt.entity.Staff;
+import com.hsf.stdntapt.entity.Student;
 
 public class ReadExcel {
 	// 总行数
@@ -167,6 +172,82 @@ public class ReadExcel {
 	 * @param fileName
 	 * @return
 	 */
+	public List<Speciality> getSpecialityExcelInfo(String fileName, MultipartFile Mfile) {
+		List<Speciality> list = new ArrayList<Speciality>();
+		// 初始化输入流
+		InputStream is = null;
+		try {
+			// 根据新建的文件实例化输入流
+			is = Mfile.getInputStream();
+
+			Workbook wb = checkfile(fileName, Mfile, is);
+
+			if (wb != null) {
+				// 读取Excel里的信息
+				list = readSpecialityExcelValue(wb);
+			}
+
+			is.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					is = null;
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * 读学院EXCEL文件，获取客户信息集合
+	 *
+	 * @param fileName
+	 * @return
+	 */
+	public List<Consellor> getConsellorExcelInfo(String fileName, MultipartFile Mfile) {
+		List<Consellor> list = new ArrayList<Consellor>();
+		// 初始化输入流
+		InputStream is = null;
+		try {
+			// 根据新建的文件实例化输入流
+			is = Mfile.getInputStream();
+
+			Workbook wb = checkfile(fileName, Mfile, is);
+
+			if (wb != null) {
+				// 读取Excel里的信息
+				list = readConsellorExcelValue(wb);
+			}
+
+			is.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					is = null;
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * 读学院EXCEL文件，获取客户信息集合
+	 *
+	 * @param fileName
+	 * @return
+	 */
 	public List<Class> getClassExcelInfo(String fileName, MultipartFile Mfile) {
 		List<Class> list = new ArrayList<Class>();
 		// 初始化输入流
@@ -180,6 +261,80 @@ public class ReadExcel {
 			if (wb != null) {
 				// 读取Excel里的信息
 				list = readClassExcelValue(wb);
+			}
+
+			is.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					is = null;
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 读学院EXCEL文件，获取客户信息集合
+	 *
+	 * @param fileName
+	 * @return
+	 */
+	public List<Student> getStudentExcelInfo(String fileName, MultipartFile Mfile) {
+		List<Student> list = new ArrayList<Student>();
+		// 初始化输入流
+		InputStream is = null;
+		try {
+			// 根据新建的文件实例化输入流
+			is = Mfile.getInputStream();
+
+			Workbook wb = checkfile(fileName, Mfile, is);
+
+			if (wb != null) {
+				// 读取Excel里的信息
+				list = readStudentExcelValue(wb);
+			}
+
+			is.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					is = null;
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 读学院EXCEL文件，获取客户信息集合
+	 *
+	 * @param fileName
+	 * @return
+	 */
+	public List<Staff> getStaffExcelInfo(String fileName, MultipartFile Mfile) {
+		List<Staff> list = new ArrayList<Staff>();
+		// 初始化输入流
+		InputStream is = null;
+		try {
+			// 根据新建的文件实例化输入流
+			is = Mfile.getInputStream();
+
+			Workbook wb = checkfile(fileName, Mfile, is);
+
+			if (wb != null) {
+				// 读取Excel里的信息
+				list = readStaffExcelValue(wb);
 			}
 
 			is.close();
@@ -288,6 +443,104 @@ public class ReadExcel {
 	}
 
 	/**
+	 * 读取专业Excel里面信息
+	 *
+	 * @param wb
+	 * @return
+	 */
+	private List<Speciality> readSpecialityExcelValue(Workbook wb) {
+		// 得到第一个shell
+		Sheet sheet = wb.getSheetAt(0);
+
+		// 得到Excel的行数
+		this.totalRows = sheet.getPhysicalNumberOfRows();
+
+		// 得到Excel的列数(前提是有行数)
+		if (totalRows >= 1 && sheet.getRow(0) != null) {
+			this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
+		}
+		List<Speciality> specialityList = new ArrayList<Speciality>();
+		// 循环Excel行数,从第二行开始。标题不入库
+		for (int r = 1; r < totalRows; r++) {
+			Speciality speciality = new Speciality();
+			Row row = sheet.getRow(r).getCell(1).getRow();
+			if (row == null)
+				continue;
+			// 循环Excel的列,获取相关信息
+			for (int c = 0; c < this.totalCells; c++) {
+				Cell cell = row.getCell(c);
+				if (null != cell) {
+					if (c == 0) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						speciality.setSpeciID(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 1) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						speciality.setSpeciName(cell.getStringCellValue());
+					} else if (c == 2) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						speciality.setCollegeID(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 3) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						speciality.setSpeYearsID(Integer.parseInt(cell.getStringCellValue()));
+					}
+				}
+			}
+			// 添加
+			specialityList.add(speciality);
+		}
+		return specialityList;
+	}
+
+	/**
+	 * 读取辅导员Excel里面信息
+	 *
+	 * @param wb
+	 * @return
+	 */
+	private List<Consellor> readConsellorExcelValue(Workbook wb) {
+		// 得到第一个shell
+		Sheet sheet = wb.getSheetAt(0);
+
+		// 得到Excel的行数
+		this.totalRows = sheet.getPhysicalNumberOfRows();
+
+		// 得到Excel的列数(前提是有行数)
+		if (totalRows >= 1 && sheet.getRow(0) != null) {
+			this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
+		}
+		List<Consellor> consellorList = new ArrayList<Consellor>();
+		// 循环Excel行数,从第二行开始。标题不入库
+		for (int r = 1; r < totalRows; r++) {
+			Consellor consellor = new Consellor();
+			Row row = sheet.getRow(r).getCell(1).getRow();
+			if (row == null)
+				continue;
+			// 循环Excel的列,获取相关信息
+			for (int c = 0; c < this.totalCells; c++) {
+				Cell cell = row.getCell(c);
+				if (null != cell) {
+					if (c == 0) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						consellor.setConsellID(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 1) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						consellor.setConsellName(cell.getStringCellValue());
+					} else if (c == 2) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						consellor.setConsellSex(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 3) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						consellor.setConsellTel(cell.getStringCellValue());
+					}
+				}
+			}
+			// 添加
+			consellorList.add(consellor);
+		}
+		return consellorList;
+	}
+
+	/**
 	 * 读取班级Excel里面信息
 	 *
 	 * @param wb
@@ -334,6 +587,122 @@ public class ReadExcel {
 			classList.add(classes);
 		}
 		return classList;
+	}
+
+	/**
+	 * 读取学生Excel里面信息
+	 *
+	 * @param wb
+	 * @return
+	 */
+	private List<Student> readStudentExcelValue(Workbook wb) {
+		// 得到第一个shell
+		Sheet sheet = wb.getSheetAt(0);
+
+		// 得到Excel的行数
+		this.totalRows = sheet.getPhysicalNumberOfRows();
+
+		// 得到Excel的列数(前提是有行数)
+		if (totalRows >= 1 && sheet.getRow(0) != null) {
+			this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
+		}
+		List<Student> studentList = new ArrayList<Student>();
+		// 循环Excel行数,从第二行开始。标题不入库
+		for (int r = 1; r < totalRows; r++) {
+			Student students = new Student();
+			Row row = sheet.getRow(r).getCell(1).getRow();
+			if (row == null)
+				continue;
+			// 循环Excel的列,获取相关信息
+			for (int c = 0; c < this.totalCells; c++) {
+				Cell cell = row.getCell(c);
+				if (null != cell) {
+					if (c == 0) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						students.setStdID(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 1) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						students.setStdName(cell.getStringCellValue());
+					} else if (c == 2) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						students.setStdSex(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 3) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						students.setStdTel(cell.getStringCellValue());
+					} else if (c == 4) {
+						if (HSSFDateUtil.isCellDateFormatted(cell)) {
+							students.setEnterTime(cell.getDateCellValue());
+						}
+					} else if (c == 5) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						students.setParty(Boolean.parseBoolean(cell.getStringCellValue()));
+					} else if (c == 6) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						students.setClassID(Integer.parseInt(cell.getStringCellValue()));
+					}
+				}
+			}
+			// 添加
+			studentList.add(students);
+		}
+		return studentList;
+	}
+
+	/**
+	 * 读取学生Excel里面信息
+	 *
+	 * @param wb
+	 * @return
+	 */
+	private List<Staff> readStaffExcelValue(Workbook wb) {
+		// 得到第一个shell
+		Sheet sheet = wb.getSheetAt(0);
+
+		// 得到Excel的行数
+		this.totalRows = sheet.getPhysicalNumberOfRows();
+
+		// 得到Excel的列数(前提是有行数)
+		if (totalRows >= 1 && sheet.getRow(0) != null) {
+			this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
+		}
+		List<Staff> staffList = new ArrayList<Staff>();
+		// 循环Excel行数,从第二行开始。标题不入库
+		for (int r = 1; r < totalRows; r++) {
+			Staff staffs = new Staff();
+			Row row = sheet.getRow(r).getCell(1).getRow();
+			if (row == null)
+				continue;
+			// 循环Excel的列,获取相关信息
+			for (int c = 0; c < this.totalCells; c++) {
+				Cell cell = row.getCell(c);
+				if (null != cell) {
+					if (c == 0) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						staffs.setStaffID(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 1) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						staffs.setStaffName(cell.getStringCellValue());
+					} else if (c == 2) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						staffs.setStaffSex(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 3) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						staffs.setStaffTel(cell.getStringCellValue());
+					} else if (c == 4) {
+						if (HSSFDateUtil.isCellDateFormatted(cell)) {
+							staffs.setHiredate(cell.getDateCellValue());
+						}
+					} else if (c == 5) {
+						if (HSSFDateUtil.isCellDateFormatted(cell)) {
+							staffs.setLeavedate(cell.getDateCellValue());
+						}
+					}
+				}
+			}
+			// 添加
+			staffList.add(staffs);
+		}
+		return staffList;
 	}
 
 }

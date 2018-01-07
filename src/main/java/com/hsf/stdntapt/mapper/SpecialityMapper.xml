@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hsf.stdntapt.dao.SpecialityDao">
+    <insert id="insertSpecialityList" parameterType="int">
+        INSERT INTO Speciality(
+        	<if test="speciID != null">speciID,</if>
+	        <if test="speciName != null">speciName,</if>
+	        <if test="collegeID != null">collegeID,</if>
+	        <if test="speYearsID != null">speYearsID</if>
+		) VALUES (
+	        <if test="speciID != null">#{speciID},</if>
+	        <if test="speciName != null">#{speciName},</if>
+	        <if test="collegeID != null">#{collegeID},</if>
+	        <if test="speYearsID != null">#{speYearsID}</if>
+		)
+    </insert>
+</mapper>

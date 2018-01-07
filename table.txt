@@ -33,7 +33,7 @@ create table consellor(
 	consellID int(20) unsigned not null primary key,
 	consellName varchar(20) not null,
 	consellSex int(1),
-	consellTel int,
+	consellTel varchar(11),
 	deleted bit not null default 0
 );
 
@@ -41,7 +41,7 @@ create table staff(
 	staffID int(20) unsigned not null primary key,
 	staffName varchar(11) not null,
 	staffSex int(1),
-	staffTel int,
+	staffTel varchar(11)
 	hiredate datetime not null default current_timestamp,
 	leavedate datetime default null,
 	deleted bit not null default 0
@@ -61,7 +61,7 @@ create table student(
 	stdID int(20) unsigned not null primary key,
 	stdName varchar(11) not null,
 	stdSex int(1),
-	stdTel int(11),
+	stdTel varchar(11),
 	enterTime date,
 	isParty bit,
 	classID int(6) unsigned,

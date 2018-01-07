@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hsf.stdntapt.dao.StudentDao">
+    <insert id="insertStudentList" parameterType="int">
+        INSERT INTO student(
+        	<if test="stdID != null">stdID,</if>
+	        <if test="stdName != null">stdName,</if>
+	        stdSex,
+	        stdTel,
+	        enterTime,
+	        isParty,
+	        classID
+		) VALUES (
+	        <if test="stdID != null">#{stdID},</if>
+	        <if test="stdName != null">#{stdName},</if>
+	        #{stdSex},
+	        #{stdTel},
+	        #{enterTime},
+	        #{isParty},
+	        #{classID}
+		)
+    </insert>
+</mapper>
