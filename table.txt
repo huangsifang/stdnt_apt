@@ -1,6 +1,6 @@
-create table user(
+create table users(
 	id int(20) unsigned not null primary key auto_increment,
-	userID int(20) not null,
+	userName int(20) not null,
 	userType int(1) not null,
 	password varchar(20) not null default '123456',
 	deleted bit not null default 0
