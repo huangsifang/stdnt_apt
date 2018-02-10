@@ -1,14 +1,15 @@
 create table users(
 	id int(20) unsigned not null primary key auto_increment,
-	userName int(20) not null,
-	password varchar(20) not null default '123456',
+	username varchar(20) not null,
+	password varchar(200) not null default '123456',
+	password_salt varchar(100),
 	deleted bit not null default 0
 );
 
 CREATE TABLE `user_roles` (
   	`id` int(20) NOT NULL AUTO_INCREMENT,
   	`role_name` varchar(20) DEFAULT NULL,
-  	`userName` varchar(20) DEFAULT NULL,
+  	`username` varchar(20) DEFAULT NULL,
   	PRIMARY KEY (`id`)
 );
 
