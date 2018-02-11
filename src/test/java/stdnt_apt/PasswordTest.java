@@ -2,6 +2,7 @@ package stdnt_apt;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.converters.AbstractConverter;
+import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.jdbc.JdbcRealm;
@@ -57,5 +58,17 @@ public class PasswordTest extends BaseTest {
 			return null;
 		}
 
+	}
+
+	@Test(expectedExceptions = ExcessiveAttemptsException.class)
+	public void testRetryLimitHashedCredentialsMatcherWithMyRealm() {
+		BeanUtilsBean.getInstance().getConvertUtils().register(new EnumConverter(), JdbcRealm.SaltStyle.class);
+		for (int i = 1; i <= 5; i++) {
+			try {
+				login("classpath:shiro-password.ini", "liu", "234");
+			} catch (Exception e) {
+				/* ignore */}
+		}
+		login("classpath:shiro-password.ini", "liu", "234");
 	}
 }
