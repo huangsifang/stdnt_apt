@@ -1,4 +1,4 @@
-package stdnt_apt;
+package com.hsf.stdntapt.tool;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

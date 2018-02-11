@@ -1,12 +1,13 @@
 package stdnt_apt;
 
 import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.commons.beanutils.converters.AbstractConverter;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.jdbc.JdbcRealm;
 import org.testng.annotations.Test;
+
+import com.hsf.stdntapt.tool.EnumConverter;
 
 /**
  * <p>
@@ -40,24 +41,6 @@ public class PasswordTest extends BaseTest {
 
 		// 浣跨敤testGeneratePassword鐢熸垚鐨勬暎鍒楀瘑鐮�
 		login("classpath:shiro-password.ini", "liu", "123");
-	}
-
-	private class EnumConverter extends AbstractConverter {
-		@Override
-		protected String convertToString(final Object value) throws Throwable {
-			return ((Enum) value).name();
-		}
-
-		@Override
-		protected Object convertToType(final Class type, final Object value) throws Throwable {
-			return Enum.valueOf(type, value.toString());
-		}
-
-		@Override
-		protected Class getDefaultType() {
-			return null;
-		}
-
 	}
 
 	@Test(expectedExceptions = ExcessiveAttemptsException.class)

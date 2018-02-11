@@ -5,6 +5,7 @@
     <li><a href="dormDailyScore" />dormDailyScore</li>
     <li><a href="scoreMap" />scoreMap</li>
     <li><a href="uploadInfo/uploadInfo.do" />uploadInfo</li>
+    <li><a href="login" />login</li>
 </ul>
 </body>
 </html>
