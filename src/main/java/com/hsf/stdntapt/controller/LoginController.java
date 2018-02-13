@@ -28,14 +28,9 @@ public class LoginController extends BaseTest {
 		String error = null;
 		String username = req.getParameter("username");
 		String password = req.getParameter("password");
-		// Subject subject = SecurityUtils.getSubject();
-		// UsernamePasswordToken token = new UsernamePasswordToken(username,
-		// password);
-		// token.setRememberMe(true);
 		try {
 			BeanUtilsBean.getInstance().getConvertUtils().register(new EnumConverter(), JdbcRealm.SaltStyle.class);
-			login("classpath:shiro-password.ini", username, password);
-			// subject.login(token);
+			login(username, password);
 		} catch (UnknownAccountException e) {
 			error = "用户名/密码错误";
 		} catch (IncorrectCredentialsException e) {
