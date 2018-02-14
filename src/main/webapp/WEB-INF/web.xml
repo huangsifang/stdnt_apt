@@ -68,4 +68,9 @@
           <taglib-location>/WEB-INF/tags.tld </taglib-location>  
         </taglib>  
     </jsp-config>
+    
+    <error-page>
+        <exception-type>org.apache.shiro.session.InvalidSessionException</exception-type>
+        <location>/invalidSession.jsp</location>
+    </error-page>
 </web-app>

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,12 +27,14 @@ public class UploadInfoController {
 	@Resource
 	InfoService infoService;
 
+	@RequiresRoles("admin")
 	@RequestMapping(value = "/uploadInfo.do")
 	public String uploadInfo() {
 		return "uploadInfo";
 	}
 
 	/** 接收上传的文件 */
+	@RequiresRoles("admin")
 	@RequestMapping(value = "/uploadInfoFromType.do")
 	public String uploadInfo(@RequestParam(value = "filename") MultipartFile file,
 			@RequestParam(value = "filetype") String type, Map<String, Object> map) {
