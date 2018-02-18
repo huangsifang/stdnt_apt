@@ -18,7 +18,9 @@ import com.hsf.stdntapt.entity.SpeYears;
 import com.hsf.stdntapt.entity.Speciality;
 import com.hsf.stdntapt.entity.Staff;
 import com.hsf.stdntapt.entity.Student;
+import com.hsf.stdntapt.entity.User;
 import com.hsf.stdntapt.service.InfoService;
+import com.hsf.stdntapt.service.UserService;
 
 @Controller
 @RequestMapping("/uploadInfo")
@@ -26,6 +28,9 @@ public class UploadInfoController {
 
 	@Resource
 	InfoService infoService;
+
+	@Resource
+	UserService userService;
 
 	@RequiresRoles("admin")
 	@RequestMapping(value = "/uploadInfo.do")
@@ -69,7 +74,8 @@ public class UploadInfoController {
 					infoService.insertConsellorList(consellList.get(i).getConsellID(),
 							consellList.get(i).getConsellName(), consellList.get(i).getConsellSex(),
 							consellList.get(i).getConsellTel());
-					infoService.insertUserList(consellList.get(i).getConsellID(), 2, "123456");
+					User user = new User(consellList.get(i).getConsellID() + "", "123456");
+					userService.createUser(user);
 				}
 				msg = "解析成功,总共" + consellList.size() + "条!";
 			} else if (type.equals("class")) {
@@ -86,7 +92,8 @@ public class UploadInfoController {
 							studentList.get(i).getStdSex(), studentList.get(i).getStdTel(),
 							studentList.get(i).getEnterTime(), studentList.get(i).isParty(),
 							studentList.get(i).getClassID());
-					infoService.insertUserList(studentList.get(i).getStdID(), 1, "123456");
+					User user = new User(studentList.get(i).getStdID() + "", "123456");
+					userService.createUser(user);
 				}
 				msg = "解析成功,总共" + studentList.size() + "条!";
 			} else if (type.equals("staff")) {
@@ -95,7 +102,8 @@ public class UploadInfoController {
 					infoService.insertStaffList(staffList.get(i).getStaffID(), staffList.get(i).getStaffName(),
 							staffList.get(i).getStaffSex(), staffList.get(i).getStaffTel(),
 							staffList.get(i).getHiredate(), staffList.get(i).getLeavedate());
-					infoService.insertUserList(staffList.get(i).getStaffID(), 3, "123456");
+					User user = new User(staffList.get(i).getStaffID() + "", "123456");
+					userService.createUser(user);
 				}
 				msg = "解析成功,总共" + staffList.size() + "条!";
 			}

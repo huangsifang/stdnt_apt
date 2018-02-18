@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hsf.stdntapt.dao.UserDao">
-    <insert id="insertUserList" parameterType="int">
+    <insert id="createUser" parameterType="int">
         INSERT INTO user(
-        	<if test="userID != null">userID,</if>
-	        <if test="userType != null">userType,</if>
-	        <if test="password != null">password</if>
+        	username,
+	        password,
+	        salt,
+	        role_ids,
+	        locked
 		) VALUES (
-	        <if test="userID != null">#{userID},</if>
-	        <if test="userType != null">#{userType},</if>
-	        <if test="password != null">#{password}</if>
+	        #{username},
+	        #{password},
+	        #{salt},
+	        #{role_ids},
+	        #{locked}
 		)
     </insert>
+    <select id="findByUsername" parameterType="int" resultType="User">
+		select id, username, password, salt, role_ids as roleIdsStr, locked from user where username='admin'
+    </select>
 </mapper>

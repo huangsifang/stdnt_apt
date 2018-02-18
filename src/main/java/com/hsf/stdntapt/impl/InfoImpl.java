@@ -137,9 +137,4 @@ public class InfoImpl implements InfoService {
 			Date leavedate) {
 		staffDao.insertStaffList(staffID, staffName, staffSex, staffTel, hiredate, leavedate);
 	}
-
-	@Override
-	public void insertUserList(int userID, int userType, String password) {
-		userDao.insertUserList(userID, userType, password);
-	}
 }

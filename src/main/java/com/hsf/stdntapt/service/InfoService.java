@@ -44,6 +44,4 @@ public interface InfoService {
 	public void insertStaffList(int staffID, String staffName, int staffSex, String staffTel, Date hiredate,
 			Date leavedate);
 
-	public void insertUserList(int userID, int userType, String password);
-
 }

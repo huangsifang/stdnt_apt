@@ -25,6 +25,7 @@ public abstract class BaseTest {
 		// 得到Subject及创建用户名/密码身份验证Token（即用户身份/凭证）
 		Subject subject = SecurityUtils.getSubject();
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+		token.setRememberMe(false);
 
 		subject.login(token);
 	}
