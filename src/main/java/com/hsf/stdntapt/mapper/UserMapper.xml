@@ -16,7 +16,25 @@
 	        #{user.locked}
 		)
     </insert>
-    <select id="findByUsername" resultType="User">
+    <update id="updateUser" parameterType="User" useGeneratedKeys="true" keyProperty="user.id">
+    	UPDATE user SET 
+    		username = #{user.username}, 
+    		password = #{user.password}, 
+    		salt = #{user.salt}, 
+    		role_ids = #{user.roleIdsStr}, 
+    		locked = #{user.locked} 
+    		where id = #{user.id}
+    </update>
+    <delete id="deleteUser" parameterType="long">
+		delete from user where id=#{userId}
+	</delete>
+	<select id="findOne" parameterType="long" resultType="user">
+		select id, username, password, salt, role_ids as roleIdsStr, locked from user where id=#{userId}
+    </select>
+    <select id="findByUsername" parameterType="string" resultType="user">
 		select id, username, password, salt, role_ids as roleIdsStr, locked from user where username=#{username}
+    </select>
+    <select id="findAll" resultType="user">
+    	select id, username, password, salt, role_ids as roleIdsStr, locked from user
     </select>
 </mapper>

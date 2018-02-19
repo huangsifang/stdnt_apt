@@ -22,7 +22,7 @@ public interface UserService {
 	 */
 	public long createUser(User user);
 
-	public User updateUser(User user);
+	public long updateUser(User user);
 
 	public void deleteUser(Long userId);
 

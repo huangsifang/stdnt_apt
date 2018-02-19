@@ -30,12 +30,12 @@ public class RoleServiceImpl implements RoleService {
 	private ResourceService resourceService;
 
 	@Override
-	public Role createRole(Role role) {
+	public long createRole(Role role) {
 		return roleDao.createRole(role);
 	}
 
 	@Override
-	public Role updateRole(Role role) {
+	public long updateRole(Role role) {
 		return roleDao.updateRole(role);
 	}
 

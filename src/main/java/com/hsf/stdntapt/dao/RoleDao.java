@@ -2,6 +2,8 @@ package com.hsf.stdntapt.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.hsf.stdntapt.entity.Role;
 
 /**
@@ -14,13 +16,13 @@ import com.hsf.stdntapt.entity.Role;
  */
 public interface RoleDao {
 
-	public Role createRole(Role role);
+	public long createRole(@Param("role") Role role);
 
-	public Role updateRole(Role role);
+	public long updateRole(@Param("role") Role role);
 
-	public void deleteRole(Long roleId);
+	public void deleteRole(@Param("roleId") Long roleId);
 
-	public Role findOne(Long roleId);
+	public Role findOne(@Param("roleId") Long roleId);
 
 	public List<Role> findAll();
 }

@@ -29,7 +29,7 @@ public class ResourceDaoImpl implements ResourceDao {
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
-	public Resource createResource(final Resource resource) {
+	public long createResource(final Resource resource) {
 		final String sql = "insert into resource(name, type, url, permission, parent_id, parent_ids, available) values(?,?,?,?,?,?,?)";
 
 		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -49,16 +49,16 @@ public class ResourceDaoImpl implements ResourceDao {
 			}
 		}, keyHolder);
 		resource.setId(keyHolder.getKey().longValue());
-		return resource;
+		return resource.getId();
 	}
 
 	@Override
-	public Resource updateResource(Resource resource) {
+	public long updateResource(Resource resource) {
 		final String sql = "update resource set name=?, type=?, url=?, permission=?, parent_id=?, parent_ids=?, available=? where id=?";
 		jdbcTemplate.update(sql, resource.getName(), resource.getType().name(), resource.getUrl(),
 				resource.getPermission(), resource.getParentId(), resource.getParentIds(), resource.getAvailable(),
 				resource.getId());
-		return resource;
+		return resource.getId();
 	}
 
 	@Override

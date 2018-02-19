@@ -30,7 +30,7 @@ public class RoleDaoImpl implements RoleDao {
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
-	public Role createRole(final Role role) {
+	public long createRole(final Role role) {
 		final String sql = "insert into role(role, description, resource_ids, available) values(?,?,?,?)";
 
 		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -47,15 +47,15 @@ public class RoleDaoImpl implements RoleDao {
 			}
 		}, keyHolder);
 		role.setId(keyHolder.getKey().longValue());
-		return role;
+		return role.getId();
 	}
 
 	@Override
-	public Role updateRole(Role role) {
+	public long updateRole(Role role) {
 		final String sql = "update role set role=?, description=?, resource_ids=?, available=? where id=?";
 		jdbcTemplate.update(sql, role.getRole(), role.getDescription(), role.getResourceIdsStr(), role.getAvailable(),
 				role.getId());
-		return role;
+		return role.getId();
 	}
 
 	@Override

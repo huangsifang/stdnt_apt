@@ -75,6 +75,7 @@ public class UploadInfoController {
 							consellList.get(i).getConsellName(), consellList.get(i).getConsellSex(),
 							consellList.get(i).getConsellTel());
 					User user = new User(consellList.get(i).getConsellID() + "", "123456");
+					user.setRoleIdsStr("3");
 					userService.createUser(user);
 				}
 				msg = "解析成功,总共" + consellList.size() + "条!";
@@ -93,6 +94,7 @@ public class UploadInfoController {
 							studentList.get(i).getEnterTime(), studentList.get(i).isParty(),
 							studentList.get(i).getClassID());
 					User user = new User(studentList.get(i).getStdID() + "", "123456");
+					user.setRoleIdsStr("4");
 					userService.createUser(user);
 				}
 				msg = "解析成功,总共" + studentList.size() + "条!";
@@ -103,6 +105,7 @@ public class UploadInfoController {
 							staffList.get(i).getStaffSex(), staffList.get(i).getStaffTel(),
 							staffList.get(i).getHiredate(), staffList.get(i).getLeavedate());
 					User user = new User(staffList.get(i).getStaffID() + "", "123456");
+					user.setRoleIdsStr("2");
 					userService.createUser(user);
 				}
 				msg = "解析成功,总共" + staffList.size() + "条!";

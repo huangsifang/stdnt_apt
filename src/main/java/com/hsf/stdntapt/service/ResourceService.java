@@ -15,9 +15,9 @@ import com.hsf.stdntapt.entity.Resource;
  */
 public interface ResourceService {
 
-	public Resource createResource(Resource resource);
+	public long createResource(Resource resource);
 
-	public Resource updateResource(Resource resource);
+	public long updateResource(Resource resource);
 
 	public void deleteResource(Long resourceId);
 
@@ -27,7 +27,7 @@ public interface ResourceService {
 
 	/**
 	 * 得到资源对应的权限字符串
-	 * 
+	 *
 	 * @param resourceIds
 	 * @return
 	 */
@@ -35,7 +35,7 @@ public interface ResourceService {
 
 	/**
 	 * 根据用户权限得到菜单
-	 * 
+	 *
 	 * @param permissions
 	 * @return
 	 */

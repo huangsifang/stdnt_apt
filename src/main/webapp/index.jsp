@@ -6,6 +6,7 @@
     <li><a href="scoreMap" />scoreMap</li>
     <li><a href="uploadInfo/uploadInfo.do" />uploadInfo</li>
     <li><a href="login" />login</li>
+    <li><a href="user" />user</li>
 </ul>
 </body>
 </html>

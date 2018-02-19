@@ -11,7 +11,7 @@
     </listener>
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>classpath*:ApplicationContext.xml,classpath*:ApplicationContext-shiro.xml</param-value>
+        <param-value>classpath*:ApplicationContext.xml,classpath*:shiro.xml</param-value>
     </context-param>
     
     <!-- 前端控制器 -->  

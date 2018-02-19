@@ -18,14 +18,14 @@ public interface UserDao {
 
 	public long createUser(@Param("user") User user);
 
-	public User updateUser(User user);
+	public long updateUser(@Param("user") User user);
 
-	public void deleteUser(Long userId);
+	public void deleteUser(@Param("userId") Long userId);
 
-	User findOne(Long userId);
+	User findOne(@Param("userId") Long userId);
 
 	List<User> findAll();
 
-	User findByUsername(String username);
+	User findByUsername(@Param("username") String username);
 
 }

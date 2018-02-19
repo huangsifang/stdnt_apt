@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hsf.stdntapt.dao.ResourceDao">
+    <insert id="createResource" parameterType="Resource" useGeneratedKeys="true" keyProperty="resource.id">
+        INSERT INTO resource(
+        	name,
+	        url,
+	        permission,
+	        parent_id,
+	        parent_ids,
+	        available
+		) VALUES (
+	        #{resource.name},
+	        #{resource.url},
+	        #{resource.permission},
+	        #{resource.parentId},
+	        #{resource.parentIds},
+	        #{resource.available}
+		)
+    </insert>
+    <update id="updateResource" parameterType="Resource" useGeneratedKeys="true" keyProperty="resource.id">
+    	UPDATE resource SET 
+    		name = #{resource.name}, 
+    		url = #{resource.url}, 
+    		permission = #{resource.permission}, 
+    		parent_id = #{resource.parentId},
+    		parent_ids = #{resource.parentIds},
+    		available = #{resource.available}
+    		where id = #{resource.id}
+    </update>
+    <delete id="deleteResource" parameterType="long">
+	  delete from resource where id=#{resourceId}
+	</delete>
+	<select id="findOne" parameterType="long" resultType="Resource">
+		select id, name, type, url, permission, parent_id, parent_ids, available from resource where id=#{resourceId}
+    </select>
+    <select id="findAll" resultType="Resource">
+    	select id, name, type, url, permission, parent_id, parent_ids, available from resource order by concat(parent_ids, id) asc
+    </select>
+</mapper>

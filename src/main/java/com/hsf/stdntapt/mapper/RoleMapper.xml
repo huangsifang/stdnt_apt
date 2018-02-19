@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hsf.stdntapt.dao.RoleDao">
+    <insert id="createRole" parameterType="Role" useGeneratedKeys="true" keyProperty="role.id">
+        INSERT INTO role(
+        	role,
+	        description,
+	        resource_ids,
+	        available
+		) VALUES (
+	        #{role.role},
+	        #{role.description},
+	        #{role.resourceIds},
+	        #{role.available}
+		)
+    </insert>
+    <update id="updateRole" parameterType="Role" useGeneratedKeys="true" keyProperty="role.id">
+    	UPDATE role SET 
+    		role = #{role.role}, 
+    		description = #{role.description}, 
+    		resource_ids = #{role.resourceIds}, 
+    		available = #{role.available}
+    		where id = #{role.id}
+    </update>
+    <delete id="deleteRole" parameterType="long">
+	  delete from role where id=#{roleId}
+	</delete>
+	<select id="findOne" parameterType="long" resultType="Role">
+		select id, role, description, resource_ids as resourceIdsStr, available from role where id=#{roleId}
+    </select>
+    <select id="findAll" resultType="Role">
+    	select id, role, description, resource_ids as resourceIdsStr, available from role
+    </select>
+</mapper>

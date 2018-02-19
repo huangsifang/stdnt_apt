@@ -15,9 +15,9 @@ import com.hsf.stdntapt.entity.Role;
  */
 public interface RoleService {
 
-	public Role createRole(Role role);
+	public long createRole(Role role);
 
-	public Role updateRole(Role role);
+	public long updateRole(Role role);
 
 	public void deleteRole(Long roleId);
 
@@ -27,7 +27,7 @@ public interface RoleService {
 
 	/**
 	 * 根据角色编号得到角色标识符列表
-	 * 
+	 *
 	 * @param roleIds
 	 * @return
 	 */
@@ -35,7 +35,7 @@ public interface RoleService {
 
 	/**
 	 * 根据角色编号得到权限字符串列表
-	 * 
+	 *
 	 * @param roleIds
 	 * @return
 	 */
