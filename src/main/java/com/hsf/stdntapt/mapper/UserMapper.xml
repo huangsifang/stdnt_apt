@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hsf.stdntapt.dao.UserDao">
-    <insert id="createUser" parameterType="int">
+    <insert id="createUser" parameterType="User" useGeneratedKeys="true" keyProperty="user.id">
         INSERT INTO user(
         	username,
 	        password,
@@ -9,14 +9,14 @@
 	        role_ids,
 	        locked
 		) VALUES (
-	        #{username},
-	        #{password},
-	        #{salt},
-	        #{role_ids},
-	        #{locked}
+	        #{user.username},
+	        #{user.password},
+	        #{user.salt},
+	        #{user.roleIdsStr},
+	        #{user.locked}
 		)
     </insert>
-    <select id="findByUsername" parameterType="int" resultType="User">
-		select id, username, password, salt, role_ids as roleIdsStr, locked from user where username='admin'
+    <select id="findByUsername" resultType="User">
+		select id, username, password, salt, role_ids as roleIdsStr, locked from user where username=#{username}
     </select>
 </mapper>

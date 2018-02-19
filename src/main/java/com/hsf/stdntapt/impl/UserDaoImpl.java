@@ -30,7 +30,7 @@ public class UserDaoImpl implements UserDao {
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
-	public User createUser(final User user) {
+	public long createUser(final User user) {
 		final String sql = "insert into user(username, password, salt, role_ids, locked) values(?,?,?,?,?,?)";
 
 		GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
@@ -49,7 +49,7 @@ public class UserDaoImpl implements UserDao {
 		}, keyHolder);
 
 		user.setId(keyHolder.getKey().longValue());
-		return user;
+		return user.getId();
 	}
 
 	@Override

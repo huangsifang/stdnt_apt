@@ -16,7 +16,7 @@ import com.hsf.stdntapt.entity.User;
  */
 public interface UserDao {
 
-	public User createUser(@Param("user") User user);
+	public long createUser(@Param("user") User user);
 
 	public User updateUser(User user);
 

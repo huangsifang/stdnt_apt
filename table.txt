@@ -79,7 +79,7 @@ create table staff(
 	staffID int(20) unsigned not null primary key,
 	staffName varchar(11) not null,
 	staffSex int(1),
-	staffTel varchar(11)
+	staffTel varchar(11),
 	hiredate datetime not null default current_timestamp,
 	leavedate datetime default null,
 	deleted bit not null default 0

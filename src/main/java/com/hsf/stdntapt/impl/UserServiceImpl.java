@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 	 * @param user
 	 */
 	@Override
-	public User createUser(User user) {
+	public long createUser(User user) {
 		// 加密密码
 		passwordHelper.encryptPassword(user);
 		return userDao.createUser(user);
