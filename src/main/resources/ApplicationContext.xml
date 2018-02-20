@@ -58,11 +58,5 @@
         <context:exclude-filter type="aspectj" expression="com.hsf.stdntapt.dao.*"/>
     </context:component-scan>
     
-    <mvc:annotation-driven>
-        <mvc:argument-resolvers>
-            <bean class="com.hsf.stdntapt.tool.CurrentUserMethodArgumentResolver"/>
-        </mvc:argument-resolvers>
-    </mvc:annotation-driven>
-    
     <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>
 </beans>

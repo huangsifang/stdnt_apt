@@ -11,11 +11,6 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
        http://www.springframework.org/schema/cache 
        http://www.springframework.org/schema/cache/spring-cache-3.1.xsd">
-	
-	<aop:config proxy-target-class="true"></aop:config>
-    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
-        <property name="securityManager" ref="securityManager"/>
-    </bean>
     
 	<!-- Shiro 的Web过滤器 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
@@ -49,10 +44,7 @@
        </property>
     </bean>
     
-    <!-- 缓存管理器 使用Ehcache实现  
-	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">  
-	    <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>  
-	</bean>  -->
+    <!-- 缓存管理器 使用Ehcache实现  -->
 	<bean id="springCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
         <property name="cacheManager" ref="ehcacheManager"/>
     </bean>
@@ -73,29 +65,6 @@
        <property name="hashIterations" value="2"/>  
     	<property name="storedCredentialsHexEncoded" value="true"/>
     </bean>
-    
-    <!-- Realm实现 -->  
-    <!-- <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
-	    <property name="driverClassName" value="com.mysql.jdbc.Driver" />  
-	    <property name="url"  
-	        value="jdbc:mysql://localhost:3306/apartment" />  
-	    <property name="username" value="root" />  
-	    <property name="password" value="123456" />  
-	</bean>
-    <bean id="jdbcRealm" class="org.apache.shiro.realm.jdbc.JdbcRealm">  
-        <property name="dataSource" ref="dataSource"/>  
-        <property name="permissionsLookupEnabled" value="true"/>  
-        <property name="saltStyle" value="COLUMN"/>
-        <property name="credentialsMatcher" ref="credentialsMatcher"/>   
-        <property name="authenticationQuery" value="select password, concat(username,password_salt) from users where username = ?" />  
-        <property name="userRolesQuery" value="select r.role_code from rms_role r,rms_user u,rms_user_role ur where r.id = ur.role_id and u.id = ur.user_id and u.login_name = ?"/>  
-        <property name="permissionsQuery" value="select distinct p.priv_code from rms_privilege p,rms_role r,rms_role_privilege rp where p.id = rp.priv_id and r.id = rp.role_id and r.role_code = ?"/> 
-        <property name="cachingEnabled" value="true"/>  
-	    <property name="authenticationCachingEnabled" value="true"/>  
-	    <property name="authenticationCacheName" value="authenticationCache"/>  
-	    <property name="authorizationCachingEnabled" value="true"/>  
-	    <property name="authorizationCacheName" value="authorizationCache"/>  
-    </bean> -->
     
     <!-- 数据源 -->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
@@ -228,7 +197,6 @@
 	
 	<bean id="sysUserFilter" class="com.hsf.stdntapt.tool.SysUserFilter"/>
 	
-	
 	<!-- Shiro生命周期处理器-->  
 	<bean id="lifecycleBeanPostProcessor"   
 	class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/> 
@@ -237,10 +205,5 @@
     <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">  
         <property name="securityManager" ref="securityManager"/>  
     </bean>
-	
-	<!-- 控制器异常处理 -->
-    <bean id="exceptionHandlerExceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver">
-    </bean>
-    <bean class="com.hsf.stdntapt.tool.DefaultExceptionHandler"/>
     
 </beans>

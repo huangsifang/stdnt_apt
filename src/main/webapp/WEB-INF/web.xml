@@ -14,28 +14,30 @@
         <param-value>classpath*:ApplicationContext.xml,classpath*:shiro.xml</param-value>
     </context-param>
     
-    <!-- 前端控制器 -->  
-    <servlet>    
-        <servlet-name>stdnt-apt</servlet-name>  
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>          
-        <load-on-startup>1</load-on-startup>  
-    </servlet>
-      
-    <!-- 拦截所有请求 -->  
-    <servlet-mapping>    
-        <servlet-name>stdnt-apt</servlet-name>
-        <url-pattern>/</url-pattern>    
-    </servlet-mapping>
+    <!-- 可以使用RequestContextHolder.currentRequestAttributes() 获取到请求的attr -->
+    <listener>
+        <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+    </listener>
     
+    <!-- 设置servlet编码开始 -->
     <filter>
-        <filter-name>spring filter</filter-name>
+        <filter-name>Set Character Encoding</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <async-supported>true</async-supported>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
     </filter>
-    
     <filter-mapping>
-        <filter-name>spring filter</filter-name>
+        <filter-name>Set Character Encoding</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+    <!-- 设置servlet编码结束 -->
     
     <!--- shiro 1.2 -->
     <listener>
@@ -49,28 +51,44 @@
         <param-name>shiroConfigLocations</param-name>
         <param-value>classpath:shiro.ini</param-value>
     </context-param>
-    <filter>  
-	    <filter-name>shiroFilter</filter-name>  
-	    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>  
-	    <init-param>  
-	        <param-name>targetFilterLifecycle</param-name>  
-	        <param-value>true</param-value>  
-	    </init-param>  
-	</filter>
+    
+    <!-- shiro 安全过滤器 -->
+    <filter>
+        <filter-name>shiroFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <async-supported>true</async-supported>
+        <init-param>
+            <param-name>targetFilterLifecycle</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+
     <filter-mapping>
         <filter-name>shiroFilter</filter-name>
         <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
-    
-    <jsp-config>  
-        <taglib>  
-          <taglib-uri>http://www.tag.com/mytag</taglib-uri>  
-          <taglib-location>/WEB-INF/tags.tld </taglib-location>  
-        </taglib>  
-    </jsp-config>
     
     <error-page>
         <exception-type>org.apache.shiro.session.InvalidSessionException</exception-type>
         <location>/invalidSession.jsp</location>
     </error-page>
+    
+    <!-- 前端控制器 -->  
+    <servlet>
+        <servlet-name>stdnt-apt</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath*:spring-mvc.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+        <async-supported>true</async-supported>
+    </servlet>
+      
+    <!-- 拦截所有请求 -->  
+    <servlet-mapping>    
+        <servlet-name>stdnt-apt</servlet-name>
+        <url-pattern>/</url-pattern>    
+    </servlet-mapping>
 </web-app>
