@@ -46,6 +46,9 @@ insert into role values(2, 'staff', '宿舍管理员', '', true);
 insert into role values(3, 'consellor', '辅导员', '', true);
 insert into role values(4, 'student', '学生', '', true);
 insert into user values(1,'admin','d3c59d25033dbf980d29554025c23a75','8d78869f470951332959580424d4bf4f', '1', false);
+
+
+insert into resource values(1, '资源', 'menu', '', 0, '0/', '', true);
 insert into resource values(11, '用户管理', 'menu', '/user', 1, '0/1/', 'user:*', true);
 insert into resource values(12, '用户新增', 'button', '', 11, '0/1/11/', 'user:create', true);
 insert into resource values(13, '用户修改', 'button', '', 11, '0/1/11/', 'user:update', true);

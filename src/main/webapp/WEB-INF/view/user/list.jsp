@@ -7,6 +7,8 @@
 </head>
 <body>
 
+欢迎[<shiro:principal/>]登录成功！<a href="logout">退出</a>
+
 <c:if test="${not empty msg}">
     <div>${msg}</div>
 </c:if>

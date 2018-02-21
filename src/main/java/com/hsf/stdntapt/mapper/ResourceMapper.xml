@@ -32,9 +32,9 @@
 	  delete from resource where id=#{resourceId}
 	</delete>
 	<select id="findOne" parameterType="long" resultType="Resource">
-		select id, name, type, url, permission, parent_id, parent_ids, available from resource where id=#{resourceId}
+		select id, name, type, url, permission, parent_id as parentId, parent_ids as parentIds, available from resource where id=#{resourceId}
     </select>
     <select id="findAll" resultType="Resource">
-    	select id, name, type, url, permission, parent_id, parent_ids, available from resource order by concat(parent_ids, id) asc
+    	select id, name, type, url, permission, parent_id as parentId, parent_ids as parentIds, available from resource order by concat(parent_ids, id) asc
     </select>
 </mapper>
