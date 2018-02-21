@@ -1,17 +1,17 @@
 package com.hsf.stdntapt.entity;
 
 public class Class {
-	private int classID;
+	private int classId;
 	private String className;
-	private int speciID;
-	private int consellID;
+	private int speciId;
+	private int consellId;
 
-	public int getClassID() {
-		return classID;
+	public int getClassId() {
+		return classId;
 	}
 
-	public void setClassID(int classID) {
-		this.classID = classID;
+	public void setClassId(int classId) {
+		this.classId = classId;
 	}
 
 	public String getClassName() {
@@ -22,20 +22,20 @@ public class Class {
 		this.className = className;
 	}
 
-	public int getSpeciID() {
-		return speciID;
+	public int getSpeciId() {
+		return speciId;
 	}
 
-	public void setSpeciID(int speciID) {
-		this.speciID = speciID;
+	public void setSpeciId(int speciId) {
+		this.speciId = speciId;
 	}
 
-	public int getConsellID() {
-		return consellID;
+	public int getConsellId() {
+		return consellId;
 	}
 
-	public void setConsellID(int consellID) {
-		this.consellID = consellID;
+	public void setConsellId(int consellId) {
+		this.consellId = consellId;
 	}
 
 }

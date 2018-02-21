@@ -3,19 +3,19 @@ package com.hsf.stdntapt.entity;
 import java.util.Date;
 
 public class Staff {
-	private int staffID;
+	private int staffId;
 	private String staffName;
 	private int staffSex;
 	private String staffTel;
 	private Date hiredate;
 	private Date leavedate;
 
-	public int getStaffID() {
-		return staffID;
+	public int getStaffId() {
+		return staffId;
 	}
 
-	public void setStaffID(int staffID) {
-		this.staffID = staffID;
+	public void setStaffId(int staffId) {
+		this.staffId = staffId;
 	}
 
 	public String getStaffName() {

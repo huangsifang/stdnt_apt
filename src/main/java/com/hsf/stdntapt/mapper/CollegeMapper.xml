@@ -3,10 +3,10 @@
 <mapper namespace="com.hsf.stdntapt.dao.CollegeDao">
     <insert id="insertCollegeList" parameterType="int">
         INSERT INTO college(
-        	<if test="collegeID != null">collegeID,</if>
-	        <if test="collegeName != null">collegeName</if>
+        	<if test="collegeId != null">college_id,</if>
+	        <if test="collegeName != null">college_name</if>
 		) VALUES (
-	        <if test="collegeID != null">#{collegeID},</if>
+	        <if test="collegeId != null">#{collegeId},</if>
 	        <if test="collegeName != null">#{collegeName}</if>
 		)
     </insert>

@@ -1,17 +1,17 @@
 package com.hsf.stdntapt.entity;
 
 public class Speciality {
-	private int speciID;
+	private int speciId;
 	private String speciName;
-	private int collegeID;
-	private int speYearsID;
+	private int collegeId;
+	private int speYearsId;
 
-	public int getSpeciID() {
-		return speciID;
+	public int getSpeciId() {
+		return speciId;
 	}
 
-	public void setSpeciID(int speciID) {
-		this.speciID = speciID;
+	public void setSpeciId(int speciId) {
+		this.speciId = speciId;
 	}
 
 	public String getSpeciName() {
@@ -22,20 +22,20 @@ public class Speciality {
 		this.speciName = speciName;
 	}
 
-	public int getCollegeID() {
-		return collegeID;
+	public int getCollegeId() {
+		return collegeId;
 	}
 
-	public void setCollegeID(int collegeID) {
-		this.collegeID = collegeID;
+	public void setCollegeId(int collegeId) {
+		this.collegeId = collegeId;
 	}
 
-	public int getSpeYearsID() {
-		return speYearsID;
+	public int getSpeYearsId() {
+		return speYearsId;
 	}
 
-	public void setSpeYearsID(int speYearsID) {
-		this.speYearsID = speYearsID;
+	public void setSpeYearsId(int speYearsId) {
+		this.speYearsId = speYearsId;
 	}
 
 }

@@ -3,21 +3,21 @@
 <mapper namespace="com.hsf.stdntapt.dao.StudentDao">
     <insert id="insertStudentList" parameterType="int">
         INSERT INTO student(
-        	<if test="stdID != null">stdID,</if>
-	        <if test="stdName != null">stdName,</if>
-	        stdSex,
-	        stdTel,
-	        enterTime,
-	        isParty,
-	        classID
+        	<if test="stdId != null">std_id,</if>
+	        <if test="stdName != null">std_name,</if>
+	        std_sex,
+	        std_tel,
+	        enter_time,
+	        is_party,
+	        class_id
 		) VALUES (
-	        <if test="stdID != null">#{stdID},</if>
+	        <if test="stdId != null">#{stdId},</if>
 	        <if test="stdName != null">#{stdName},</if>
 	        #{stdSex},
 	        #{stdTel},
 	        #{enterTime},
 	        #{isParty},
-	        #{classID}
+	        #{classId}
 		)
     </insert>
 </mapper>

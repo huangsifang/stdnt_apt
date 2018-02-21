@@ -1,17 +1,17 @@
 package com.hsf.stdntapt.entity;
 
 public class Consellor {
-	private int consellID;
+	private int consellId;
 	private String consellName;
 	private int consellSex;
 	private String consellTel;
 
-	public int getConsellID() {
-		return consellID;
+	public int getConsellId() {
+		return consellId;
 	}
 
-	public void setConsellID(int consellID) {
-		this.consellID = consellID;
+	public void setConsellId(int consellId) {
+		this.consellId = consellId;
 	}
 
 	public String getConsellName() {

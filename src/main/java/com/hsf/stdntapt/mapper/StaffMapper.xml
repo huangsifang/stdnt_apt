@@ -3,14 +3,14 @@
 <mapper namespace="com.hsf.stdntapt.dao.StaffDao">
     <insert id="insertStaffList" parameterType="int">
         INSERT INTO staff(
-        	<if test="staffID != null">staffID,</if>
-	        <if test="staffName != null">staffName,</if>
-	        staffSex,
-	        staffTel,
+        	<if test="staffId != null">staff_id,</if>
+	        <if test="staffName != null">staff_name,</if>
+	        staff_sex,
+	        staff_tel,
 	        <if test="hiredate != null">hiredate,</if>
 	        leavedate
 		) VALUES (
-	        <if test="staffID != null">#{staffID},</if>
+	        <if test="staffId != null">#{staffId},</if>
 	        <if test="staffName != null">#{staffName},</if>
 	        #{staffSex},
 	        #{staffTel},

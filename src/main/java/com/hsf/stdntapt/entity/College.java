@@ -2,15 +2,15 @@ package com.hsf.stdntapt.entity;
 
 public class College {
 
-	private int collegeID;
+	private int collegeId;
 	private String collegeName;
 
-	public int getCollegeID() {
-		return collegeID;
+	public int getCollegeId() {
+		return collegeId;
 	}
 
-	public void setCollegeID(int collegeID) {
-		this.collegeID = collegeID;
+	public void setCollegeId(int collegeId) {
+		this.collegeId = collegeId;
 	}
 
 	public String getCollegeName() {

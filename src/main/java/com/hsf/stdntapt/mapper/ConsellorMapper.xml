@@ -3,12 +3,12 @@
 <mapper namespace="com.hsf.stdntapt.dao.ConsellorDao">
     <insert id="insertConsellorList" parameterType="int">
         INSERT INTO consellor(
-        	<if test="consellID != null">consellID,</if>
-	        <if test="consellName != null">consellName,</if>
-	        consellSex,
-	        consellTel
+        	<if test="consellId != null">consell_id,</if>
+	        <if test="consellName != null">consell_name,</if>
+	        consell_sex,
+	        consell_tel
 		) VALUES (
-	        <if test="consellID != null">#{consellID},</if>
+	        <if test="consellId != null">#{consellId},</if>
 	        <if test="consellName != null">#{consellName},</if>
 	        #{consellSex},
 	        #{consellTel}

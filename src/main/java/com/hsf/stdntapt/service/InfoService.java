@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
 import com.hsf.stdntapt.entity.Consellor;
+import com.hsf.stdntapt.entity.Repairman;
 import com.hsf.stdntapt.entity.SpeYears;
 import com.hsf.stdntapt.entity.Speciality;
 import com.hsf.stdntapt.entity.Staff;
@@ -28,20 +29,25 @@ public interface InfoService {
 
 	public List<Staff> getStaffInfo(String name, MultipartFile file);
 
-	public void insertCollegeList(int collegeID, String collegeName);
+	public List<Repairman> getRepairmanInfo(String name, MultipartFile file);
 
-	public void insertSpeYearsList(int speYearsID, String speYearsName, int speYearsLength);
+	public void insertCollegeList(int collegeId, String collegeName);
 
-	public void insertSpecialityList(int speciID, String speciName, int collegeID, int speYearsID);
+	public void insertSpeYearsList(int speYearsId, String speYearsName, int speYearsLength);
 
-	public void insertConsellorList(int consellID, String consellName, int consellSex, String consellTel);
+	public void insertSpecialityList(int speciId, String speciName, int collegeId, int speYearsId);
 
-	public void insertClassList(int classID, String className, int speciID, int consellID);
+	public void insertConsellorList(int consellId, String consellName, int consellSex, String consellTel);
 
-	public void insertStudentList(int stdID, String stdName, int stdSex, String stdTel, Date enterTime, boolean isParty,
-			int classID);
+	public void insertClassList(int classId, String className, int speciId, int consellId);
 
-	public void insertStaffList(int staffID, String staffName, int staffSex, String staffTel, Date hiredate,
+	public void insertStudentList(int stdId, String stdName, int stdSex, String stdTel, Date enterTime, boolean isParty,
+			int classId);
+
+	public void insertStaffList(int staffId, String staffName, int staffSex, String staffTel, Date hiredate,
 			Date leavedate);
+
+	public void insertRepairmanList(int repairmanId, String repairmanName, int repairmanSex, String repairmanTel,
+			int repairType);
 
 }

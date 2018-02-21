@@ -3,15 +3,15 @@
 <mapper namespace="com.hsf.stdntapt.dao.SpecialityDao">
     <insert id="insertSpecialityList" parameterType="int">
         INSERT INTO Speciality(
-        	<if test="speciID != null">speciID,</if>
-	        <if test="speciName != null">speciName,</if>
-	        <if test="collegeID != null">collegeID,</if>
-	        <if test="speYearsID != null">speYearsID</if>
+        	<if test="speciId != null">speci_id,</if>
+	        <if test="speciName != null">speci_name,</if>
+	        <if test="collegeId != null">college_id,</if>
+	        <if test="speYearsId != null">spe_years_id</if>
 		) VALUES (
-	        <if test="speciID != null">#{speciID},</if>
+	        <if test="speciId != null">#{speciId},</if>
 	        <if test="speciName != null">#{speciName},</if>
-	        <if test="collegeID != null">#{collegeID},</if>
-	        <if test="speYearsID != null">#{speYearsID}</if>
+	        <if test="collegeId != null">#{collegeId},</if>
+	        <if test="speYearsId != null">#{speYearsId}</if>
 		)
     </insert>
 </mapper>

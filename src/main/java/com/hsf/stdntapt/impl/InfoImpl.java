@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hsf.stdntapt.dao.ClassDao;
 import com.hsf.stdntapt.dao.CollegeDao;
 import com.hsf.stdntapt.dao.ConsellorDao;
+import com.hsf.stdntapt.dao.RepairmanDao;
 import com.hsf.stdntapt.dao.SpeYearsDao;
 import com.hsf.stdntapt.dao.SpecialityDao;
 import com.hsf.stdntapt.dao.StaffDao;
@@ -19,11 +20,13 @@ import com.hsf.stdntapt.dao.UserDao;
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
 import com.hsf.stdntapt.entity.Consellor;
+import com.hsf.stdntapt.entity.Repairman;
 import com.hsf.stdntapt.entity.SpeYears;
 import com.hsf.stdntapt.entity.Speciality;
 import com.hsf.stdntapt.entity.Staff;
 import com.hsf.stdntapt.entity.Student;
 import com.hsf.stdntapt.service.InfoService;
+import com.hsf.stdntapt.tool.ReadExcel;
 
 @Service
 public class InfoImpl implements InfoService {
@@ -50,6 +53,9 @@ public class InfoImpl implements InfoService {
 	StaffDao staffDao;
 
 	@Resource
+	RepairmanDao repairmanDao;
+
+	@Resource
 	UserDao userDao;
 
 	@Override
@@ -60,8 +66,8 @@ public class InfoImpl implements InfoService {
 	}
 
 	@Override
-	public void insertCollegeList(int collegeID, String collegeName) {
-		collegeDao.insertCollegeList(collegeID, collegeName);
+	public void insertCollegeList(int collegeId, String collegeName) {
+		collegeDao.insertCollegeList(collegeId, collegeName);
 	}
 
 	@Override
@@ -72,8 +78,8 @@ public class InfoImpl implements InfoService {
 	}
 
 	@Override
-	public void insertSpeYearsList(int speYearsID, String speYearsName, int speYearsLength) {
-		speYearsDao.insertSpeYearsList(speYearsID, speYearsName, speYearsLength);
+	public void insertSpeYearsList(int speYearsId, String speYearsName, int speYearsLength) {
+		speYearsDao.insertSpeYearsList(speYearsId, speYearsName, speYearsLength);
 	}
 
 	@Override
@@ -84,8 +90,8 @@ public class InfoImpl implements InfoService {
 	}
 
 	@Override
-	public void insertConsellorList(int consellID, String consellName, int consellSex, String consellTel) {
-		consellorDao.insertConsellorList(consellID, consellName, consellSex, consellTel);
+	public void insertConsellorList(int consellId, String consellName, int consellSex, String consellTel) {
+		consellorDao.insertConsellorList(consellId, consellName, consellSex, consellTel);
 	}
 
 	@Override
@@ -96,8 +102,8 @@ public class InfoImpl implements InfoService {
 	}
 
 	@Override
-	public void insertSpecialityList(int speciID, String speciName, int collegeID, int speYearsID) {
-		specialityDao.insertSpecialityList(speciID, speciName, collegeID, speYearsID);
+	public void insertSpecialityList(int speciId, String speciName, int collegeId, int speYearsId) {
+		specialityDao.insertSpecialityList(speciId, speciName, collegeId, speYearsId);
 	}
 
 	@Override
@@ -108,8 +114,8 @@ public class InfoImpl implements InfoService {
 	}
 
 	@Override
-	public void insertClassList(int classID, String className, int speciID, int consellID) {
-		classDao.insertClassList(classID, className, speciID, consellID);
+	public void insertClassList(int classId, String className, int speciId, int consellId) {
+		classDao.insertClassList(classId, className, speciId, consellId);
 	}
 
 	@Override
@@ -120,9 +126,9 @@ public class InfoImpl implements InfoService {
 	}
 
 	@Override
-	public void insertStudentList(int stdID, String stdName, int stdSex, String stdTel, Date enterTime, boolean isParty,
-			int classID) {
-		studentDao.insertStudentList(stdID, stdName, stdSex, stdTel, enterTime, isParty, classID);
+	public void insertStudentList(int stdId, String stdName, int stdSex, String stdTel, Date enterTime, boolean isParty,
+			int classId) {
+		studentDao.insertStudentList(stdId, stdName, stdSex, stdTel, enterTime, isParty, classId);
 	}
 
 	@Override
@@ -133,8 +139,21 @@ public class InfoImpl implements InfoService {
 	}
 
 	@Override
-	public void insertStaffList(int staffID, String staffName, int staffSex, String staffTel, Date hiredate,
+	public void insertStaffList(int staffId, String staffName, int staffSex, String staffTel, Date hiredate,
 			Date leavedate) {
-		staffDao.insertStaffList(staffID, staffName, staffSex, staffTel, hiredate, leavedate);
+		staffDao.insertStaffList(staffId, staffName, staffSex, staffTel, hiredate, leavedate);
+	}
+
+	@Override
+	public List<Repairman> getRepairmanInfo(String name, MultipartFile file) {
+		ReadExcel ReadExcel = new ReadExcel();
+		List<Repairman> excelInfo = ReadExcel.getRepairmanExcelInfo(name, file);
+		return excelInfo;
+	}
+
+	@Override
+	public void insertRepairmanList(int repairmanId, String repairmanName, int repairmanSex, String repairmanTel,
+			int repairType) {
+		repairmanDao.insertRepairmanList(repairmanId, repairmanName, repairmanSex, repairmanTel, repairType);
 	}
 }

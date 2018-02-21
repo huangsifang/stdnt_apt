@@ -3,15 +3,15 @@
 <mapper namespace="com.hsf.stdntapt.dao.ClassDao">
     <insert id="insertClassList" parameterType="int">
         INSERT INTO class(
-        	<if test="classID != null">classID,</if>
-	        <if test="className != null">className,</if>
-	        <if test="speciID != null">speciID,</if>
-	        consellID
+        	<if test="classId != null">class_id,</if>
+	        <if test="className != null">class_name,</if>
+	        <if test="speciId != null">speci_id,</if>
+	        consell_id
 		) VALUES (
-	        <if test="classID != null">#{classID},</if>
+	        <if test="classId != null">#{classId},</if>
 	        <if test="className != null">#{className},</if>
-	        <if test="speciID != null">#{speciID},</if>
-	        #{consellID}
+	        <if test="speciId != null">#{speciId},</if>
+	        #{consellId}
 		)
     </insert>
 </mapper>

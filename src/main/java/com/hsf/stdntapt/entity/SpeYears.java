@@ -1,16 +1,16 @@
 package com.hsf.stdntapt.entity;
 
 public class SpeYears {
-	private int speYearsID;
+	private int speYearsId;
 	private String speYearsName;
 	private int speYearsLength;
 
-	public int getSpeYearsID() {
-		return speYearsID;
+	public int getSpeYearsId() {
+		return speYearsId;
 	}
 
-	public void setSpeYearsID(int speYearsID) {
-		this.speYearsID = speYearsID;
+	public void setSpeYearsId(int speYearsId) {
+		this.speYearsId = speYearsId;
 	}
 
 	public String getSpeYearsName() {

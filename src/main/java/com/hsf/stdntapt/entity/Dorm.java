@@ -2,17 +2,21 @@ package com.hsf.stdntapt.entity;
 
 public class Dorm {
 
-	private int dormID;
+	private int dormId;
 	private int score;
-	public int getDormID() {
-		return dormID;
+
+	public int getDormId() {
+		return dormId;
 	}
-	public void setDormID(int dormID) {
-		this.dormID = dormID;
+
+	public void setDormId(int dormId) {
+		this.dormId = dormId;
 	}
+
 	public int getScore() {
 		return score;
 	}
+
 	public void setScore(int score) {
 		this.score = score;
 	}

@@ -19,7 +19,7 @@
             </tr>
             <c:forEach var="score" items="${scores}">
                 <tr>
-                    <td>${score.dormID}</td>
+                    <td>${score.dormId}</td>
                     <td>${score.score}</td>
                 </tr>
             </c:forEach>

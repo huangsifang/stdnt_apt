@@ -1,4 +1,4 @@
-package com.hsf.stdntapt.impl;
+package com.hsf.stdntapt.tool;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
 import com.hsf.stdntapt.entity.Consellor;
+import com.hsf.stdntapt.entity.Repairman;
 import com.hsf.stdntapt.entity.SpeYears;
 import com.hsf.stdntapt.entity.Speciality;
 import com.hsf.stdntapt.entity.Staff;
@@ -91,7 +92,7 @@ public class ReadExcel {
 	}
 
 	/**
-	 * 读学院EXCEL文件，获取客户信息集合
+	 * 读学院EXCEL文件
 	 *
 	 * @param fileName
 	 * @return
@@ -129,7 +130,7 @@ public class ReadExcel {
 	}
 
 	/**
-	 * 读学院EXCEL文件，获取客户信息集合
+	 * 读学制EXCEL文件
 	 *
 	 * @param fileName
 	 * @return
@@ -167,7 +168,7 @@ public class ReadExcel {
 	}
 
 	/**
-	 * 读学院EXCEL文件，获取客户信息集合
+	 * 读专业EXCEL文件
 	 *
 	 * @param fileName
 	 * @return
@@ -205,7 +206,7 @@ public class ReadExcel {
 	}
 
 	/**
-	 * 读学院EXCEL文件，获取客户信息集合
+	 * 读辅导员EXCEL文件
 	 *
 	 * @param fileName
 	 * @return
@@ -243,7 +244,7 @@ public class ReadExcel {
 	}
 
 	/**
-	 * 读学院EXCEL文件，获取客户信息集合
+	 * 读班级EXCEL文件
 	 *
 	 * @param fileName
 	 * @return
@@ -280,7 +281,7 @@ public class ReadExcel {
 	}
 
 	/**
-	 * 读学院EXCEL文件，获取客户信息集合
+	 * 读学生EXCEL文件
 	 *
 	 * @param fileName
 	 * @return
@@ -317,7 +318,7 @@ public class ReadExcel {
 	}
 
 	/**
-	 * 读学院EXCEL文件，获取客户信息集合
+	 * 读工作人员EXCEL文件
 	 *
 	 * @param fileName
 	 * @return
@@ -335,6 +336,43 @@ public class ReadExcel {
 			if (wb != null) {
 				// 读取Excel里的信息
 				list = readStaffExcelValue(wb);
+			}
+
+			is.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					is = null;
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 读维修人员EXCEL文件
+	 *
+	 * @param fileName
+	 * @return
+	 */
+	public List<Repairman> getRepairmanExcelInfo(String fileName, MultipartFile Mfile) {
+		List<Repairman> list = new ArrayList<Repairman>();
+		// 初始化输入流
+		InputStream is = null;
+		try {
+			// 根据新建的文件实例化输入流
+			is = Mfile.getInputStream();
+
+			Workbook wb = checkfile(fileName, Mfile, is);
+
+			if (wb != null) {
+				// 读取Excel里的信息
+				list = readRepairmanExcelValue(wb);
 			}
 
 			is.close();
@@ -383,7 +421,7 @@ public class ReadExcel {
 				if (null != cell) {
 					if (c == 0) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
-						college.setCollegeID(Integer.parseInt(cell.getStringCellValue()));
+						college.setCollegeId(Integer.parseInt(cell.getStringCellValue()));
 					} else if (c == 1) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
 						college.setCollegeName(cell.getStringCellValue());
@@ -426,7 +464,7 @@ public class ReadExcel {
 				if (null != cell) {
 					if (c == 0) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
-						speYears.setSpeYearsID(Integer.parseInt(cell.getStringCellValue()));
+						speYears.setSpeYearsId(Integer.parseInt(cell.getStringCellValue()));
 					} else if (c == 1) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
 						speYears.setSpeYearsName(cell.getStringCellValue());
@@ -472,16 +510,16 @@ public class ReadExcel {
 				if (null != cell) {
 					if (c == 0) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
-						speciality.setSpeciID(Integer.parseInt(cell.getStringCellValue()));
+						speciality.setSpeciId(Integer.parseInt(cell.getStringCellValue()));
 					} else if (c == 1) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
 						speciality.setSpeciName(cell.getStringCellValue());
 					} else if (c == 2) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
-						speciality.setCollegeID(Integer.parseInt(cell.getStringCellValue()));
+						speciality.setCollegeId(Integer.parseInt(cell.getStringCellValue()));
 					} else if (c == 3) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
-						speciality.setSpeYearsID(Integer.parseInt(cell.getStringCellValue()));
+						speciality.setSpeYearsId(Integer.parseInt(cell.getStringCellValue()));
 					}
 				}
 			}
@@ -521,7 +559,7 @@ public class ReadExcel {
 				if (null != cell) {
 					if (c == 0) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
-						consellor.setConsellID(Integer.parseInt(cell.getStringCellValue()));
+						consellor.setConsellId(Integer.parseInt(cell.getStringCellValue()));
 					} else if (c == 1) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
 						consellor.setConsellName(cell.getStringCellValue());
@@ -570,16 +608,16 @@ public class ReadExcel {
 				if (null != cell) {
 					if (c == 0) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
-						classes.setClassID(Integer.parseInt(cell.getStringCellValue()));
+						classes.setClassId(Integer.parseInt(cell.getStringCellValue()));
 					} else if (c == 1) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
 						classes.setClassName(cell.getStringCellValue());
 					} else if (c == 2) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
-						classes.setSpeciID(Integer.parseInt(cell.getStringCellValue()));
+						classes.setSpeciId(Integer.parseInt(cell.getStringCellValue()));
 					} else if (c == 3) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
-						classes.setConsellID(Integer.parseInt(cell.getStringCellValue()));
+						classes.setConsellId(Integer.parseInt(cell.getStringCellValue()));
 					}
 				}
 			}
@@ -619,7 +657,7 @@ public class ReadExcel {
 				if (null != cell) {
 					if (c == 0) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
-						students.setStdID(Integer.parseInt(cell.getStringCellValue()));
+						students.setStdId(Integer.parseInt(cell.getStringCellValue()));
 					} else if (c == 1) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
 						students.setStdName(cell.getStringCellValue());
@@ -638,7 +676,7 @@ public class ReadExcel {
 						students.setParty(Boolean.parseBoolean(cell.getStringCellValue()));
 					} else if (c == 6) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
-						students.setClassID(Integer.parseInt(cell.getStringCellValue()));
+						students.setClassId(Integer.parseInt(cell.getStringCellValue()));
 					}
 				}
 			}
@@ -649,7 +687,7 @@ public class ReadExcel {
 	}
 
 	/**
-	 * 读取学生Excel里面信息
+	 * 读取工作人员Excel里面信息
 	 *
 	 * @param wb
 	 * @return
@@ -678,7 +716,7 @@ public class ReadExcel {
 				if (null != cell) {
 					if (c == 0) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
-						staffs.setStaffID(Integer.parseInt(cell.getStringCellValue()));
+						staffs.setStaffId(Integer.parseInt(cell.getStringCellValue()));
 					} else if (c == 1) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
 						staffs.setStaffName(cell.getStringCellValue());
@@ -703,6 +741,58 @@ public class ReadExcel {
 			staffList.add(staffs);
 		}
 		return staffList;
+	}
+
+	/**
+	 * 读取维修人员Excel里面信息
+	 *
+	 * @param wb
+	 * @return
+	 */
+	private List<Repairman> readRepairmanExcelValue(Workbook wb) {
+		// 得到第一个shell
+		Sheet sheet = wb.getSheetAt(0);
+
+		// 得到Excel的行数
+		this.totalRows = sheet.getPhysicalNumberOfRows();
+
+		// 得到Excel的列数(前提是有行数)
+		if (totalRows >= 1 && sheet.getRow(0) != null) {
+			this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
+		}
+		List<Repairman> repairmanList = new ArrayList<Repairman>();
+		// 循环Excel行数,从第二行开始。标题不入库
+		for (int r = 1; r < totalRows; r++) {
+			Repairman repairmans = new Repairman();
+			Row row = sheet.getRow(r).getCell(1).getRow();
+			if (row == null)
+				continue;
+			// 循环Excel的列,获取相关信息
+			for (int c = 0; c < this.totalCells; c++) {
+				Cell cell = row.getCell(c);
+				if (null != cell) {
+					if (c == 0) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						repairmans.setRepairmanId(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 1) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						repairmans.setRepairmanName(cell.getStringCellValue());
+					} else if (c == 2) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						repairmans.setRepairmanSex(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 3) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						repairmans.setRepairmanTel(cell.getStringCellValue());
+					} else if (c == 4) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						repairmans.setRepairType(Integer.parseInt(cell.getStringCellValue()));
+					}
+				}
+			}
+			// 添加
+			repairmanList.add(repairmans);
+		}
+		return repairmanList;
 	}
 
 }

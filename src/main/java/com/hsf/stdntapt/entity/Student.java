@@ -3,20 +3,20 @@ package com.hsf.stdntapt.entity;
 import java.util.Date;
 
 public class Student {
-	private int stdID;
+	private int stdId;
 	private String stdName;
 	private int stdSex;
 	private String stdTel;
 	private Date enterTime;
 	private boolean isParty;
-	private int classID;
+	private int classId;
 
-	public int getStdID() {
-		return stdID;
+	public int getStdId() {
+		return stdId;
 	}
 
-	public void setStdID(int stdID) {
-		this.stdID = stdID;
+	public void setStdId(int stdId) {
+		this.stdId = stdId;
 	}
 
 	public String getStdName() {
@@ -59,12 +59,12 @@ public class Student {
 		this.isParty = isParty;
 	}
 
-	public int getClassID() {
-		return classID;
+	public int getClassId() {
+		return classId;
 	}
 
-	public void setClassID(int classID) {
-		this.classID = classID;
+	public void setClassId(int classId) {
+		this.classId = classId;
 	}
 
 }
