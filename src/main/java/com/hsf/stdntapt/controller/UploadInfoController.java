@@ -1,7 +1,6 @@
 package com.hsf.stdntapt.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -9,8 +8,10 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hsf.stdntapt.entity.Apartment;
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
 import com.hsf.stdntapt.entity.Consellor;
@@ -20,6 +21,7 @@ import com.hsf.stdntapt.entity.Speciality;
 import com.hsf.stdntapt.entity.Staff;
 import com.hsf.stdntapt.entity.Student;
 import com.hsf.stdntapt.entity.User;
+import com.hsf.stdntapt.service.ApartmentService;
 import com.hsf.stdntapt.service.InfoService;
 import com.hsf.stdntapt.service.UserService;
 
@@ -33,17 +35,21 @@ public class UploadInfoController {
 	@Resource
 	UserService userService;
 
+	@Resource
+	ApartmentService apartmentService;
+
 	@RequiresRoles("admin")
-	@RequestMapping(value = "/uploadInfo.do")
+	@RequestMapping(value = "/uploadInfo")
 	public String uploadInfo() {
 		return "uploadInfo";
 	}
 
 	/** 接收上传的文件 */
 	@RequiresRoles("admin")
-	@RequestMapping(value = "/uploadInfoFromType.do")
+	@RequestMapping(value = "uploadInfoFromType", produces = "text/html;charset=UTF-8;")
+	@ResponseBody
 	public String uploadInfo(@RequestParam(value = "filename") MultipartFile file,
-			@RequestParam(value = "filetype") String type, Map<String, Object> map) {
+			@RequestParam(value = "filetype") String type) {
 		String msg = "";
 		// 获取文件名
 		String name = file.getOriginalFilename();
@@ -121,6 +127,13 @@ public class UploadInfoController {
 					userService.createUser(user);
 				}
 				msg = "解析成功,总共" + repairmanList.size() + "条!";
+			} else if (type.equals("apartment")) {
+				List<Apartment> apartList = infoService.getApartmentInfo(name, file);
+				for (int i = 0; i < apartList.size(); i++) {
+					Apartment apartment = new Apartment(apartList.get(i).getApartId(), apartList.get(i).getApartName());
+					apartmentService.createApartment(apartment);
+				}
+				msg = "解析成功,总共" + apartList.size() + "条!";
 			}
 		} catch (NullPointerException e) {
 			e.printStackTrace();
@@ -129,7 +142,6 @@ public class UploadInfoController {
 			e.printStackTrace();
 			msg = "导入失败......";
 		}
-		map.put("msg", msg);
-		return "uploadInfo";
+		return msg;
 	}
 }

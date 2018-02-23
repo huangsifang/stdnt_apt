@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hsf.stdntapt.dao.ApartmentDao">
+    <insert id="createApartment" parameterType="Apartment" useGeneratedKeys="true" keyProperty="apartment.apartId">
+        INSERT INTO apartment(
+        	<if test="apartment.apartId != null">apart_id,</if>
+	        <if test="apartment.apartName != null">apart_name</if>
+		) VALUES (
+	        <if test="apartment.apartId != null">#{apartment.apartId},</if>
+	        <if test="apartment.apartName != null">#{apartment.apartName}</if>
+		)
+    </insert>
+    
+    <update id="updateApartment" parameterType="Apartment" useGeneratedKeys="true" keyProperty="apartment.apartId">
+    	UPDATE apartment SET 
+    		apart_id = #{apartment.apartId}, 
+    		apart_name = #{apartment.apartName}
+    		where apart_id = #{apartment.apartId}
+    </update>
+    <delete id="deleteApartment" parameterType="int">
+		delete from apartment where apart_id=#{apartId}
+	</delete>
+	<select id="findOne" parameterType="int" resultType="Apartment">
+		select apart_id as apartId, apart_name as apartName from apartment where apart_id=#{apartId}
+    </select>
+    <select id="findAll" resultType="Apartment">
+    	select apart_id as apartId, apart_name as apartName from apartment
+    </select>
+</mapper>

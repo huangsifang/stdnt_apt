@@ -33,8 +33,8 @@ create table role (
 ) charset=utf8 ENGINE=InnoDB;
 create index idx_role_resource_ids on role(resource_ids);
 
-insert into role values(1, 'admin', '超级管理员', '11', true);
-insert into role values(2, 'staff', '宿舍管理员', '', true);
+insert into role values(1, 'admin', '超级管理员', '11,21', true);
+insert into role values(2, 'staff', '宿舍管理员', '21', true);
 insert into role values(3, 'consellor', '辅导员', '', true);
 insert into role values(4, 'student', '学生', '', true);
 insert into role values(5, 'repairman', '维修人员', '', true);
@@ -123,18 +123,15 @@ create table repairman(
 create table apartment(
 	apart_id int(3) unsigned not null primary key,
 	apart_name varchar(11) not null,
-	apart_num int(2) not null,
-	staff_id int(20) unsigned,
-	deleted bit not null default 0,
-	foreign key(staff_id) references staff(staff_id)
+	deleted bit not null default 0
 );
 
 create table apart_staff_relation(	
 	relation_id int(20) unsigned not null primary key auto_increment,
 	apart_id int(3) unsigned not null,
 	staff_id int(20) unsigned not null,
-	create datetime not null default current_timestamp,
-	leave datetime default null,
+	create_time datetime not null default current_timestamp,
+	leave_time datetime default null,
 	deleted bit not null default 0,
 	foreign key(apart_id) references apartment(apart_id),
 	foreign key(staff_id) references staff(staff_id)
@@ -164,9 +161,10 @@ create table dormitory(
 	dorm_no int(2) not null,
 	floor_id int(11) unsigned not null,
 	fee decimal(6,2) not null,
-	std_id int(20) foreign key references student(std_id),
+	leader_id int(20) unsigned not null,
 	deleted bit not null default 0,
-	foreign key(floor_id) references floor(floor_id)
+	foreign key(floor_id) references floor(floor_id),
+	foreign key(leader_id) references student(std_id)
 );
 
 create table bed(
@@ -177,8 +175,8 @@ create table bed(
 );
 
 create table activity_room(
-	actRoom_id int(11) unsigned not null primary key,
-	actRoom_no int(2) not null,
+	act_room_id int(11) unsigned not null primary key,
+	act_room_no int(2) not null,
 	floor_id int(11) unsigned not null,
 	deleted bit not null default 0,
 	foreign key(floor_id) references floor(floor_id)

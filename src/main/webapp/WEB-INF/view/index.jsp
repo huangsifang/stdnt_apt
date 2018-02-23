@@ -7,15 +7,16 @@
 <div>
     功能菜单<br/>
     <c:forEach items="${menus}" var="m">
-        <a href="${pageContext.request.contextPath}/${m.url}" target="content">${m.name}</a><br/>
+        <a href="${pageContext.request.contextPath}${m.url}" target="content">${m.name}</a><br/>
     </c:forEach>
 </div>
 <ul>
     <li><a href="dormDailyScore" />dormDailyScore</li>
     <li><a href="scoreMap" />scoreMap</li>
-    <li><a href="uploadInfo/uploadInfo.do" />uploadInfo</li>
+    <li><a href="uploadInfo/uploadInfo" />uploadInfo</li>
     <li><a href="login" />login</li>
     <li><a href="user" />user</li>
+    <li><a href="apartment" />apartment</li>
 </ul>
 </body>
 </html>

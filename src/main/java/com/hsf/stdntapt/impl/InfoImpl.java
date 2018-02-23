@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hsf.stdntapt.dao.ApartmentDao;
 import com.hsf.stdntapt.dao.ClassDao;
 import com.hsf.stdntapt.dao.CollegeDao;
 import com.hsf.stdntapt.dao.ConsellorDao;
@@ -17,6 +18,7 @@ import com.hsf.stdntapt.dao.SpecialityDao;
 import com.hsf.stdntapt.dao.StaffDao;
 import com.hsf.stdntapt.dao.StudentDao;
 import com.hsf.stdntapt.dao.UserDao;
+import com.hsf.stdntapt.entity.Apartment;
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
 import com.hsf.stdntapt.entity.Consellor;
@@ -57,6 +59,9 @@ public class InfoImpl implements InfoService {
 
 	@Resource
 	UserDao userDao;
+
+	@Resource
+	ApartmentDao apartmentDao;
 
 	@Override
 	public List<College> getCollegeInfo(String name, MultipartFile file) {
@@ -155,5 +160,12 @@ public class InfoImpl implements InfoService {
 	public void insertRepairmanList(int repairmanId, String repairmanName, int repairmanSex, String repairmanTel,
 			int repairType) {
 		repairmanDao.insertRepairmanList(repairmanId, repairmanName, repairmanSex, repairmanTel, repairType);
+	}
+
+	@Override
+	public List<Apartment> getApartmentInfo(String name, MultipartFile file) {
+		ReadExcel ReadExcel = new ReadExcel();
+		List<Apartment> excelInfo = ReadExcel.getApartmentExcelInfo(name, file);
+		return excelInfo;
 	}
 }

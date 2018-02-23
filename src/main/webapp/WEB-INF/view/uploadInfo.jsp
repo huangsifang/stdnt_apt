@@ -8,7 +8,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form id="QueryForm" action="uploadInfoFromType.do" method="post" enctype="multipart/form-data" onsubmit="return check();">
+	<form class="uploadForm" action="uploadInfoFromType" method="post" enctype="multipart/form-data">
 		<div class="row">
 		　　	<div class="col-sm-6" style="width: 50%;">
 		   		<div class="box box-primary">
@@ -26,7 +26,7 @@
        </div>
 	</form>
 	
-	<form id="QueryForm" action="uploadInfoFromType.do" method="post" enctype="multipart/form-data" onsubmit="return check();">
+	<form class="uploadForm" action="uploadInfoFromType" method="post" enctype="multipart/form-data">
 		<div class="row">
 		　　	<div class="col-sm-6" style="width: 50%;">
 		   		<div class="box box-primary">
@@ -44,7 +44,7 @@
        </div>
 	</form>
 	
-	<form id="QueryForm" action="uploadInfoFromType.do" method="post" enctype="multipart/form-data" onsubmit="return check();">
+	<form class="uploadForm" action="uploadInfoFromType" method="post" enctype="multipart/form-data">
 		<div class="row">
 		　　	<div class="col-sm-6" style="width: 50%;">
 		   		<div class="box box-primary">
@@ -62,7 +62,7 @@
        </div>
 	</form>
 	
-	<form id="QueryForm" action="uploadInfoFromType.do" method="post" enctype="multipart/form-data" onsubmit="return check();">
+	<form class="uploadForm" action="uploadInfoFromType" method="post" enctype="multipart/form-data">
 		<div class="row">
 		　　	<div class="col-sm-6" style="width: 50%;">
 		   		<div class="box box-primary">
@@ -80,7 +80,7 @@
        </div>
 	</form>
 	
-	<form id="QueryForm" action="uploadInfoFromType.do" method="post" enctype="multipart/form-data" onsubmit="return check();">
+	<form class="uploadForm" action="uploadInfoFromType" method="post" enctype="multipart/form-data">
 		<div class="row">
 		　　	<div class="col-sm-6" style="width: 50%;">
 		   		<div class="box box-primary">
@@ -98,7 +98,7 @@
        </div>
 	</form>
 	
-	<form id="QueryForm" action="uploadInfoFromType.do" method="post" enctype="multipart/form-data" onsubmit="return check();">
+	<form class="uploadForm" action="uploadInfoFromType" method="post" enctype="multipart/form-data">
 		<div class="row">
 		　　	<div class="col-sm-6" style="width: 50%;">
 		   		<div class="box box-primary">
@@ -116,7 +116,7 @@
        </div>
 	</form>
 	
-	<form id="QueryForm" action="uploadInfoFromType.do" method="post" enctype="multipart/form-data" onsubmit="return check();">
+	<form class="uploadForm" action="uploadInfoFromType" method="post" enctype="multipart/form-data">
 		<div class="row">
 		　　	<div class="col-sm-6" style="width: 50%;">
 		   		<div class="box box-primary">
@@ -134,7 +134,7 @@
        </div>
 	</form>
 	
-	<form id="QueryForm" action="uploadInfoFromType.do" method="post" enctype="multipart/form-data" onsubmit="return check();">
+	<form class="uploadForm" action="uploadInfoFromType" method="post" enctype="multipart/form-data">
 		<div class="row">
 		　　	<div class="col-sm-6" style="width: 50%;">
 		   		<div class="box box-primary">
@@ -151,5 +151,41 @@
 			</div>
        </div>
 	</form>
+	
+	<form class="uploadForm" action="uploadInfoFromType" method="post" enctype="multipart/form-data">
+		<div class="row">
+		　　	<div class="col-sm-6" style="width: 50%;">
+		   		<div class="box box-primary">
+		        	<div class="box-header with-border">
+		            	<h3 class="box-title">请选择上传的公寓文件:</h3>
+		                <div class="box-body">
+		　　　　　　　　　　　　  	<input class="excel_file" class="form-control" type="file" name="filename" accept="xlsx" size="80" />
+							<input class="file_type" class="form-control" name="filetype" value="apartment" hidden/>
+		                </div>
+		                <span class="box-title"><c:if test="${msg !=''}">${msg}</c:if></span>
+		 				<input class="btn btn-primary pull-right" type="submit" value="导入" />
+					</div>
+				</div>
+			</div>
+       </div>
+	</form>
 </body>
+<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
+<script src="${pageContext.request.contextPath}/public/js/jquery.form.min.js" ></script> 
+<script>
+	$(function() {
+		$(".uploadForm").ajaxForm({
+			beforeSubmit: function(formData, jqForm, options) {
+                return true; 
+            },
+			success: function(data){
+				alert(data);
+	        },
+	        error: function() {
+	        	alert('error');
+	        },
+	        resetForm: true        // 成功提交后，重置所有的表单元素的值
+		});
+    });
+</script> 
 </html>

@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hsf.stdntapt.entity.Apartment;
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
 import com.hsf.stdntapt.entity.Consellor;
@@ -373,6 +374,43 @@ public class ReadExcel {
 			if (wb != null) {
 				// 读取Excel里的信息
 				list = readRepairmanExcelValue(wb);
+			}
+
+			is.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					is = null;
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 读公寓EXCEL文件
+	 *
+	 * @param fileName
+	 * @return
+	 */
+	public List<Apartment> getApartmentExcelInfo(String fileName, MultipartFile Mfile) {
+		List<Apartment> list = new ArrayList<Apartment>();
+		// 初始化输入流
+		InputStream is = null;
+		try {
+			// 根据新建的文件实例化输入流
+			is = Mfile.getInputStream();
+
+			Workbook wb = checkfile(fileName, Mfile, is);
+
+			if (wb != null) {
+				// 读取Excel里的信息
+				list = readApartmentExcelValue(wb);
 			}
 
 			is.close();
@@ -793,6 +831,49 @@ public class ReadExcel {
 			repairmanList.add(repairmans);
 		}
 		return repairmanList;
+	}
+
+	/**
+	 * 读取公寓Excel里面信息
+	 *
+	 * @param wb
+	 * @return
+	 */
+	private List<Apartment> readApartmentExcelValue(Workbook wb) {
+		// 得到第一个shell
+		Sheet sheet = wb.getSheetAt(0);
+
+		// 得到Excel的行数
+		this.totalRows = sheet.getPhysicalNumberOfRows();
+
+		// 得到Excel的列数(前提是有行数)
+		if (totalRows >= 1 && sheet.getRow(0) != null) {
+			this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
+		}
+		List<Apartment> apartList = new ArrayList<Apartment>();
+		// 循环Excel行数,从第二行开始。标题不入库
+		for (int r = 1; r < totalRows; r++) {
+			Apartment apart = new Apartment();
+			Row row = sheet.getRow(r).getCell(1).getRow();
+			if (row == null)
+				continue;
+			// 循环Excel的列,获取相关信息
+			for (int c = 0; c < this.totalCells; c++) {
+				Cell cell = row.getCell(c);
+				if (null != cell) {
+					if (c == 0) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						apart.setApartId(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 1) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						apart.setApartName(cell.getStringCellValue());
+					}
+				}
+			}
+			// 添加
+			apartList.add(apart);
+		}
+		return apartList;
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.hsf.stdntapt.entity.Apartment;
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
 import com.hsf.stdntapt.entity.Consellor;
@@ -30,6 +31,8 @@ public interface InfoService {
 	public List<Staff> getStaffInfo(String name, MultipartFile file);
 
 	public List<Repairman> getRepairmanInfo(String name, MultipartFile file);
+
+	public List<Apartment> getApartmentInfo(String name, MultipartFile file);
 
 	public void insertCollegeList(int collegeId, String collegeName);
 
