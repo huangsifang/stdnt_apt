@@ -15,6 +15,7 @@ import com.hsf.stdntapt.entity.Apartment;
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
 import com.hsf.stdntapt.entity.Consellor;
+import com.hsf.stdntapt.entity.Floor;
 import com.hsf.stdntapt.entity.Repairman;
 import com.hsf.stdntapt.entity.SpeYears;
 import com.hsf.stdntapt.entity.Speciality;
@@ -130,8 +131,13 @@ public class UploadInfoController {
 			} else if (type.equals("apartment")) {
 				List<Apartment> apartList = infoService.getApartmentInfo(name, file);
 				for (int i = 0; i < apartList.size(); i++) {
-					Apartment apartment = new Apartment(apartList.get(i).getApartId(), apartList.get(i).getApartName());
+					Apartment apartment = new Apartment(apartList.get(i).getApartId(), apartList.get(i).getApartName(),
+							apartList.get(i).getFloorNum());
 					apartmentService.createApartment(apartment);
+					for (int j = 0; j < apartment.getFloorNum(); j++) {
+						Floor floor = new Floor(apartment.getApartId(), j + 1);
+						apartmentService.createFloor(floor);
+					}
 				}
 				msg = "解析成功,总共" + apartList.size() + "条!";
 			}

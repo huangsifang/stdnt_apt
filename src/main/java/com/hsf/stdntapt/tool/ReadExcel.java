@@ -867,6 +867,9 @@ public class ReadExcel {
 					} else if (c == 1) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
 						apart.setApartName(cell.getStringCellValue());
+					} else if (c == 2) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						apart.setFloorNum(Integer.parseInt(cell.getStringCellValue()));
 					}
 				}
 			}

@@ -17,6 +17,13 @@
             <form:label path="apartName">公寓名：</form:label>
             <form:input path="apartName"/>
         </div>
+        
+        <c:if test="${op eq '新增'}">
+            <div class="form-group">
+                <form:label path="floorNum">楼层数：</form:label>
+                <form:input path="floorNum"/>
+            </div>
+        </c:if>
 
         <form:button>${op}</form:button>
 

@@ -24,6 +24,44 @@
 		select apart_id as apartId, apart_name as apartName from apartment where apart_id=#{apartId}
     </select>
     <select id="findAll" resultType="Apartment">
-    	select apart_id as apartId, apart_name as apartName from apartment
+    	select apart_id as apartId, apart_name as apartName from apartment where deleted=0
+    </select>
+    
+    <insert id="createFloor" parameterType="Floor" useGeneratedKeys="true" keyProperty="floor.id">
+        INSERT INTO floor(
+        	<if test="floor.apartId != null">apart_id,</if>
+	        <if test="floor.floorNo != null">floor_no</if>
+		) VALUES (
+	        <if test="floor.apartId != null">#{floor.apartId},</if>
+	        <if test="floor.floorNo != null">#{floor.floorNo}</if>
+		)
+    </insert>
+    <insert id="createDorm" parameterType="Dormitory" useGeneratedKeys="true" keyProperty="dormitory.id">
+        INSERT INTO dormitory(
+        	<if test="dormitory.dormNo != null">dorm_no,</if>
+	        <if test="dormitory.floorId != null">floor_id,</if>
+	        <if test="dormitory.fee != null">fee,</if>
+	        <if test="dormitory.leaderId != null">leader_id</if>
+		) VALUES (
+	        <if test="dormitory.dormNo != null">#{dormitory.dormNo},</if>
+	        <if test="dormitory.floorId != null">#{dormitory.floorId},</if>
+	        <if test="dormitory.fee != null">#{dormitory.fee},</if>
+	        <if test="dormitory.leaderId != null">#{dormitory.leaderId}</if>
+		)
+    </insert>
+    <select id="findFloorNum" resultType="int">
+    	select count(*) from floor where apart_id=#{apartId} and deleted=0
+    </select>
+    <select id="findFloorAll" resultType="Floor">
+    	select id, apart_id as apartId, floor_no as floorNo from floor where apart_id=#{apartId} and deleted=0
+    </select>
+    <select id="findFloorDormNum" resultType="int">
+    	select count(*) from dormitory where floor_id=#{floorId} and deleted=0
+    </select>
+    <select id="findApartDormNum" resultType="int">
+    	select count(*) from dormitory where floor_id in (select id from floor where apart_id = #{apartId}) and deleted=0
+    </select>
+    <select id="findFloorDormAll" resultType="Dormitory">
+    	select dorm_no as dormNo, floor_id as floorId, fee, leader_id as leaderId from dormitory where floor_id=#{floorId} and deleted=0
     </select>
 </mapper>

@@ -1,5 +1,7 @@
 package com.hsf.stdntapt.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -8,9 +10,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hsf.stdntapt.entity.Apartment;
+import com.hsf.stdntapt.entity.Dormitory;
+import com.hsf.stdntapt.entity.Floor;
 import com.hsf.stdntapt.service.ApartmentService;
 
 @Controller
@@ -22,7 +27,12 @@ public class ApartmentController {
 	@RequiresPermissions("apartment:view")
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(Model model) {
-		model.addAttribute("apartList", apartmentService.findAll());
+		List<Apartment> apartList = apartmentService.findAll();
+		for (Apartment apart : apartList) {
+			apart.setFloorNum(apartmentService.findFloorNum(apart.getApartId()));
+			apart.setDormNum(apartmentService.findApartDormNum(apart.getApartId()));
+		}
+		model.addAttribute("apartList", apartList);
 		return "apartment/list";
 	}
 
@@ -38,6 +48,10 @@ public class ApartmentController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public String create(Apartment apartment, RedirectAttributes redirectAttributes) {
 		apartmentService.createApartment(apartment);
+		for (int i = 0; i < apartment.getFloorNum(); i++) {
+			Floor floor = new Floor(apartment.getApartId(), i + 1);
+			apartmentService.createFloor(floor);
+		}
 		redirectAttributes.addFlashAttribute("msg", "新增成功");
 		return "redirect:/apartment";
 	}
@@ -72,5 +86,32 @@ public class ApartmentController {
 		apartmentService.deleteApartment(id);
 		redirectAttributes.addFlashAttribute("msg", "删除成功");
 		return "redirect:/apartment";
+	}
+
+	@RequiresPermissions("apartment:view")
+	@RequestMapping(value = "/{id}/floor", method = RequestMethod.GET)
+	public String floorList(@PathVariable("id") int id, Model model) {
+		List<Floor> floorList = apartmentService.findFloorAll(id);
+		for (Floor floor : floorList) {
+			floor.setDormNum(apartmentService.findFloorDormNum(floor.getId()));
+			List<Dormitory> dormList = apartmentService.findFloorDormAll(floor.getId());
+			floor.setDormList(dormList);
+		}
+		model.addAttribute("floorList", floorList);
+		return "apartment/floor/list";
+	}
+
+	@RequiresPermissions("apartment:create")
+	@RequestMapping(value = "{apartId}/{floorId}/dorm/create", method = RequestMethod.POST)
+	public String dormCreate(@PathVariable("apartId") int apartId, @PathVariable("floorId") int floorId,
+			@RequestParam(value = "dormNum") int dormNum, @RequestParam(value = "currentDormNum") int currentDormNum,
+			RedirectAttributes redirectAttributes) {
+		for (int i = currentDormNum; i < dormNum; i++) {
+			Dormitory dorm = new Dormitory(i + 1, floorId);
+			dorm.setleaderId(1);
+			apartmentService.createDorm(dorm);
+		}
+		redirectAttributes.addFlashAttribute("msg", "新增成功");
+		return "redirect:/apartment/" + apartId + "/floor";
 	}
 }

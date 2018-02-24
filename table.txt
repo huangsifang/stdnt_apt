@@ -138,7 +138,7 @@ create table apart_staff_relation(
 );
 
 create table floor(
-	floor_id int(11) unsigned not null primary key,
+	id int(20) unsigned not null primary key auto_increment,
 	apart_id int(3) unsigned not null,
 	floor_no int(2) not null,
 	deleted bit not null default 0,
@@ -152,18 +152,18 @@ create table floor_leader_relation(
 	create datetime not null default current_timestamp,
 	leave datetime default null,
 	deleted bit not null default 0,
-	foreign key(floor_id) references floor(floor_id),
+	foreign key(floor_id) references floor(id),
 	foreign key(std_id) references student(std_id)
 );
 
 create table dormitory(
-	dorm_id int(11) unsigned not null primary key,
+	id int(20) unsigned not null primary key auto_increment,
 	dorm_no int(2) not null,
 	floor_id int(11) unsigned not null,
-	fee decimal(6,2) not null,
-	leader_id int(20) unsigned not null,
+	fee decimal(6,2),
+	leader_id int(20) unsigned,
 	deleted bit not null default 0,
-	foreign key(floor_id) references floor(floor_id),
+	foreign key(floor_id) references floor(id),
 	foreign key(leader_id) references student(std_id)
 );
 
@@ -171,7 +171,7 @@ create table bed(
 	bed_id int(11) unsigned not null primary key,
 	dorm_id int(11) unsigned not null,
 	deleted bit not null default 0,
-	foreign key(dorm_id) references dormitory(dorm_id)
+	foreign key(dorm_id) references dormitory(id)
 );
 
 create table activity_room(
@@ -179,5 +179,5 @@ create table activity_room(
 	act_room_no int(2) not null,
 	floor_id int(11) unsigned not null,
 	deleted bit not null default 0,
-	foreign key(floor_id) references floor(floor_id)
+	foreign key(floor_id) references floor(id)
 );

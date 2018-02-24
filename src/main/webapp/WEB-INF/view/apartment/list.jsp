@@ -40,6 +40,8 @@
         <tr>
             <th>公寓号</th>
             <th>公寓名</th>
+            <th>楼层数</th>
+            <th>宿舍数</th>
             <th>操作</th>
         </tr>
     </thead>
@@ -48,6 +50,8 @@
             <tr>
                 <td>${apart.apartId}</td>
                 <td>${apart.apartName}</td>
+                <td><a href="apartment/${apart.apartId}/floor">${apart.floorNum}</a></td>
+                <td>${apart.dormNum}</td>
                 <td>
                     <shiro:hasPermission name="apartment:update">
                         <a href="apartment/${apart.apartId}/update">修改</a>
