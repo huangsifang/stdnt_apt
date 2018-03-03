@@ -30,4 +30,8 @@ public interface ApartmentService {
 	public int findApartDormNum(int apartId);
 
 	List<Dormitory> findFloorDormAll(int floorId);
+
+	public Dormitory findOneDorm(int dormId);
+
+	public int updateDorm(Dormitory dorm);
 }

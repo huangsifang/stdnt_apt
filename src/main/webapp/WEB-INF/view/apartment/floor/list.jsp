@@ -35,7 +35,7 @@
                 </td>
                 <td>
                 	<c:forEach items="${floor.dormList}" var="dorm">
-                		<a href="#">${dorm.dormNo}</a>
+                		<a href="${pageContext.request.contextPath}/apartment/dorm/${dorm.id}">${dorm.dormNo}</a>
                 	</c:forEach>
                 </td>
             </tr>

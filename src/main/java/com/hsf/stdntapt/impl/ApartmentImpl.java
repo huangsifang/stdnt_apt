@@ -76,4 +76,14 @@ public class ApartmentImpl implements ApartmentService {
 	public List<Dormitory> findFloorDormAll(int floorId) {
 		return apartmentDao.findFloorDormAll(floorId);
 	}
+
+	@Override
+	public Dormitory findOneDorm(int dormId) {
+		return apartmentDao.findOneDorm(dormId);
+	}
+
+	@Override
+	public int updateDorm(Dormitory dorm) {
+		return apartmentDao.updateDorm(dorm);
+	}
 }

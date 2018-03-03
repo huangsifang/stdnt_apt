@@ -62,6 +62,15 @@
     	select count(*) from dormitory where floor_id in (select id from floor where apart_id = #{apartId}) and deleted=0
     </select>
     <select id="findFloorDormAll" resultType="Dormitory">
-    	select dorm_no as dormNo, floor_id as floorId, fee, leader_id as leaderId from dormitory where floor_id=#{floorId} and deleted=0
+    	select id, dorm_no as dormNo, floor_id as floorId, fee, leader_id as leaderId from dormitory where floor_id=#{floorId} and deleted=0
     </select>
+    <select id="findOneDorm" parameterType="int" resultType="Dormitory">
+    	select id, dorm_no as dormNo, floor_id as floorId, fee, leader_id as leaderId from dormitory where id=#{dormId} and deleted=0
+    </select>
+    <update id="updateDorm" parameterType="Dormitory" useGeneratedKeys="true" keyProperty="dorm.id">
+    	UPDATE dormitory SET 
+    		fee = #{dorm.fee}, 
+    		leader_id = #{dorm.leaderId}
+    		where id = #{dorm.id}
+    </update>
 </mapper>

@@ -33,4 +33,8 @@ public interface ApartmentDao {
 	public int findApartDormNum(@Param("apartId") int apartId);
 
 	List<Dormitory> findFloorDormAll(int floorId);
+
+	public Dormitory findOneDorm(@Param("dormId") int dormId);
+
+	public int updateDorm(@Param("dorm") Dormitory dorm);
 }

@@ -8,6 +8,7 @@ public class Dormitory {
 	private int floorId;
 	private BigDecimal fee;
 	private int leaderId;
+	private String leaderName;
 	private boolean deleted = Boolean.FALSE;
 
 	public Dormitory() {
@@ -50,12 +51,20 @@ public class Dormitory {
 		this.fee = fee;
 	}
 
-	public int getleaderId() {
+	public int getLeaderId() {
 		return leaderId;
 	}
 
-	public void setleaderId(int leaderId) {
+	public void setLeaderId(int leaderId) {
 		this.leaderId = leaderId;
+	}
+
+	public String getLeaderName() {
+		return leaderName;
+	}
+
+	public void setLeaderName(String leaderName) {
+		this.leaderName = leaderName;
 	}
 
 	public boolean isDeleted() {

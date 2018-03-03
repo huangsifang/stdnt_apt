@@ -1,5 +1,6 @@
 package com.hsf.stdntapt.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -11,18 +12,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hsf.stdntapt.entity.Apartment;
 import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
+import com.hsf.stdntapt.entity.Student;
 import com.hsf.stdntapt.service.ApartmentService;
+import com.hsf.stdntapt.service.StudentService;
 
 @Controller
 @RequestMapping("/apartment")
 public class ApartmentController {
 	@Resource
 	ApartmentService apartmentService;
+
+	@Resource
+	StudentService studentService;
 
 	@RequiresPermissions("apartment:view")
 	@RequestMapping(method = RequestMethod.GET)
@@ -108,10 +115,40 @@ public class ApartmentController {
 			RedirectAttributes redirectAttributes) {
 		for (int i = currentDormNum; i < dormNum; i++) {
 			Dormitory dorm = new Dormitory(i + 1, floorId);
-			dorm.setleaderId(1);
+			dorm.setLeaderId(1);
 			apartmentService.createDorm(dorm);
 		}
 		redirectAttributes.addFlashAttribute("msg", "新增成功");
 		return "redirect:/apartment/" + apartId + "/floor";
+	}
+
+	@RequiresPermissions("apartment:view")
+	@RequestMapping(value = "dorm/{dormId}", method = RequestMethod.GET)
+	public String dormDetail(@PathVariable("dormId") int dormId, Model model) {
+		Dormitory dorm = apartmentService.findOneDorm(dormId);
+		Student std = studentService.findOneStd(dorm.getLeaderId());
+		dorm.setLeaderName(std.getStdName());
+		model.addAttribute("dorm", dorm);
+		return "apartment/floor/dorm";
+	}
+
+	@RequiresPermissions("apartment:update")
+	@RequestMapping(value = "/dorm/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String updateDorm(@RequestParam("dormId") int dormId, @RequestParam("fee") BigDecimal fee,
+			@RequestParam("leaderId") int leaderId) {
+		String msg = "";
+		try {
+			Dormitory dorm = new Dormitory();
+			dorm.setId(dormId);
+			dorm.setFee(fee);
+			dorm.setLeaderId(leaderId);
+			apartmentService.updateDorm(dorm);
+			msg = "修改成功!";
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "修改失败！";
+		}
+		return msg;
 	}
 }
