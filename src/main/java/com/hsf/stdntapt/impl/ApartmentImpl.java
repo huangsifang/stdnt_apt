@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.hsf.stdntapt.dao.ApartmentDao;
 import com.hsf.stdntapt.entity.Apartment;
+import com.hsf.stdntapt.entity.Bed;
 import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
 import com.hsf.stdntapt.service.ApartmentService;
@@ -85,5 +86,20 @@ public class ApartmentImpl implements ApartmentService {
 	@Override
 	public int updateDorm(Dormitory dorm) {
 		return apartmentDao.updateDorm(dorm);
+	}
+
+	@Override
+	public List<Bed> findBedsFromDorm(int dormId) {
+		return apartmentDao.findBedsFromDorm(dormId);
+	}
+
+	@Override
+	public int createBed(Bed bed) {
+		return apartmentDao.createBed(bed);
+	}
+
+	@Override
+	public int updateDormStd(Bed bed) {
+		return apartmentDao.updateDormStd(bed);
 	}
 }

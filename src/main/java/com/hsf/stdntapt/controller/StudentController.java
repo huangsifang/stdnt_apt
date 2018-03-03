@@ -23,7 +23,6 @@ public class StudentController {
 	@ResponseBody
 	public String studentName(@RequestParam(value = "stdId") int stdId) {
 		Student std = studentService.findOneStd(stdId);
-		System.out.println(std.getStdName());
 		return std.getStdName();
 	}
 }

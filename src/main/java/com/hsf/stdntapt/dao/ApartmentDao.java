@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.hsf.stdntapt.entity.Apartment;
+import com.hsf.stdntapt.entity.Bed;
 import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
 
@@ -37,4 +38,10 @@ public interface ApartmentDao {
 	public Dormitory findOneDorm(@Param("dormId") int dormId);
 
 	public int updateDorm(@Param("dorm") Dormitory dorm);
+
+	public List<Bed> findBedsFromDorm(@Param("dormId") int dormId);
+
+	public int createBed(@Param("bed") Bed bed);
+
+	public int updateDormStd(@Param("bed") Bed bed);
 }

@@ -73,4 +73,24 @@
     		leader_id = #{dorm.leaderId}
     		where id = #{dorm.id}
     </update>
+    <select id="findBedsFromDorm" resultType="Bed">
+    	select bed_id as bedId, dorm_id as dormId, std_id as stdId from bed where dorm_id=#{dormId} and deleted=0
+    </select>
+    <insert id="createBed" parameterType="Bed" useGeneratedKeys="true" keyProperty="bed.bedId">
+        INSERT INTO bed(
+        	<if test="bed.bedId != null">bed_id,</if>
+	        <if test="bed.dormId != null">dorm_id,</if>
+	        <if test="bed.stdId != null">std_id</if>
+		) VALUES (
+	        <if test="bed.bedId != null">#{bed.bedId},</if>
+	        <if test="bed.dormId != null">#{bed.dormId},</if>
+	        <if test="bed.stdId != null">#{bed.stdId}</if>
+		)
+    </insert>
+    <update id="updateDormStd" parameterType="Bed" useGeneratedKeys="true" keyProperty="bed.stdId">
+    	UPDATE bed SET 
+    		std_id = #{bed.stdId}
+    		where bed_id = #{bed.bedId} 
+    		and dorm_id = #{bed.dormId}
+    </update>
 </mapper>

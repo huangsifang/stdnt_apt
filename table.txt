@@ -168,10 +168,13 @@ create table dormitory(
 );
 
 create table bed(
-	bed_id int(11) unsigned not null primary key,
+	bed_id int(11) unsigned not null,
 	dorm_id int(11) unsigned not null,
+	std_id int(20) unsigned,
 	deleted bit not null default 0,
-	foreign key(dorm_id) references dormitory(id)
+	primary key(bed_id, dorm_id),
+	foreign key(dorm_id) references dormitory(id),
+	foreign key(std_id) references student(std_id)
 );
 
 create table activity_room(

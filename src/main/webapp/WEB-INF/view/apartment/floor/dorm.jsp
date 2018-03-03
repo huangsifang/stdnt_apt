@@ -22,9 +22,30 @@
 	<span id="leaderName">${dorm.leaderName}</span><br/>
 	<button type="button" id="dormUpdateBtn">提交</button>
 </form>
+<c:forEach items="${bedList}" var="bed">
+	${bed.bedId}号床，
+	学号：${bed.stdId}，
+	姓名：${bed.stdName}
+	<button type="button" onClick="changeBedStd(${bed.bedId}, ${bed.dormId}, ${bed.stdId}, '${bed.stdName}')">修改</button><br />
+</c:forEach>
+
+<form id="dormStdForm" action="" method="post">
+	<input type="number" name="bedId" id="bedId" hidden/>
+	<input type="number" name="dormId" id="dormId" hidden/>
+	学号：<input type="number" name="stdId" id="stdId"/><br />
+	姓名：<span id="stdName"></span><br />
+	<button type="button" id="dormStdChangeBtn">确定</button>
+</form>
 </body>
 <script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script> 
 <script>
+	function changeBedStd(bedId, dormId, stdId, stdName) {
+		$("#bedId").val(bedId);
+		$("#dormId").val(dormId);
+		$("#stdId").val(stdId);
+		$("#stdName").text(stdName);
+	}
+	
 	$(function() {
 		$("#dormUpdateBtn").click(function() {
 			$.ajax({
@@ -32,6 +53,21 @@
 				datatype: "text",
 				url: "update",
 				data: $("#dormForm").serializeArray(),
+				contentType: "application/x-www-form-urlencoded",
+				success: function(data) {
+					alert(data);
+				},
+				error: function() {
+		        	alert('error');
+		        }
+			});
+		});
+		$("#dormStdChangeBtn").click(function() {
+			$.ajax({
+				type: "POST",
+				datatype: "text",
+				url: "student/update",
+				data: $("#dormStdForm").serializeArray(),
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
 					alert(data);
@@ -51,6 +87,22 @@
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
 					$("#leaderName").text(data);
+				},
+				error: function() {
+		        	alert('error');
+		        }
+			});
+		});
+		$("#stdId").change(function(){
+			var stdId = $("#stdId").val();
+			$.ajax({
+				type: "GET",
+				datatype: "json",
+				url: getRootPath() + "/student/stdName",
+				data: {stdId: stdId},
+				contentType: "application/x-www-form-urlencoded",
+				success: function(data) {
+					$("#stdName").text(data);
 				},
 				error: function() {
 		        	alert('error');

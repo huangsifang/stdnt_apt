@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hsf.stdntapt.entity.Apartment;
+import com.hsf.stdntapt.entity.Bed;
 import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
 import com.hsf.stdntapt.entity.Student;
@@ -25,6 +26,7 @@ import com.hsf.stdntapt.service.StudentService;
 @Controller
 @RequestMapping("/apartment")
 public class ApartmentController {
+
 	@Resource
 	ApartmentService apartmentService;
 
@@ -112,11 +114,16 @@ public class ApartmentController {
 	@RequestMapping(value = "{apartId}/{floorId}/dorm/create", method = RequestMethod.POST)
 	public String dormCreate(@PathVariable("apartId") int apartId, @PathVariable("floorId") int floorId,
 			@RequestParam(value = "dormNum") int dormNum, @RequestParam(value = "currentDormNum") int currentDormNum,
-			RedirectAttributes redirectAttributes) {
+			@RequestParam(value = "aDormBedNum") int aDormBedNum, RedirectAttributes redirectAttributes) {
 		for (int i = currentDormNum; i < dormNum; i++) {
 			Dormitory dorm = new Dormitory(i + 1, floorId);
 			dorm.setLeaderId(1);
 			apartmentService.createDorm(dorm);
+			for (int j = 0; j < aDormBedNum; j++) {
+				Bed bed = new Bed(j + 1, dorm.getId());
+				bed.setStdId(1);
+				apartmentService.createBed(bed);
+			}
 		}
 		redirectAttributes.addFlashAttribute("msg", "新增成功");
 		return "redirect:/apartment/" + apartId + "/floor";
@@ -126,9 +133,19 @@ public class ApartmentController {
 	@RequestMapping(value = "dorm/{dormId}", method = RequestMethod.GET)
 	public String dormDetail(@PathVariable("dormId") int dormId, Model model) {
 		Dormitory dorm = apartmentService.findOneDorm(dormId);
-		Student std = studentService.findOneStd(dorm.getLeaderId());
-		dorm.setLeaderName(std.getStdName());
+		Student leader = studentService.findOneStd(dorm.getLeaderId());
+		dorm.setLeaderName(leader.getStdName());
 		model.addAttribute("dorm", dorm);
+		List<Bed> bedList = apartmentService.findBedsFromDorm(dormId);
+		for (Bed bed : bedList) {
+			if (bed.getStdId() > 0) {
+				Student std = studentService.findOneStd(bed.getStdId());
+				if (std != null) {
+					bed.setStdName(std.getStdName());
+				}
+			}
+		}
+		model.addAttribute("bedList", bedList);
 		return "apartment/floor/dorm";
 	}
 
@@ -144,6 +161,24 @@ public class ApartmentController {
 			dorm.setFee(fee);
 			dorm.setLeaderId(leaderId);
 			apartmentService.updateDorm(dorm);
+			msg = "修改成功!";
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "修改失败！";
+		}
+		return msg;
+	}
+
+	@RequiresPermissions("apartment:update")
+	@RequestMapping(value = "/dorm/student/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String updateDormStd(@RequestParam("bedId") int bedId, @RequestParam("dormId") int dormId,
+			@RequestParam("stdId") int stdId) {
+		String msg = "";
+		try {
+			Bed bed = new Bed(bedId, dormId);
+			bed.setStdId(stdId);
+			apartmentService.updateDormStd(bed);
 			msg = "修改成功!";
 		} catch (Exception e) {
 			e.printStackTrace();

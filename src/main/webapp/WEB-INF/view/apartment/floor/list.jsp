@@ -26,12 +26,8 @@
             <tr>
                 <td>${floor.floorNo}</td>
                 <td>
-                	${floor.dormNum}
-                	<form action="${floor.id}/dorm/create" method="post">
-                		<input type="number" name="dormNum" value="${floor.dormNum}"/>
-                		<input type="number" name="currentDormNum" value="${floor.dormNum}" hidden/>
-                		<button type="submit">提交</button>
-                	</form>
+                	<span>${floor.dormNum}</span>
+                	<button type="button" onClick="showNumForm(${floor.id},${floor.dormNum})">修改</button>
                 </td>
                 <td>
                 	<c:forEach items="${floor.dormList}" var="dorm">
@@ -42,5 +38,19 @@
         </c:forEach>
     </tbody>
 </table>
+<form id="dormBedNumForm" method="post">
+	宿舍数量：<input id="dormNum" type="number" name="dormNum"/><br />
+	<input id="currentDormNum" type="number" name="currentDormNum" hidden/>
+	床位数量/宿舍：<input type="number" name="aDormBedNum" value="4"/>
+	<button type="submit">提交</button>
+</form>
 </body>
+<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script> 
+<script>
+function showNumForm(floorId, dormNum) {
+	$("#dormBedNumForm").attr("action",floorId+"/dorm/create");
+	$("#dormNum").val(dormNum);
+	$("#currentDormNum").val(dormNum);
+}
+</script>
 </html>
