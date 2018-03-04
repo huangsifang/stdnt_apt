@@ -114,18 +114,39 @@ public class ApartmentController {
 	@RequestMapping(value = "{apartId}/{floorId}/dorm/create", method = RequestMethod.POST)
 	public String dormCreate(@PathVariable("apartId") int apartId, @PathVariable("floorId") int floorId,
 			@RequestParam(value = "dormNum") int dormNum, @RequestParam(value = "currentDormNum") int currentDormNum,
-			@RequestParam(value = "aDormBedNum") int aDormBedNum, RedirectAttributes redirectAttributes) {
-		for (int i = currentDormNum; i < dormNum; i++) {
-			Dormitory dorm = new Dormitory(i + 1, floorId);
-			dorm.setLeaderId(1);
-			apartmentService.createDorm(dorm);
-			for (int j = 0; j < aDormBedNum; j++) {
-				Bed bed = new Bed(j + 1, dorm.getId());
+			@RequestParam(value = "aDormBedNum") int aDormBedNum, @RequestParam(value = "dormFee") BigDecimal dormFee,
+			RedirectAttributes redirectAttributes) {
+		int dormId = 0;
+		String msg = "新增成功";
+		for (int i = 0; i < dormNum; i++) {
+			if (i >= currentDormNum) { // 新增宿舍
+				Dormitory dorm = new Dormitory(i + 1, floorId);
+				dorm.setFee(dormFee);
+				dorm.setLeaderId(1);
+				apartmentService.createDorm(dorm);
+				dormId = dorm.getId();
+			} else { // 获取已有的宿舍Id
+				Dormitory dorm = apartmentService.findByDormNoFloorId(i + 1, floorId);
+				if (dorm != null) {
+					dormId = dorm.getId();
+				} else {
+					msg = "新增失败";
+					break;
+				}
+			}
+			/* 新增床位 */
+			int dormBedNum = apartmentService.getDormBedNum(dormId);
+			if (dormNum <= currentDormNum && aDormBedNum <= dormBedNum) {
+				msg = "没有任何新增宿舍或床位";
+				break;
+			}
+			for (int j = dormBedNum; j < aDormBedNum; j++) {
+				Bed bed = new Bed(j + 1, dormId);
 				bed.setStdId(1);
 				apartmentService.createBed(bed);
 			}
 		}
-		redirectAttributes.addFlashAttribute("msg", "新增成功");
+		redirectAttributes.addFlashAttribute("msg", msg);
 		return "redirect:/apartment/" + apartId + "/floor";
 	}
 

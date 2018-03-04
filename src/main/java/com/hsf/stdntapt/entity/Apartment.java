@@ -1,10 +1,15 @@
 package com.hsf.stdntapt.entity;
 
+import java.math.BigDecimal;
+
 public class Apartment {
 	private int apartId;
 	private String apartName;
 	private int floorNum;
 	private int dormNum;
+	private int aFloorDormNum;
+	private int aDormBedNum;
+	private BigDecimal aStdYearFee;
 	private boolean deleted = Boolean.FALSE;
 
 	public Apartment() {
@@ -46,6 +51,30 @@ public class Apartment {
 
 	public void setDormNum(int dormNum) {
 		this.dormNum = dormNum;
+	}
+
+	public int getaFloorDormNum() {
+		return aFloorDormNum;
+	}
+
+	public void setaFloorDormNum(int aFloorDormNum) {
+		this.aFloorDormNum = aFloorDormNum;
+	}
+
+	public int getaDormBedNum() {
+		return aDormBedNum;
+	}
+
+	public void setaDormBedNum(int aDormBedNum) {
+		this.aDormBedNum = aDormBedNum;
+	}
+
+	public BigDecimal getaStdYearFee() {
+		return aStdYearFee;
+	}
+
+	public void setaStdYearFee(BigDecimal aStdYearFee) {
+		this.aStdYearFee = aStdYearFee;
 	}
 
 	public boolean getDeleted() {

@@ -34,6 +34,8 @@ public interface ApartmentService {
 
 	public Dormitory findOneDorm(int dormId);
 
+	public Dormitory findByDormNoFloorId(int dormNo, int floorId);
+
 	public int updateDorm(Dormitory dorm);
 
 	List<Bed> findBedsFromDorm(int dormId);
@@ -41,4 +43,6 @@ public interface ApartmentService {
 	public int createBed(Bed bed);
 
 	public int updateDormStd(Bed bed);
+
+	public int getDormBedNum(int dormId);
 }

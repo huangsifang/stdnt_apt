@@ -84,6 +84,11 @@ public class ApartmentImpl implements ApartmentService {
 	}
 
 	@Override
+	public Dormitory findByDormNoFloorId(int dormNo, int floorId) {
+		return apartmentDao.findByDormNoFloorId(dormNo, floorId);
+	}
+
+	@Override
 	public int updateDorm(Dormitory dorm) {
 		return apartmentDao.updateDorm(dorm);
 	}
@@ -101,5 +106,10 @@ public class ApartmentImpl implements ApartmentService {
 	@Override
 	public int updateDormStd(Bed bed) {
 		return apartmentDao.updateDormStd(bed);
+	}
+
+	@Override
+	public int getDormBedNum(int dormId) {
+		return apartmentDao.getDormBedNum(dormId);
 	}
 }

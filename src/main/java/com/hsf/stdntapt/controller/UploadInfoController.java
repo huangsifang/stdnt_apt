@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.hsf.stdntapt.entity.Apartment;
+import com.hsf.stdntapt.entity.Bed;
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
 import com.hsf.stdntapt.entity.Consellor;
+import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
 import com.hsf.stdntapt.entity.Repairman;
 import com.hsf.stdntapt.entity.SpeYears;
@@ -137,6 +139,17 @@ public class UploadInfoController {
 					for (int j = 0; j < apartment.getFloorNum(); j++) {
 						Floor floor = new Floor(apartment.getApartId(), j + 1);
 						apartmentService.createFloor(floor);
+						for (int k = 0; k < apartList.get(i).getaFloorDormNum(); k++) {
+							Dormitory dorm = new Dormitory(k + 1, floor.getId());
+							dorm.setFee(apartList.get(i).getaStdYearFee());
+							dorm.setLeaderId(1);
+							apartmentService.createDorm(dorm);
+							for (int z = 0; z < apartList.get(i).getaDormBedNum(); z++) {
+								Bed bed = new Bed(z + 1, dorm.getId());
+								bed.setStdId(1);
+								apartmentService.createBed(bed);
+							}
+						}
 					}
 				}
 				msg = "解析成功,总共" + apartList.size() + "条!";

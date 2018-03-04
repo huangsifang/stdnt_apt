@@ -37,6 +37,8 @@ public interface ApartmentDao {
 
 	public Dormitory findOneDorm(@Param("dormId") int dormId);
 
+	public Dormitory findByDormNoFloorId(@Param("dormNo") int dormNo, @Param("floorId") int floorId);
+
 	public int updateDorm(@Param("dorm") Dormitory dorm);
 
 	public List<Bed> findBedsFromDorm(@Param("dormId") int dormId);
@@ -44,4 +46,6 @@ public interface ApartmentDao {
 	public int createBed(@Param("bed") Bed bed);
 
 	public int updateDormStd(@Param("bed") Bed bed);
+
+	public int getDormBedNum(@Param("dormId") int dormId);
 }

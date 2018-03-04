@@ -2,6 +2,7 @@ package com.hsf.stdntapt.tool;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -870,6 +871,15 @@ public class ReadExcel {
 					} else if (c == 2) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
 						apart.setFloorNum(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 3) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						apart.setaFloorDormNum(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 4) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						apart.setaDormBedNum(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 5) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						apart.setaStdYearFee(new BigDecimal(cell.getStringCellValue()));
 					}
 				}
 			}

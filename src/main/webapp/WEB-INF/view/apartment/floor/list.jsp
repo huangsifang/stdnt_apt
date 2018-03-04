@@ -10,7 +10,7 @@
 欢迎[<shiro:principal/>]登录成功！<a href="logout">退出</a>
 
 <c:if test="${not empty msg}">
-    <div>${msg}</div>
+	<script>alert("${msg}")</script>
 </c:if>
 
 <table class="table">
@@ -41,7 +41,8 @@
 <form id="dormBedNumForm" method="post">
 	宿舍数量：<input id="dormNum" type="number" name="dormNum"/><br />
 	<input id="currentDormNum" type="number" name="currentDormNum" hidden/>
-	床位数量/宿舍：<input type="number" name="aDormBedNum" value="4"/>
+	床位数量/宿舍：<input type="number" name="aDormBedNum" value="4"/><br />
+	费用/床：<input type="number" name="dormFee" value="1200"/><br />
 	<button type="submit">提交</button>
 </form>
 </body>
