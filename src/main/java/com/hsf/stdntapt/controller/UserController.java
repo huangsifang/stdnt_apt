@@ -13,14 +13,6 @@ import com.hsf.stdntapt.entity.User;
 import com.hsf.stdntapt.service.RoleService;
 import com.hsf.stdntapt.service.UserService;
 
-/**
- * <p>
- * User: Zhang Kaitao
- * <p>
- * Date: 14-2-14
- * <p>
- * Version: 1.0
- */
 @Controller
 @RequestMapping("/user")
 public class UserController {

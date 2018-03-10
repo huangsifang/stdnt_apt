@@ -17,6 +17,8 @@ public interface ApartmentService {
 
 	public List<Staff> findApartStaffs(int apartId);
 
+	public List<Apartment> findStaffAparts(int staffId);
+
 	public Staff findApartStaff(int apartId, int staffId);
 
 	public int createApartStaff(int apartId, int staffId);
@@ -26,6 +28,10 @@ public interface ApartmentService {
 	Apartment findOne(int apartId);
 
 	public int createFloor(Floor floor);
+
+	public Floor findFloorFromDormId(int dormId);
+
+	public Apartment findApartFromFloorId(int floorId);
 
 	public int createDorm(Dormitory dormitory);
 

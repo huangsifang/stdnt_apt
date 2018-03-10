@@ -34,7 +34,7 @@ create table role (
 create index idx_role_resource_ids on role(resource_ids);
 
 insert into role values(1, 'admin', '超级管理员', '11,21', true);
-insert into role values(2, 'staff', '宿舍管理员', '21', true);
+insert into role values(2, 'staff', '宿舍管理员', '22,23,25', true);
 insert into role values(3, 'consellor', '辅导员', '', true);
 insert into role values(4, 'student', '学生', '', true);
 insert into role values(5, 'repairman', '维修人员', '', true);
@@ -47,6 +47,16 @@ insert into resource values(12, '用户新增', 'button', '', 11, '0/1/11/', 'user:c
 insert into resource values(13, '用户修改', 'button', '', 11, '0/1/11/', 'user:update', true);
 insert into resource values(14, '用户删除', 'button', '', 11, '0/1/11/', 'user:delete', true);
 insert into resource values(15, '用户查看', 'button', '', 11, '0/1/11/', 'user:view', true);
+insert into resource values(21, '公寓管理', 'menu', '/apartment', 1, '0/1/', 'apartment:*', true);
+insert into resource values(22, '公寓新增', 'button', '', 21, '0/1/21/', 'apartment:create', true);
+insert into resource values(23, '公寓修改', 'button', '', 21, '0/1/21/', 'apartment:update', true);
+insert into resource values(24, '公寓删除', 'button', '', 21, '0/1/21/', 'apartment:delete', true);
+insert into resource values(25, '公寓查看', 'button', '', 21, '0/1/21/', 'apartment:view', true);
+insert into resource values(31, '打分管理', 'menu', '/score', 1, '0/1/', 'score:*', true);
+insert into resource values(32, '打分新增', 'button', '', 31, '0/1/31/', 'score:create', true);
+insert into resource values(33, '打分修改', 'button', '', 31, '0/1/31/', 'score:update', true);
+insert into resource values(34, '打分删除', 'button', '', 31, '0/1/31/', 'score:delete', true);
+insert into resource values(35, '打分查看', 'button', '', 31, '0/1/31/', 'score:view', true);
 
 create table college(
 	college_id int(4) unsigned not null primary key,
@@ -183,4 +193,16 @@ create table activity_room(
 	floor_id int(11) unsigned not null,
 	deleted bit not null default 0,
 	foreign key(floor_id) references floor(id)
+);
+
+
+create table dorm_score(
+	id int(5) unsigned not null primary key auto_increment,
+	dorm_id int(20) unsigned not null,
+	staff_id int(20) unsigned not null,
+	create_time datetime not null default current_timestamp,
+	score int(3),
+	deleted bit not null default 0,
+	foreign key(dorm_id) references dormitory(id),
+	foreign key(staff_id) references staff(staff_id)
 );

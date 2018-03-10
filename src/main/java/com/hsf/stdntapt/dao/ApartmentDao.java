@@ -20,6 +20,8 @@ public interface ApartmentDao {
 
 	public List<Staff> findApartStaffs(@Param("apartId") int apartId);
 
+	public List<Apartment> findStaffAparts(@Param("staffId") int staffId);
+
 	public Staff findApartStaff(@Param("apartId") int apartId, @Param("staffId") int staffId);
 
 	public int createApartStaff(@Param("apartId") int apartId, @Param("staffId") int staffId);
@@ -31,6 +33,10 @@ public interface ApartmentDao {
 	List<Apartment> findAll();
 
 	public int createFloor(@Param("floor") Floor floor);
+
+	public Floor findFloorFromDormId(@Param("dormId") int dormId);
+
+	public Apartment findApartFromFloorId(@Param("floorId") int floorId);
 
 	public int createDorm(@Param("dormitory") Dormitory dormitory);
 

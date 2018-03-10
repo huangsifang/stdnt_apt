@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +24,7 @@ import com.hsf.stdntapt.entity.Staff;
 import com.hsf.stdntapt.entity.Student;
 import com.hsf.stdntapt.service.ApartmentService;
 import com.hsf.stdntapt.service.StudentService;
+import com.hsf.stdntapt.service.UserService;
 
 @Controller
 @RequestMapping("/apartment")
@@ -34,10 +36,20 @@ public class ApartmentController {
 	@Resource
 	StudentService studentService;
 
+	@Resource
+	UserService userService;
+
 	@RequiresPermissions("apartment:view")
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(Model model) {
-		List<Apartment> apartList = apartmentService.findAll();
+		String username = SecurityUtils.getSubject().getPrincipal().toString();
+		List<Apartment> apartList = null;
+		if (username.equals("admin")) {
+			apartList = apartmentService.findAll();
+		} else {
+			apartList = apartmentService.findStaffAparts(Integer.parseInt(username));
+		}
+
 		for (Apartment apart : apartList) {
 			apart.setFloorNum(apartmentService.findFloorNum(apart.getApartId()));
 			apart.setDormNum(apartmentService.findApartDormNum(apart.getApartId()));
@@ -80,19 +92,26 @@ public class ApartmentController {
 	}
 
 	@RequiresPermissions("apartment:update")
-	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST)
-	public String update(Apartment apartment, RedirectAttributes redirectAttributes) {
-		apartmentService.updateApartment(apartment);
-		redirectAttributes.addFlashAttribute("msg", "修改成功");
-		return "redirect:/apartment";
-	}
-
-	@RequiresPermissions("apartment:delete")
-	@RequestMapping(value = "/{id}/delete", method = RequestMethod.GET)
-	public String showDeleteForm(@PathVariable("id") int id, Model model) {
-		model.addAttribute("apartment", apartmentService.findOne(id));
-		model.addAttribute("op", "删除");
-		return "apartment/edit";
+	@RequestMapping(value = "/{apartId}/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String updateApartStaff(@PathVariable("apartId") int apartId, @RequestParam("apartName") String apartName,
+			@RequestParam("staffId") int[] staffId) {
+		String msg = "";
+		try {
+			Apartment apartment = new Apartment(apartId, apartName);
+			apartmentService.updateApartment(apartment);
+			for (int id : staffId) {
+				Staff staff = apartmentService.findApartStaff(apartId, id);
+				if (staff == null) {
+					apartmentService.createApartStaff(apartId, id);
+				}
+			}
+			msg = "修改成功!";
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "修改失败！";
+		}
+		return msg;
 	}
 
 	@RequiresPermissions("apartment:delete")
@@ -188,26 +207,6 @@ public class ApartmentController {
 			dorm.setFee(fee);
 			dorm.setLeaderId(leaderId);
 			apartmentService.updateDorm(dorm);
-			msg = "修改成功!";
-		} catch (Exception e) {
-			e.printStackTrace();
-			msg = "修改失败！";
-		}
-		return msg;
-	}
-
-	@RequiresPermissions("apartment:update")
-	@RequestMapping(value = "/staff/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
-	@ResponseBody
-	public String updateApartStaff(@RequestParam("apartId") int apartId, @RequestParam("staffId") int[] staffId) {
-		String msg = "";
-		try {
-			for (int id : staffId) {
-				Staff staff = apartmentService.findApartStaff(apartId, id);
-				if (staff == null) {
-					apartmentService.createApartStaff(apartId, id);
-				}
-			}
 			msg = "修改成功!";
 		} catch (Exception e) {
 			e.printStackTrace();

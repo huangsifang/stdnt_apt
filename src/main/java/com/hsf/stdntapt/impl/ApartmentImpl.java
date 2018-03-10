@@ -40,6 +40,11 @@ public class ApartmentImpl implements ApartmentService {
 	}
 
 	@Override
+	public List<Apartment> findStaffAparts(int staffId) {
+		return apartmentDao.findStaffAparts(staffId);
+	}
+
+	@Override
 	public Staff findApartStaff(int apartId, int staffId) {
 		return apartmentDao.findApartStaff(apartId, staffId);
 	}
@@ -67,6 +72,16 @@ public class ApartmentImpl implements ApartmentService {
 	@Override
 	public int createFloor(Floor floor) {
 		return apartmentDao.createFloor(floor);
+	}
+
+	@Override
+	public Floor findFloorFromDormId(int dormId) {
+		return apartmentDao.findFloorFromDormId(dormId);
+	}
+
+	@Override
+	public Apartment findApartFromFloorId(int floorId) {
+		return apartmentDao.findApartFromFloorId(floorId);
 	}
 
 	@Override

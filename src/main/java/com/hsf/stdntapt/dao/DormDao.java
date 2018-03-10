@@ -2,8 +2,12 @@ package com.hsf.stdntapt.dao;
 
 import java.util.List;
 
-import com.hsf.stdntapt.entity.Dorm;
+import org.apache.ibatis.annotations.Param;
+
+import com.hsf.stdntapt.entity.DormScore;
 
 public interface DormDao {
-	public List<Dorm> getDormDailyScore();
+	public List<DormScore> getNewScores();
+
+	public int createDormScore(@Param("dormScore") DormScore dormScore);
 }

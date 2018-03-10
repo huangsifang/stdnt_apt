@@ -19,6 +19,11 @@ public class Apartment {
 	public Apartment() {
 	}
 
+	public Apartment(int apartId, String apartName) {
+		this.apartId = apartId;
+		this.apartName = apartName;
+	}
+
 	public Apartment(int apartId, String apartName, int floorNum) {
 		this.apartId = apartId;
 		this.apartName = apartName;

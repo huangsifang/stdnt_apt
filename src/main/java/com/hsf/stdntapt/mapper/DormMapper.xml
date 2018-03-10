@@ -7,4 +7,21 @@
     <select id="getOneDormScore" parameterType="int" resultType="Dorm">
         select created, score from dorm_hygiene where dorm_id=1
     </select>
+    <select id="getNewScores" parameterType="int" resultType="DormScore">
+        select dorm_id as dormId, staff_id as staffId, create_time as createTime, score from dorm_score 
+        where deleted=0 
+        order by create_time desc
+        limit 20
+    </select>
+    <insert id="createDormScore" parameterType="DormScore" useGeneratedKeys="true" keyProperty="dormScore.id">
+        INSERT INTO dorm_score(
+        	<if test="dormScore.dormId != null">dorm_id,</if>
+	        <if test="dormScore.staffId != null">staff_id,</if>
+	        <if test="dormScore.score != null">score</if>
+		) VALUES (
+			<if test="dormScore.dormId != null">#{dormScore.dormId},</if>
+	        <if test="dormScore.staffId != null">#{dormScore.staffId},</if>
+	        <if test="dormScore.score != null">#{dormScore.score}</if>
+		)
+    </insert>
 </mapper>

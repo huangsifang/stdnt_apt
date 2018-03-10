@@ -51,6 +51,11 @@
     <select id="findAll" resultType="Apartment">
     	select apart_id as apartId, apart_name as apartName from apartment where deleted=0
     </select>
+    <select id="findStaffAparts" resultType="Apartment">
+    	select apart_id as apartId, apart_name as apartName from apartment where deleted=0 and apart_id in(
+    		select apart_id from apart_staff_relation where staff_id=#{staffId}
+    	)
+    </select>
     
     <insert id="createFloor" parameterType="Floor" useGeneratedKeys="true" keyProperty="floor.id">
         INSERT INTO floor(
@@ -61,6 +66,18 @@
 	        <if test="floor.floorNo != null">#{floor.floorNo}</if>
 		)
     </insert>
+    <select id="findFloorFromDormId" resultType="Floor">
+    	select id, apart_id as apartId, floor_no as floorNo from floor where deleted=0 and id in(
+    		select floor_id from dormitory
+    		where id=#{dormId}
+    	)
+    </select>
+    <select id="findApartFromFloorId" resultType="Apartment">
+    	select apart_id as apartId, apart_name as apartName from apartment where deleted=0 and apart_id in(
+    		select apart_id from floor
+    		where id=#{floorId}
+    	)
+    </select>
     <insert id="createDorm" parameterType="Dormitory" useGeneratedKeys="true" keyProperty="dormitory.id">
         INSERT INTO dormitory(
         	<if test="dormitory.dormNo != null">dorm_no,</if>
