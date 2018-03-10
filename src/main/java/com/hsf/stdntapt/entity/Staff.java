@@ -10,6 +10,14 @@ public class Staff {
 	private Date hiredate;
 	private Date leavedate;
 
+	public Staff() {
+	}
+
+	public Staff(int staffId, String staffName) {
+		this.staffId = staffId;
+		this.staffName = staffName;
+	}
+
 	public int getStaffId() {
 		return staffId;
 	}

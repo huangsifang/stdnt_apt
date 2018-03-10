@@ -11,6 +11,7 @@ import com.hsf.stdntapt.entity.Apartment;
 import com.hsf.stdntapt.entity.Bed;
 import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
+import com.hsf.stdntapt.entity.Staff;
 import com.hsf.stdntapt.service.ApartmentService;
 
 @Service
@@ -31,6 +32,26 @@ public class ApartmentImpl implements ApartmentService {
 	@Override
 	public void deleteApartment(int apartId) {
 		apartmentDao.deleteApartment(apartId);
+	}
+
+	@Override
+	public List<Staff> findApartStaffs(int apartId) {
+		return apartmentDao.findApartStaffs(apartId);
+	}
+
+	@Override
+	public Staff findApartStaff(int apartId, int staffId) {
+		return apartmentDao.findApartStaff(apartId, staffId);
+	}
+
+	@Override
+	public int createApartStaff(int apartId, int staffId) {
+		return apartmentDao.createApartStaff(apartId, staffId);
+	}
+
+	@Override
+	public int deleteApartStaff(int apartId, int staffId) {
+		return apartmentDao.deleteApartStaff(apartId, staffId);
 	}
 
 	@Override
@@ -61,6 +82,11 @@ public class ApartmentImpl implements ApartmentService {
 	@Override
 	public List<Floor> findFloorAll(int floorId) {
 		return apartmentDao.findFloorAll(floorId);
+	}
+
+	@Override
+	public Floor findFloorByApartIdFloorNo(int apartId, int floorNo) {
+		return apartmentDao.findFloorByApartIdFloorNo(apartId, floorNo);
 	}
 
 	@Override
@@ -96,6 +122,11 @@ public class ApartmentImpl implements ApartmentService {
 	@Override
 	public List<Bed> findBedsFromDorm(int dormId) {
 		return apartmentDao.findBedsFromDorm(dormId);
+	}
+
+	@Override
+	public Bed findBed(int dormId, int bedId) {
+		return apartmentDao.findBed(dormId, bedId);
 	}
 
 	@Override

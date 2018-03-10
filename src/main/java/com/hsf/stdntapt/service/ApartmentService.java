@@ -6,6 +6,7 @@ import com.hsf.stdntapt.entity.Apartment;
 import com.hsf.stdntapt.entity.Bed;
 import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
+import com.hsf.stdntapt.entity.Staff;
 
 public interface ApartmentService {
 	public int createApartment(Apartment apartment);
@@ -13,6 +14,14 @@ public interface ApartmentService {
 	public int updateApartment(Apartment apartment);
 
 	public void deleteApartment(int apartId);
+
+	public List<Staff> findApartStaffs(int apartId);
+
+	public Staff findApartStaff(int apartId, int staffId);
+
+	public int createApartStaff(int apartId, int staffId);
+
+	public int deleteApartStaff(int apartId, int staffId);
 
 	Apartment findOne(int apartId);
 
@@ -25,6 +34,8 @@ public interface ApartmentService {
 	public int findFloorNum(int apartId);
 
 	List<Floor> findFloorAll(int floorId);
+
+	Floor findFloorByApartIdFloorNo(int apartId, int floorNo);
 
 	public int findFloorDormNum(int floorId);
 
@@ -39,6 +50,8 @@ public interface ApartmentService {
 	public int updateDorm(Dormitory dorm);
 
 	List<Bed> findBedsFromDorm(int dormId);
+
+	Bed findBed(int bedId, int dormId);
 
 	public int createBed(Bed bed);
 

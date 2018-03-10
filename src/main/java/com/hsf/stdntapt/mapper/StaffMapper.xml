@@ -18,4 +18,8 @@
 	        #{leavedate}
 		)
     </insert>
+    
+    <select id="findOneStaff" parameterType="int" resultType="Staff">
+		select staff_id as staffId, staff_name as staffName, staff_sex as staffSex, staff_tel as staffTel, hiredate, leavedate from staff where staff_id=#{staffId}
+    </select>
 </mapper>

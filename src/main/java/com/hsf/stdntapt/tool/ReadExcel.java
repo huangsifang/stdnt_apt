@@ -24,6 +24,7 @@ import com.hsf.stdntapt.entity.SpeYears;
 import com.hsf.stdntapt.entity.Speciality;
 import com.hsf.stdntapt.entity.Staff;
 import com.hsf.stdntapt.entity.Student;
+import com.hsf.stdntapt.entity.StudentBed;
 
 public class ReadExcel {
 	// 总行数
@@ -301,6 +302,43 @@ public class ReadExcel {
 			if (wb != null) {
 				// 读取Excel里的信息
 				list = readStudentExcelValue(wb);
+			}
+
+			is.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					is = null;
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+
+	/**
+	 * 读学生床位EXCEL文件
+	 *
+	 * @param fileName
+	 * @return
+	 */
+	public List<StudentBed> getStudentBedExcelInfo(String fileName, MultipartFile Mfile) {
+		List<StudentBed> list = new ArrayList<StudentBed>();
+		// 初始化输入流
+		InputStream is = null;
+		try {
+			// 根据新建的文件实例化输入流
+			is = Mfile.getInputStream();
+
+			Workbook wb = checkfile(fileName, Mfile, is);
+
+			if (wb != null) {
+				// 读取Excel里的信息
+				list = readStudentBedExcelValue(wb);
 			}
 
 			is.close();
@@ -721,6 +759,58 @@ public class ReadExcel {
 			}
 			// 添加
 			studentList.add(students);
+		}
+		return studentList;
+	}
+
+	/**
+	 * 读取学生床位Excel里面信息
+	 *
+	 * @param wb
+	 * @return
+	 */
+	private List<StudentBed> readStudentBedExcelValue(Workbook wb) {
+		// 得到第一个shell
+		Sheet sheet = wb.getSheetAt(0);
+
+		// 得到Excel的行数
+		this.totalRows = sheet.getPhysicalNumberOfRows();
+
+		// 得到Excel的列数(前提是有行数)
+		if (totalRows >= 1 && sheet.getRow(0) != null) {
+			this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
+		}
+		List<StudentBed> studentList = new ArrayList<StudentBed>();
+		// 循环Excel行数,从第二行开始。标题不入库
+		for (int r = 1; r < totalRows; r++) {
+			StudentBed stdBed = new StudentBed();
+			Row row = sheet.getRow(r).getCell(1).getRow();
+			if (row == null)
+				continue;
+			// 循环Excel的列,获取相关信息
+			for (int c = 0; c < this.totalCells; c++) {
+				Cell cell = row.getCell(c);
+				if (null != cell) {
+					if (c == 0) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						stdBed.setStdId(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 1) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						stdBed.setApartId(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 2) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						stdBed.setFloorNo(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 3) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						stdBed.setDormNo(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 4) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						stdBed.setBedId(Integer.parseInt(cell.getStringCellValue()));
+					}
+				}
+			}
+			// 添加
+			studentList.add(stdBed);
 		}
 		return studentList;
 	}

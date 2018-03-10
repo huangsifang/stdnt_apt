@@ -1,6 +1,8 @@
 package com.hsf.stdntapt.entity;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Apartment {
 	private int apartId;
@@ -10,6 +12,8 @@ public class Apartment {
 	private int aFloorDormNum;
 	private int aDormBedNum;
 	private BigDecimal aStdYearFee;
+	private List<Staff> staffs;
+	private String staffsStr;
 	private boolean deleted = Boolean.FALSE;
 
 	public Apartment() {
@@ -75,6 +79,41 @@ public class Apartment {
 
 	public void setaStdYearFee(BigDecimal aStdYearFee) {
 		this.aStdYearFee = aStdYearFee;
+	}
+
+	public List<Staff> getStaffs() {
+		return staffs;
+	}
+
+	public void setStaffs(List<Staff> staffs) {
+		String staffsStr = "";
+		for (Staff staff : staffs) {
+			staffsStr += staff.getStaffId() + ":" + staff.getStaffName() + ",";
+		}
+		if (staffsStr != "") {
+			staffsStr = staffsStr.substring(0, staffsStr.length() - 1);
+		}
+		this.staffsStr = staffsStr;
+		this.staffs = staffs;
+	}
+
+	public String getStaffsStr() {
+		return staffsStr;
+	}
+
+	public void setStaffsStr(String staffsStr) {
+		String[] staffsArray = staffsStr.split(",");
+		List<Staff> staffs = new ArrayList<Staff>(staffsArray.length);
+		for (int i = 0; i < staffsArray.length; i++) {
+			int index = staffsArray[0].indexOf(":");
+			int len = staffsArray.length;
+			int staffId = Integer.parseUnsignedInt(staffsArray[0].substring(0, index));
+			String staffName = staffsArray[0].substring(index + 1, len);
+			Staff staff = new Staff(staffId, staffName);
+			staffs.add(staff);
+		}
+		this.staffs = staffs;
+		this.staffsStr = staffsStr;
 	}
 
 	public boolean getDeleted() {

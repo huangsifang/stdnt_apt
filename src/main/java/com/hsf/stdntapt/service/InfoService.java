@@ -14,6 +14,7 @@ import com.hsf.stdntapt.entity.SpeYears;
 import com.hsf.stdntapt.entity.Speciality;
 import com.hsf.stdntapt.entity.Staff;
 import com.hsf.stdntapt.entity.Student;
+import com.hsf.stdntapt.entity.StudentBed;
 
 public interface InfoService {
 	public List<College> getCollegeInfo(String name, MultipartFile file);
@@ -27,6 +28,8 @@ public interface InfoService {
 	public List<Class> getClassInfo(String name, MultipartFile file);
 
 	public List<Student> getStudentInfo(String name, MultipartFile file);
+
+	public List<StudentBed> getStudentBedInfo(String name, MultipartFile file);
 
 	public List<Staff> getStaffInfo(String name, MultipartFile file);
 

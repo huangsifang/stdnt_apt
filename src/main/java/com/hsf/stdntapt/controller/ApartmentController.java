@@ -19,6 +19,7 @@ import com.hsf.stdntapt.entity.Apartment;
 import com.hsf.stdntapt.entity.Bed;
 import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
+import com.hsf.stdntapt.entity.Staff;
 import com.hsf.stdntapt.entity.Student;
 import com.hsf.stdntapt.service.ApartmentService;
 import com.hsf.stdntapt.service.StudentService;
@@ -40,6 +41,8 @@ public class ApartmentController {
 		for (Apartment apart : apartList) {
 			apart.setFloorNum(apartmentService.findFloorNum(apart.getApartId()));
 			apart.setDormNum(apartmentService.findApartDormNum(apart.getApartId()));
+			List<Staff> staffs = apartmentService.findApartStaffs(apart.getApartId());
+			apart.setStaffs(staffs);
 		}
 		model.addAttribute("apartList", apartList);
 		return "apartment/list";
@@ -68,7 +71,10 @@ public class ApartmentController {
 	@RequiresPermissions("apartment:update")
 	@RequestMapping(value = "/{id}/update", method = RequestMethod.GET)
 	public String showUpdateForm(@PathVariable("id") int id, Model model) {
-		model.addAttribute("apartment", apartmentService.findOne(id));
+		Apartment apart = apartmentService.findOne(id);
+		List<Staff> staffs = apartmentService.findApartStaffs(id);
+		apart.setStaffs(staffs);
+		model.addAttribute("apartment", apart);
 		model.addAttribute("op", "修改");
 		return "apartment/edit";
 	}
@@ -186,6 +192,41 @@ public class ApartmentController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			msg = "修改失败！";
+		}
+		return msg;
+	}
+
+	@RequiresPermissions("apartment:update")
+	@RequestMapping(value = "/staff/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String updateApartStaff(@RequestParam("apartId") int apartId, @RequestParam("staffId") int[] staffId) {
+		String msg = "";
+		try {
+			for (int id : staffId) {
+				Staff staff = apartmentService.findApartStaff(apartId, id);
+				if (staff == null) {
+					apartmentService.createApartStaff(apartId, id);
+				}
+			}
+			msg = "修改成功!";
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "修改失败！";
+		}
+		return msg;
+	}
+
+	@RequiresPermissions("apartment:update")
+	@RequestMapping(value = "/staff/delete", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String deleteApartStaff(@RequestParam("apartId") int apartId, @RequestParam("staffId") int staffId) {
+		String msg = "";
+		try {
+			apartmentService.deleteApartStaff(apartId, staffId);
+			msg = "删除成功!";
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "删除失败！";
 		}
 		return msg;
 	}

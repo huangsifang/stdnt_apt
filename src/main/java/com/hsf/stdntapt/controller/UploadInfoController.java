@@ -23,6 +23,7 @@ import com.hsf.stdntapt.entity.SpeYears;
 import com.hsf.stdntapt.entity.Speciality;
 import com.hsf.stdntapt.entity.Staff;
 import com.hsf.stdntapt.entity.Student;
+import com.hsf.stdntapt.entity.StudentBed;
 import com.hsf.stdntapt.entity.User;
 import com.hsf.stdntapt.service.ApartmentService;
 import com.hsf.stdntapt.service.InfoService;
@@ -108,6 +109,17 @@ public class UploadInfoController {
 					userService.createUser(user);
 				}
 				msg = "解析成功,总共" + studentList.size() + "条!";
+			} else if (type.equals("studentBed")) {
+				List<StudentBed> stdBedList = infoService.getStudentBedInfo(name, file);
+				for (int i = 0; i < stdBedList.size(); i++) {
+					Floor floor = apartmentService.findFloorByApartIdFloorNo(stdBedList.get(i).getApartId(),
+							stdBedList.get(i).getFloorNo());
+					Dormitory dorm = apartmentService.findByDormNoFloorId(stdBedList.get(i).getDormNo(), floor.getId());
+					Bed bed = apartmentService.findBed(dorm.getId(), stdBedList.get(i).getBedId());
+					bed.setStdId(stdBedList.get(i).getStdId());
+					apartmentService.updateDormStd(bed);
+				}
+				msg = "解析成功,总共" + stdBedList.size() + "条!";
 			} else if (type.equals("staff")) {
 				List<Staff> staffList = infoService.getStaffInfo(name, file);
 				for (int i = 0; i < staffList.size(); i++) {

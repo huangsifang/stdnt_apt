@@ -8,6 +8,7 @@ import com.hsf.stdntapt.entity.Apartment;
 import com.hsf.stdntapt.entity.Bed;
 import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
+import com.hsf.stdntapt.entity.Staff;
 
 public interface ApartmentDao {
 
@@ -16,6 +17,14 @@ public interface ApartmentDao {
 	public int updateApartment(@Param("apartment") Apartment apartment);
 
 	public void deleteApartment(@Param("apartId") int apartId);
+
+	public List<Staff> findApartStaffs(@Param("apartId") int apartId);
+
+	public Staff findApartStaff(@Param("apartId") int apartId, @Param("staffId") int staffId);
+
+	public int createApartStaff(@Param("apartId") int apartId, @Param("staffId") int staffId);
+
+	public int deleteApartStaff(@Param("apartId") int apartId, @Param("staffId") int staffId);
 
 	Apartment findOne(@Param("apartId") int apartId);
 
@@ -27,7 +36,9 @@ public interface ApartmentDao {
 
 	public int findFloorNum(@Param("apartId") int apartId);
 
-	List<Floor> findFloorAll(int floorId);
+	List<Floor> findFloorAll(@Param("apartId") int apartId);
+
+	Floor findFloorByApartIdFloorNo(@Param("apartId") int apartId, @Param("floorNo") int floorNo);
 
 	public int findFloorDormNum(@Param("floorId") int floorId);
 
@@ -42,6 +53,8 @@ public interface ApartmentDao {
 	public int updateDorm(@Param("dorm") Dormitory dorm);
 
 	public List<Bed> findBedsFromDorm(@Param("dormId") int dormId);
+
+	Bed findBed(@Param("dormId") int dormId, @Param("bedId") int bedId);
 
 	public int createBed(@Param("bed") Bed bed);
 

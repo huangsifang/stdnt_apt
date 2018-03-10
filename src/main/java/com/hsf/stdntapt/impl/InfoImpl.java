@@ -27,6 +27,7 @@ import com.hsf.stdntapt.entity.SpeYears;
 import com.hsf.stdntapt.entity.Speciality;
 import com.hsf.stdntapt.entity.Staff;
 import com.hsf.stdntapt.entity.Student;
+import com.hsf.stdntapt.entity.StudentBed;
 import com.hsf.stdntapt.service.InfoService;
 import com.hsf.stdntapt.tool.ReadExcel;
 
@@ -127,6 +128,13 @@ public class InfoImpl implements InfoService {
 	public List<Student> getStudentInfo(String name, MultipartFile file) {
 		ReadExcel ReadExcel = new ReadExcel();
 		List<Student> excelInfo = ReadExcel.getStudentExcelInfo(name, file);
+		return excelInfo;
+	}
+
+	@Override
+	public List<StudentBed> getStudentBedInfo(String name, MultipartFile file) {
+		ReadExcel ReadExcel = new ReadExcel();
+		List<StudentBed> excelInfo = ReadExcel.getStudentBedExcelInfo(name, file);
 		return excelInfo;
 	}
 

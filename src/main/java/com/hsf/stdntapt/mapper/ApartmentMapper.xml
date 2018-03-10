@@ -20,6 +20,31 @@
     <delete id="deleteApartment" parameterType="int">
 		delete from apartment where apart_id=#{apartId}
 	</delete>
+	<select id="findApartStaffs" parameterType="int" resultType="Staff">
+		select staff_id as staffId, staff_name as staffName from staff where staff_id in(
+			select staff_id from apart_staff_relation where apart_id=#{apartId} and deleted=0
+		)
+    </select>
+    <select id="findApartStaff" parameterType="int" resultType="Staff">
+		select staff_id as staffId, staff_name as staffName from staff where staff_id in(
+			select staff_id from apart_staff_relation where apart_id=#{apartId} and staff_id=#{staffId} and deleted=0
+		)
+    </select>
+    <insert id="createApartStaff" parameterType="int" useGeneratedKeys="true" keyProperty="staffId">
+        INSERT INTO apart_staff_relation(
+        	<if test="apartId != null">apart_id,</if>
+	        <if test="staffId != null">staff_id</if>
+		) VALUES (
+	        <if test="apartId != null">#{apartId},</if>
+	        <if test="staffId != null">#{staffId}</if>
+		)
+    </insert>
+    <update id="deleteApartStaff" parameterType="int" useGeneratedKeys="true" keyProperty="staffId">
+    	UPDATE apart_staff_relation SET 
+    		deleted = 1
+    		where apart_id = #{apartId}
+    		and staff_id = #{staffId}
+    </update>
 	<select id="findOne" parameterType="int" resultType="Apartment">
 		select apart_id as apartId, apart_name as apartName from apartment where apart_id=#{apartId}
     </select>
@@ -55,6 +80,9 @@
     <select id="findFloorAll" resultType="Floor">
     	select id, apart_id as apartId, floor_no as floorNo from floor where apart_id=#{apartId} and deleted=0
     </select>
+    <select id="findFloorByApartIdFloorNo" resultType="Floor">
+    	select id, apart_id as apartId, floor_no as floorNo from floor where apart_id=#{apartId} and floor_no=#{floorNo} and deleted=0
+    </select>
     <select id="findFloorDormNum" resultType="int">
     	select count(*) from dormitory where floor_id=#{floorId} and deleted=0
     </select>
@@ -78,6 +106,9 @@
     </update>
     <select id="findBedsFromDorm" resultType="Bed">
     	select bed_id as bedId, dorm_id as dormId, std_id as stdId from bed where dorm_id=#{dormId} and deleted=0
+    </select>
+    <select id="findBed" resultType="Bed">
+    	select bed_id as bedId, dorm_id as dormId, std_id as stdId from bed where dorm_id=#{dormId} and bed_id=#{bedId} and deleted=0
     </select>
     <insert id="createBed" parameterType="Bed" useGeneratedKeys="true" keyProperty="bed.bedId">
         INSERT INTO bed(
