@@ -21,7 +21,22 @@ public class DormImpl implements DormService {
 	}
 
 	@Override
+	public List<DormScore> getApartNewScores(int apartId) {
+		return dormDao.getApartNewScores(apartId);
+	}
+
+	@Override
 	public int createDormScore(DormScore dormScore) {
 		return dormDao.createDormScore(dormScore);
+	}
+
+	@Override
+	public List<DormScore> findOneDormScore(int dormId) {
+		return dormDao.findOneDormScore(dormId);
+	}
+
+	@Override
+	public List<DormScore> findApartDormScore(int apartId) {
+		return dormDao.findApartDormScore(apartId);
 	}
 }

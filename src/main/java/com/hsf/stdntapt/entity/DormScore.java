@@ -10,6 +10,8 @@ public class DormScore {
 	private int score;
 	private int apartId;
 	private int floorDormNo;
+	private String grade;
+	private int count;
 
 	public DormScore() {
 	}
@@ -74,6 +76,22 @@ public class DormScore {
 
 	public void setFloorDormNo(int floorDormNo) {
 		this.floorDormNo = floorDormNo;
+	}
+
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 }

@@ -24,3 +24,11 @@ ehcache.xml文件增加defaultCache
     diskExpiryThreadIntervalSeconds="120"    
     memoryStoreEvictionPolicy="LFU"    
 />
+
+3.
+mysql语句group by elt(interval(xxx, 0, 60, 80, 90), 'D', 'C', 'B', 'A')报错
+原因：
+MySql 5.7版本默认sql_mode=only_full_group_by问题
+解决方法：
+1) mysql> set @@sql_mode='NO_UNSIGNED_SUBTRACTION,NO_ENGINE_SUBSTITUTION';
+2) 在mysql.ini配置文件中修改sql_mode=NO_UNSIGNED_SUBTRACTION,NO_ENGINE_SUBSTITUTION
