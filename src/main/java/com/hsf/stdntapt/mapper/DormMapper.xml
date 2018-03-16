@@ -35,7 +35,7 @@
         where dorm_id=#{dormId} and deleted=0
         order by create_time asc
     </select>
-    <select id="findApartDormDailyScore" resultType="DormScore">
+    <select id="findApartDormOneDayScore" resultType="DormScore">
     	select elt(interval(ds.score, 0, 60, 80, 90), 'D', 'C', 'B', 'A') as grade, count(*) as count 
     	from dorm_score as ds 
         where dorm_id in(
@@ -44,7 +44,7 @@
 	        	select id from floor
 	        	where apart_id=#{apartId} and deleted=0
 	        )and deleted=0
-        )and create_time like '2018-03-11%' and deleted=0
+        )and create_time like #{day} and deleted=0
         group by elt(interval(ds.score, 0, 60, 80, 90), 'D', 'C', 'B', 'A');
     </select>
     <select id="findApartDormScore" resultType="DormScore">

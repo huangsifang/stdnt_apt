@@ -39,4 +39,9 @@ public class DormImpl implements DormService {
 	public List<DormScore> findApartDormScore(int apartId) {
 		return dormDao.findApartDormScore(apartId);
 	}
+
+	@Override
+	public List<DormScore> findApartDormOneDayScore(int apartId, String day) {
+		return dormDao.findApartDormOneDayScore(apartId, day);
+	}
 }

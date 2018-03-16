@@ -5,6 +5,21 @@
 <head>
     <title></title>
     <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    	.scoreMap {
+    		height: 400px;
+    		border: 1px solid #ccc;
+    		padding: 10px;
+    	}
+    	.scoreWord {
+    		height: 400px;
+    		border: 1px solid #ccc;
+    		padding: 10px;
+    		margin: 0 auto;
+    		text-align: center;
+    		line-height: 400px;
+    	}
+    </style>
 </head>
 <body>
 
@@ -45,23 +60,47 @@
     </c:forEach>
 </ul>
 
-<c:forEach items="${newScoreList}" var="score">
-	<a href="${pageContext.request.contextPath}/score/${score.apartId}/dorm/${score.floorDormNo}">
-		<div class="col-sm-3 panel panel-default">
-			<div class="panel-body">
-			<label for="apartId">公寓号：${score.apartId}</label><br />
-			<label for="floorDormNo">寝室号：${score.floorDormNo}</label><br />
-			<label for="score">分数：${score.score}</label>
+<div class="row">
+	<c:forEach items="${newScoreList}" var="score">
+		<a href="${pageContext.request.contextPath}/score/${score.apartId}/dorm/${score.floorDormNo}">
+			<div class="col-sm-3 panel panel-default">
+				<div class="panel-body">
+				<label for="apartId">公寓号：${score.apartId}</label><br />
+				<label for="floorDormNo">寝室号：${score.floorDormNo}</label><br />
+				<label for="score">分数：${score.score}</label>
+				</div>
 			</div>
-		</div>
-	</a>
-</c:forEach>
+		</a>
+	</c:forEach>
+</div>
 
 <c:if test="${not empty apartId}">
-	<div id="main" style="height: 400px; border: 1px solid #ccc; padding: 10px;"></div>
+	<div class="row">
+		<div class="col-sm-6">
+			<c:if test="${empty apartDormScore}">
+				<div class="scoreWord">
+					该公寓未有任何得分记录
+				</div>
+			</c:if>
+			<c:if test="${not empty apartDormScore}">
+				<div id="scoreMap" class="scoreMap"></div>
+			</c:if>
+		</div>
+		<div class="col-sm-6">
+			<c:if test="${empty apartDormOneDayScore}">
+				<div class="scoreWord">
+					该公寓今日未有任何得分记录
+				</div>
+			</c:if>
+			<c:if test="${not empty apartDormOneDayScore}">
+				<div id="dayScoreMap" class="scoreMap"></div>
+			</c:if>
+		</div>
+	</div>
 </c:if>
 <c:if test="${empty apartId}">
-	<div id="main"></div>
+	<div id="scoreMap"></div>
+	<div id="dayScoreMap"></div>
 </c:if>
 
 </body>
@@ -105,6 +144,7 @@ function getRootPath() {//获得根目录
 
 var gradeList = ['A:(90-100)', 'B:(80-90)', 'C:(60-80)', 'D:(0-60)'];
 var scoreList = new Array();
+var dayScoreList = new Array();
 var i=0;
 <c:forEach var="item" items="${apartDormScore}">
 	scoreList[i]= new Object();
@@ -127,48 +167,113 @@ var i=0;
     i++;
 </c:forEach>
 
+var j=0;
+<c:forEach var="item" items="${apartDormOneDayScore}">
+dayScoreList[j]= new Object();
+var grade = "${item.grade}";
+switch(grade) {
+case "A":
+	dayScoreList[j].name = grade + ":(90-100)";
+	break;
+case "B":
+	dayScoreList[j].name = grade + ":(80-90)";
+	break;
+case "C":
+	dayScoreList[j].name = grade + ":(60-80)";
+	break;
+case "D":
+	dayScoreList[j].name = grade + ":(0-60)";
+	break;
+}
+dayScoreList[j].value = ${item.count};
+j++;
+</c:forEach>
+
 $().ready(function() {
-    var myChart = echarts.init(document.getElementById('main'));
     //图表显示提示信息
-    myChart.showLoading();
-    //定义图表options
-	var options = {
-	    title : {
-	        text: '公寓所有寝室得分分布图',
-	        subtext: '${apartId}号楼',
-	        x:'center'
-	    },
-	    tooltip : {
-	        trigger: 'item',
-	        formatter: "{a} <br/>{b} : {c} ({d}%)"
-	    },
-	    legend: {
-	        type: 'scroll',
-	        orient: 'vertical',
-	        right: 10,
-	        top: 20,
-	        bottom: 20,
-	        data: gradeList
-	    },
-	    series : [
-	        {
-	            name: '姓名',
-	            type: 'pie',
-	            radius : '55%',
-	            center: ['40%', '50%'],
-	            data: scoreList,
-	            itemStyle: {
-	                emphasis: {
-	                    shadowBlur: 10,
-	                    shadowOffsetX: 0,
-	                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-	                }
-	            }
-	        }
-	    ]
-	};
-	myChart.hideLoading();
-	myChart.setOption(options);
+    if(i != 0) {
+    	var myChart = echarts.init(document.getElementById('scoreMap'));
+	    myChart.showLoading();
+	    //定义图表options
+		var options = {
+		    title : {
+		        text: '公寓所有寝室得分分布图',
+		        subtext: '${apartId}号楼',
+		        x:'center'
+		    },
+		    tooltip : {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+		    },
+		    legend: {
+		        type: 'scroll',
+		        orient: 'vertical',
+		        right: 10,
+		        top: 20,
+		        bottom: 20,
+		        data: gradeList
+		    },
+		    series : [
+		        {
+		            name: '等级',
+		            type: 'pie',
+		            radius : '55%',
+		            center: ['40%', '50%'],
+		            data: scoreList,
+		            itemStyle: {
+		                emphasis: {
+		                    shadowBlur: 10,
+		                    shadowOffsetX: 0,
+		                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+		                }
+		            }
+		        }
+		    ]
+		};
+		myChart.hideLoading();
+		myChart.setOption(options);
+    }
+    if(j != 0) {
+    	var myChartDay = echarts.init(document.getElementById('dayScoreMap'));
+	    myChartDay.showLoading();
+		var dayOptions = {
+		    title : {
+		        text: '公寓今日寝室得分分布图',
+		        subtext: '${apartId}号楼',
+		        x:'center'
+		    },
+		    tooltip : {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+		    },
+		    legend: {
+		        type: 'scroll',
+		        orient: 'vertical',
+		        right: 10,
+		        top: 20,
+		        bottom: 20,
+		        data: gradeList
+		    },
+		    series : [
+		        {
+		            name: '等级',
+		            type: 'pie',
+		            radius : '55%',
+		            center: ['40%', '50%'],
+		            data: dayScoreList,
+		            itemStyle: {
+		                emphasis: {
+		                    shadowBlur: 10,
+		                    shadowOffsetX: 0,
+		                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+		                }
+		            }
+		        }
+		    ]
+		};
+		myChartDay.hideLoading();
+		myChartDay.setOption(dayOptions);
+    }
 });
 </script>
 </html>

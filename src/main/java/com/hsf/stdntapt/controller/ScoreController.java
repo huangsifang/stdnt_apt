@@ -1,5 +1,6 @@
 package com.hsf.stdntapt.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -133,9 +134,13 @@ public class ScoreController {
 			score.setApartId(scoreApartId);
 		}
 		List<DormScore> apartDormScore = dormService.findApartDormScore(apartId);
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		List<DormScore> apartDormOneDayScore = dormService.findApartDormOneDayScore(apartId,
+				df.format(System.currentTimeMillis()) + "%");
 		model.addAttribute("apartList", apartList);
 		model.addAttribute("newScoreList", newScoreList);
 		model.addAttribute("apartDormScore", apartDormScore);
+		model.addAttribute("apartDormOneDayScore", apartDormOneDayScore);
 		model.addAttribute("apartId", apartId);
 		return "score/list";
 	}
