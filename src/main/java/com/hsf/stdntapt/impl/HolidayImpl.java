@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.hsf.stdntapt.dao.HolidayDao;
+import com.hsf.stdntapt.entity.HoliRecord;
 import com.hsf.stdntapt.entity.Holiday;
 import com.hsf.stdntapt.service.HolidayService;
 
@@ -33,6 +34,31 @@ public class HolidayImpl implements HolidayService {
 	@Override
 	public int deleteHoliday(int holiId) {
 		return holidayDao.deleteHoliday(holiId);
+	}
+
+	@Override
+	public List<HoliRecord> findHoliRecord(int holiId, int stdId) {
+		return holidayDao.findHoliRecord(holiId, stdId);
+	}
+
+	@Override
+	public List<HoliRecord> findApartAllHomeRecords() {
+		return holidayDao.findApartAllHomeRecords();
+	}
+
+	@Override
+	public List<HoliRecord> findApartAllSchoolRecords() {
+		return holidayDao.findApartAllSchoolRecords();
+	}
+
+	@Override
+	public int createHoliRecord(HoliRecord holiRecord) {
+		return holidayDao.createHoliRecord(holiRecord);
+	}
+
+	@Override
+	public int deleteHoliRecord(int holiId, int stdId) {
+		return holidayDao.deleteHoliRecord(holiId, stdId);
 	}
 
 }

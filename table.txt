@@ -63,6 +63,11 @@ insert into resource values(42, '假期新增', 'button', '', 41, '0/1/41/', 'holida
 insert into resource values(43, '假期修改', 'button', '', 41, '0/1/41/', 'holiday:update', true);
 insert into resource values(44, '假期删除', 'button', '', 41, '0/1/41/', 'holiday:delete', true);
 insert into resource values(45, '假期查看', 'button', '', 41, '0/1/41/', 'holiday:view', true);
+insert into resource values(51, '假期留校回家管理', 'menu', '/record', 1, '0/1/', 'record:*', true);
+insert into resource values(52, '假期留校回家新增', 'button', '', 51, '0/1/51/', 'record:create', true);
+insert into resource values(53, '假期留校回家修改', 'button', '', 51, '0/1/51/', 'record:update', true);
+insert into resource values(54, '假期留校回家删除', 'button', '', 51, '0/1/51/', 'record:delete', true);
+insert into resource values(55, '假期留校回家查看', 'button', '', 51, '0/1/51/', 'record:view', true);
 
 create table college(
 	college_id int(4) unsigned not null primary key,
@@ -225,6 +230,7 @@ create table holi_record(
 	id int(20) unsigned not null primary key auto_increment,
 	holi_id int(5) unsigned not null,
 	std_id int(20) unsigned not null,
+	apart_id int(3) unsigned,
 	start_time date,
 	end_time date,
 	in_home bit default 0,
@@ -232,7 +238,8 @@ create table holi_record(
 	address varchar(50),
 	deleted bit not null default 0,
 	foreign key(holi_id) references holiday(holi_id),
-	foreign key(std_id) references student(std_id)
+	foreign key(std_id) references student(std_id),
+	foreign key(apart_id) references apartment(apart_id)
 );
 
 create table holi_back(
@@ -248,11 +255,13 @@ create table holi_back(
 create table vacation_record(
 	id int(20) unsigned not null primary key auto_increment,
 	std_id int(20) unsigned not null,
+	apart_id int(3) unsigned,
 	start_time date,
 	end_time date,
 	state int(2) default 0,
 	deleted bit not null default 0,
-	foreign key(std_id) references student(std_id)
+	foreign key(std_id) references student(std_id),
+	foreign key(apart_id) references apartment(apart_id)
 );
 
 create table vacation_sign(

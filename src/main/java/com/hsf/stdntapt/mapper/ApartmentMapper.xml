@@ -147,4 +147,11 @@
     <select id="getDormBedNum" resultType="int">
     	select count(*) from bed where dorm_id=#{dormId} and deleted=0
     </select>
+    <select id="findStdApartId" resultType="int">
+    	select apart_id from floor where id in(
+        	select floor_id from dormitory where id in(
+        		select dorm_id from bed where std_id=#{stdId} and deleted=0
+        	) and deleted=0
+       	) and deleted=0
+    </select>
 </mapper>
