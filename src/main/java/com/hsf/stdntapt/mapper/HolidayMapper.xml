@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hsf.stdntapt.dao.HolidayDao">
+    <select id="findAllHolidays" parameterType="int" resultType="Holiday">
+        select holi_id as holiId, holi_name as holiName, start_time as startTime, end_time as endTime from holiday 
+        where deleted=0
+    </select>
+    <insert id="createHoliday" parameterType="Holiday" useGeneratedKeys="true" keyProperty="holiday.holiId">
+        INSERT INTO holiday(
+        	<if test="holiday.holiId != null">holi_id,</if>
+	        <if test="holiday.holiName != null">holi_name,</if>
+	        <if test="holiday.startTime != null">start_time,</if>
+	        <if test="holiday.endTime != null">end_time</if>
+		) VALUES (
+			<if test="holiday.holiId != null">#{holiday.holiId},</if>
+	        <if test="holiday.holiName != null">#{holiday.holiName},</if>
+	        <if test="holiday.startTime != null">#{holiday.startTime},</if>
+	        <if test="holiday.endTime != null">#{holiday.endTime}</if>
+		)
+    </insert>
+    <update id="updateHoliday" parameterType="Holiday" useGeneratedKeys="true" keyProperty="holiday.holiId">
+    	UPDATE holiday SET 
+    		holi_name = #{holiday.holiName}, 
+    		start_time = #{holiday.startTime},
+    		end_time = #{holiday.endTime}
+    		where holi_id = #{holiday.holiId}
+    </update>
+    <delete id="deleteHoliday" parameterType="int">
+		delete from holiday where holi_id=#{holiId}
+	</delete>
+</mapper>

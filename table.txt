@@ -58,6 +58,11 @@ insert into resource values(32, '打分新增', 'button', '', 31, '0/1/31/', 'score:
 insert into resource values(33, '打分修改', 'button', '', 31, '0/1/31/', 'score:update', true);
 insert into resource values(34, '打分删除', 'button', '', 31, '0/1/31/', 'score:delete', true);
 insert into resource values(35, '打分查看', 'button', '', 31, '0/1/31/', 'score:view', true);
+insert into resource values(41, '假期管理', 'menu', '/holiday', 1, '0/1/', 'holiday:*', true);
+insert into resource values(42, '假期新增', 'button', '', 41, '0/1/41/', 'holiday:create', true);
+insert into resource values(43, '假期修改', 'button', '', 41, '0/1/41/', 'holiday:update', true);
+insert into resource values(44, '假期删除', 'button', '', 41, '0/1/41/', 'holiday:delete', true);
+insert into resource values(45, '假期查看', 'button', '', 41, '0/1/41/', 'holiday:view', true);
 
 create table college(
 	college_id int(4) unsigned not null primary key,
@@ -206,4 +211,54 @@ create table dorm_score(
 	deleted bit not null default 0,
 	foreign key(dorm_id) references dormitory(id),
 	foreign key(staff_id) references staff(staff_id)
+);
+
+create table holiday(
+	holi_id int(5) unsigned not null primary key,
+	holi_name varchar(11) not null,
+	start_time date,
+	end_time date,
+	deleted bit not null default 0
+);
+
+create table holi_record(
+	id int(20) unsigned not null primary key auto_increment,
+	holi_id int(5) unsigned not null,
+	std_id int(20) unsigned not null,
+	start_time date,
+	end_time date,
+	in_home bit default 0,
+	is_out bit default 0,
+	address varchar(50),
+	deleted bit not null default 0,
+	foreign key(holi_id) references holiday(holi_id),
+	foreign key(std_id) references student(std_id)
+);
+
+create table holi_back(
+	id int(20) unsigned not null primary key auto_increment,
+	holi_id int(5) unsigned not null,
+	std_id int(20) unsigned not null,
+	back_time datetime,
+	deleted bit not null default 0,
+	foreign key(holi_id) references holiday(holi_id),
+	foreign key(std_id) references student(std_id)
+);
+
+create table vacation_record(
+	id int(20) unsigned not null primary key auto_increment,
+	std_id int(20) unsigned not null,
+	start_time date,
+	end_time date,
+	state int(2) default 0,
+	deleted bit not null default 0,
+	foreign key(std_id) references student(std_id)
+);
+
+create table vacation_sign(
+	id int(20) unsigned not null primary key auto_increment,
+	std_id int(20) unsigned not null,
+	sign_time datetime,
+	deleted bit not null default 0,
+	foreign key(std_id) references student(std_id)
 );
