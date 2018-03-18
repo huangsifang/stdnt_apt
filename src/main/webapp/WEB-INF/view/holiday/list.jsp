@@ -13,7 +13,7 @@
 欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a>
 
 <c:if test="${not empty msg}">
-    <div>${msg}</div>
+	<script>alert("${msg}")</script>
 </c:if>
 
 <!-- 假期新增修改模态框（Modal） -->
@@ -164,7 +164,12 @@
                     </shiro:hasPermission>
                     
                     <shiro:hasPermission name="record:create">
-                    	<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#recordModal" type="button" onClick="holidayRecord(${holiday.holiId},'${holiday.startTime}','${holiday.endTime}')">登记</button>
+                    	<c:if test="${!holiday.hasSign}">
+                    		<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#recordModal" type="button" onClick="holidayRecord(${holiday.holiId},'${holiday.startTime}','${holiday.endTime}')">登记</button>
+                    	</c:if>
+                    	<c:if test="${holiday.hasSign}">
+                    		<a href="holiday/${holiday.holiId}/std/record">查看</a>
+                    	</c:if>
                     </shiro:hasPermission>
                     
                     <shiro:hasPermission name="record:view">

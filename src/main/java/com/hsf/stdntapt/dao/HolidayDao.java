@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.hsf.stdntapt.entity.HoliBack;
 import com.hsf.stdntapt.entity.HoliRecord;
 import com.hsf.stdntapt.entity.Holiday;
 
@@ -16,6 +17,8 @@ public interface HolidayDao {
 
 	public int deleteHoliday(@Param("holiId") int holiId);
 
+	public String findHoliName(@Param("holiId") int holiId);
+
 	public List<HoliRecord> findHoliRecord(@Param("holiId") int holiId, @Param("stdId") int stdId);
 
 	public List<HoliRecord> findApartAllRecords(@Param("holiId") int holiId, @Param("apartId") int apartId);
@@ -27,4 +30,8 @@ public interface HolidayDao {
 	public int createHoliRecord(@Param("record") HoliRecord record);
 
 	public int deleteHoliRecord(@Param("holiId") int holiId, @Param("stdId") int stdId);
+
+	public List<HoliBack> findStdHoliBack(@Param("holiId") int holiId, @Param("stdId") int stdId);
+
+	public int createHoliBack(@Param("back") HoliBack back);
 }

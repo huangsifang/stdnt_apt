@@ -28,8 +28,12 @@
     <delete id="deleteHoliday" parameterType="int">
 		delete from holiday where holi_id=#{holiId}
 	</delete>
+	<select id="findHoliName" parameterType="int" resultType="String">
+        select holi_name as holiName from holiday 
+        where holi_id=#{holiId} and deleted=0
+    </select>
 	<select id="findHoliRecord" parameterType="int" resultType="HoliRecord">
-        select holi_id as holiId, std_id as stdId, start_time as startTime, end_time as endTime, in_home as inHome, is_out as isOut, address from holi_record 
+        select holi_id as holiId, std_id as stdId, apart_id as apartId, start_time as startTime, end_time as endTime, in_home as inHome, is_out as isOut, address from holi_record 
         where holi_id=#{holiId} and std_id=#{stdId} and deleted=0
     </select>
     <select id="findApartAllRecords" parameterType="int" resultType="HoliRecord">
@@ -71,4 +75,17 @@
 			deleted=1
 			where holi_id=#{holiId} and std_id=#{stdId}
 	</update>
+	<select id="findStdHoliBack" parameterType="int" resultType="HoliBack">
+        select holi_id as holiId, std_id as stdId, back_time as backTime from holi_back 
+        where holi_id=#{holiId} and std_id=#{stdId} and deleted=0
+    </select>
+    <insert id="createHoliBack" parameterType="HoliBack" useGeneratedKeys="true" keyProperty="back.holiId">
+        INSERT INTO holi_back(
+        	<if test="back.holiId != null">holi_id,</if>
+	        <if test="back.stdId != null">std_id</if>
+		) VALUES (
+			<if test="back.holiId != null">#{back.holiId},</if>
+	        <if test="back.stdId != null">#{back.stdId}</if>
+		)
+    </insert>
 </mapper>

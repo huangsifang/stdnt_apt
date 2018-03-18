@@ -5,6 +5,7 @@ public class Holiday {
 	private String holiName;
 	private String startTime;
 	private String endTime;
+	private boolean hasSign;
 
 	public Holiday() {
 	}
@@ -44,6 +45,14 @@ public class Holiday {
 
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
+	}
+
+	public boolean isHasSign() {
+		return hasSign;
+	}
+
+	public void setHasSign(boolean hasSign) {
+		this.hasSign = hasSign;
 	}
 
 }

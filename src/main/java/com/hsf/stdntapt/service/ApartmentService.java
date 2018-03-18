@@ -15,6 +15,8 @@ public interface ApartmentService {
 
 	public void deleteApartment(int apartId);
 
+	public String findApartName(int apartId);
+
 	public List<Staff> findApartStaffs(int apartId);
 
 	public List<Apartment> findStaffAparts(int staffId);

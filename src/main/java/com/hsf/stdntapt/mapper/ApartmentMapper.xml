@@ -20,6 +20,9 @@
     <delete id="deleteApartment" parameterType="int">
 		delete from apartment where apart_id=#{apartId}
 	</delete>
+	<select id="findApartName" parameterType="int" resultType="String">
+		select apart_name as apartName from apartment where apart_id=#{apartId}
+    </select>
 	<select id="findApartStaffs" parameterType="int" resultType="Staff">
 		select staff_id as staffId, staff_name as staffName from staff where staff_id in(
 			select staff_id from apart_staff_relation where apart_id=#{apartId} and deleted=0

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hsf.stdntapt.entity.Apartment;
+import com.hsf.stdntapt.entity.HoliBack;
 import com.hsf.stdntapt.entity.HoliRecord;
 import com.hsf.stdntapt.entity.Holiday;
 import com.hsf.stdntapt.service.ApartmentService;
@@ -44,6 +45,17 @@ public class HolidayController {
 	public String holidayList(final ModelMap model) {
 		final List<Holiday> holidayList = holidayService.findAllHolidays();
 		String username = SecurityUtils.getSubject().getPrincipal().toString();
+		if (!username.equals("admin")) {
+			int stdId = Integer.parseInt(username);
+			for (Holiday holiday : holidayList) {
+				List<HoliRecord> recordList = holidayService.findHoliRecord(holiday.getHoliId(), stdId);
+				boolean hasSign = false;
+				if (!recordList.isEmpty()) {
+					hasSign = true;
+				}
+				holiday.setHasSign(hasSign);
+			}
+		}
 		Set<String> roles = userService.findRoles(username);
 		for (String role : roles) {
 			if (role.equals("student")) {
@@ -232,6 +244,65 @@ public class HolidayController {
 		try {
 			holidayService.deleteHoliRecord(holiId, stdId);
 			msg = "删除成功！";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return msg;
+	}
+
+	@RequiresPermissions("record:create")
+	@RequestMapping(value = "/{holiId}/std/record", method = RequestMethod.GET)
+	public String stdRecord(@PathVariable("holiId") int holiId, final ModelMap model) {
+		String username = SecurityUtils.getSubject().getPrincipal().toString();
+		int stdId = Integer.parseInt(username);
+		List<HoliRecord> stdRecordList = holidayService.findHoliRecord(holiId, stdId);
+		if (!stdRecordList.isEmpty()) {
+			HoliRecord stdRecord = stdRecordList.get(0);
+			String holiName = holidayService.findHoliName(holiId);
+			String apartName = apartmentService.findApartName(stdRecord.getApartId());
+			stdRecord.setHoliName(holiName);
+			stdRecord.setApartName(apartName);
+			if (stdRecord.isInHome()) {
+				stdRecord.setHomeOrSchool("返家");
+				stdRecord.setIsOutStr("");
+			} else {
+				stdRecord.setHomeOrSchool("留校");
+				if (stdRecord.isOut()) {
+					stdRecord.setIsOutStr("是");
+				} else {
+					stdRecord.setIsOutStr("否");
+				}
+			}
+			List<HoliBack> backList = holidayService.findStdHoliBack(holiId, stdId);
+			boolean hasSign = false;
+			if (!backList.isEmpty()) {
+				hasSign = true;
+			}
+			model.addAttribute("stdRecord", stdRecord);
+			model.addAttribute("hasSign", hasSign);
+			return "holiday/stdRecord";
+		} else {
+			model.addAttribute("msg", "您还没有登记哦！");
+			return "redirect:/holiday";
+		}
+	}
+
+	@RequiresPermissions("record:create")
+	@RequestMapping(value = "/{holiId}/sign", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String sign(@PathVariable("holiId") int holiId, final ModelMap model) {
+		String msg = "";
+		try {
+			String username = SecurityUtils.getSubject().getPrincipal().toString();
+			int stdId = Integer.parseInt(username);
+			List<HoliBack> backList = holidayService.findStdHoliBack(holiId, stdId);
+			if (!backList.isEmpty()) {
+				msg = "您已签到过，无需重复签到！";
+			} else {
+				HoliBack back = new HoliBack(holiId, stdId);
+				holidayService.createHoliBack(back);
+				msg = "签到成功！";
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

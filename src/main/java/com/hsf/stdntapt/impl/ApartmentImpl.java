@@ -35,6 +35,11 @@ public class ApartmentImpl implements ApartmentService {
 	}
 
 	@Override
+	public String findApartName(int apartId) {
+		return apartmentDao.findApartName(apartId);
+	}
+
+	@Override
 	public List<Staff> findApartStaffs(int apartId) {
 		return apartmentDao.findApartStaffs(apartId);
 	}

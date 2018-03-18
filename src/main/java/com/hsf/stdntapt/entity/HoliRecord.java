@@ -3,6 +3,7 @@ package com.hsf.stdntapt.entity;
 public class HoliRecord {
 	private long id;
 	private int holiId;
+	private String holiName;
 	private int stdId;
 	private String stdName;
 	private String startTime;
@@ -13,6 +14,7 @@ public class HoliRecord {
 	private String isOutStr;
 	private String address;
 	private int apartId;
+	private String apartName;
 
 	public HoliRecord() {
 	}
@@ -36,6 +38,14 @@ public class HoliRecord {
 
 	public void setHoliId(int holiId) {
 		this.holiId = holiId;
+	}
+
+	public String getHoliName() {
+		return holiName;
+	}
+
+	public void setHoliName(String holiName) {
+		this.holiName = holiName;
 	}
 
 	public int getStdId() {
@@ -116,6 +126,14 @@ public class HoliRecord {
 
 	public void setApartId(int apartId) {
 		this.apartId = apartId;
+	}
+
+	public String getApartName() {
+		return apartName;
+	}
+
+	public void setApartName(String apartName) {
+		this.apartName = apartName;
 	}
 
 }

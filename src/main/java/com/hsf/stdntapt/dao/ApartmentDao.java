@@ -18,6 +18,8 @@ public interface ApartmentDao {
 
 	public void deleteApartment(@Param("apartId") int apartId);
 
+	public String findApartName(@Param("apartId") int apartId);
+
 	public List<Staff> findApartStaffs(@Param("apartId") int apartId);
 
 	public List<Apartment> findStaffAparts(@Param("staffId") int staffId);

@@ -245,7 +245,7 @@ create table holi_back(
 	id int(20) unsigned not null primary key auto_increment,
 	holi_id int(5) unsigned not null,
 	std_id int(20) unsigned not null,
-	back_time datetime,
+	back_time datetime not null default current_timestamp,
 	deleted bit not null default 0,
 	foreign key(holi_id) references holiday(holi_id),
 	foreign key(std_id) references student(std_id)
