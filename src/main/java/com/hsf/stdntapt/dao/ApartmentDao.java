@@ -69,4 +69,6 @@ public interface ApartmentDao {
 	public int getDormBedNum(@Param("dormId") int dormId);
 
 	public int findStdApartId(@Param("stdId") int stdId);
+
+	public int findApartStdNum(@Param("apartId") int apartId);
 }

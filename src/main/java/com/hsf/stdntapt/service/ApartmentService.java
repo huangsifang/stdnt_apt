@@ -66,4 +66,6 @@ public interface ApartmentService {
 	public int getDormBedNum(int dormId);
 
 	public int findStdApartId(int stdId);
+
+	public int findApartStdNum(int apartId);
 }

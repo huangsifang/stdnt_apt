@@ -32,13 +32,18 @@
         select holi_id as holiId, std_id as stdId, start_time as startTime, end_time as endTime, in_home as inHome, is_out as isOut, address from holi_record 
         where holi_id=#{holiId} and std_id=#{stdId} and deleted=0
     </select>
+    <select id="findApartAllRecords" parameterType="int" resultType="HoliRecord">
+        select holi_id as holiId, std_id as stdId, apart_id as apartId, start_time as startTime, end_time as endTime, in_home as inHome, is_out as isOut, address 
+        from holi_record 
+        where apart_id=#{apartId} and holi_id=#{holiId} and deleted=0
+    </select>
 	<select id="findApartAllHomeRecords" parameterType="int" resultType="HoliRecord">
         select holi_id as holiId, std_id as stdId, start_time as startTime, end_time as endTime, address from holi_record 
-        where apart_id=#{record.apartId} and in_home=true and deleted=0
+        where apart_id=#{record.apartId}  and holi_id=#{holiId} and in_home=true and deleted=0
     </select>
     <select id="findApartAllSchoolRecords" parameterType="int" resultType="HoliRecord">
         select holi_id as holiId, std_id as stdId, start_time as startTime, end_time as endTime, is_out as isOut from holi_record 
-        where apart_id=#{record.apartId} and in_home=false and deleted=0
+        where apart_id=#{record.apartId}  and holi_id=#{holiId} and in_home=false and deleted=0
     </select>
     <insert id="createHoliRecord" parameterType="HoliRecord" useGeneratedKeys="true" keyProperty="record.id">
         INSERT INTO holi_record(
@@ -48,7 +53,7 @@
 	        <if test="record.startTime != null">start_time,</if>
 	        <if test="record.endTime != null">end_time,</if>
 	        <if test="record.inHome != null">in_home,</if>
-	        <if test="record.isOut != null">is_out</if>
+	        <if test="!record.inHome">is_out</if>
 	        <if test="record.address != null">address</if>
 		) VALUES (
 			<if test="record.holiId != null">#{record.holiId},</if>
@@ -57,13 +62,13 @@
 	        <if test="record.startTime != null">#{record.startTime},</if>
 	        <if test="record.endTime != null">#{record.endTime},</if>
 	        <if test="record.inHome != null">#{record.inHome},</if>
-	        <if test="record.isOut != null">#{record.isOut}</if>
+	        <if test="!record.inHome">#{record.isOut}</if>
 	        <if test="record.address != null">#{record.address}</if>
 		)
     </insert>
     <update id="deleteHoliRecord" parameterType="int">
 		UPDATE holi_record SET
-			deleted=0
-			where holi_id=#{holiId} and stdId_id=#{stdId}
+			deleted=1
+			where holi_id=#{holiId} and std_id=#{stdId}
 	</update>
 </mapper>

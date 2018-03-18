@@ -24,4 +24,8 @@
     <select id="findOneStd" parameterType="int" resultType="Student">
 		select std_id as stdId, std_name as stdName, std_sex as stdSex, std_tel as stdTel, enter_time as enterTime, is_party as isParty, class_id as classId from student where std_id=#{stdId}
     </select>
+    
+    <select id="findStdName" parameterType="int" resultType="String">
+		select std_name as stdName from student where std_id=#{stdId}
+    </select>
 </mapper>

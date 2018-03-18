@@ -4,10 +4,13 @@ public class HoliRecord {
 	private long id;
 	private int holiId;
 	private int stdId;
+	private String stdName;
 	private String startTime;
 	private String endTime;
 	private boolean inHome;
+	private String homeOrSchool;
 	private boolean isOut;
+	private String isOutStr;
 	private String address;
 	private int apartId;
 
@@ -43,6 +46,14 @@ public class HoliRecord {
 		this.stdId = stdId;
 	}
 
+	public String getStdName() {
+		return stdName;
+	}
+
+	public void setStdName(String stdName) {
+		this.stdName = stdName;
+	}
+
 	public String getStartTime() {
 		return startTime;
 	}
@@ -67,12 +78,28 @@ public class HoliRecord {
 		this.inHome = inHome;
 	}
 
+	public String getHomeOrSchool() {
+		return homeOrSchool;
+	}
+
+	public void setHomeOrSchool(String homeOrSchool) {
+		this.homeOrSchool = homeOrSchool;
+	}
+
 	public boolean isOut() {
 		return isOut;
 	}
 
 	public void setOut(boolean isOut) {
 		this.isOut = isOut;
+	}
+
+	public String getIsOutStr() {
+		return isOutStr;
+	}
+
+	public void setIsOutStr(String isOutStr) {
+		this.isOutStr = isOutStr;
 	}
 
 	public String getAddress() {

@@ -10,7 +10,7 @@
 </head>
 <body>
 
-欢迎[<shiro:principal/>]登录成功！<a href="logout">退出</a>
+欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a>
 
 <c:if test="${not empty msg}">
     <div>${msg}</div>
@@ -140,8 +140,8 @@
 <table class="table">
     <thead>
         <tr>
-            <th>寝室号</th>
-            <th>寝室名</th>
+            <th>假期号</th>
+            <th>假期名</th>
             <th>开始时间</th>
             <th>结束时间</th>
             <th>操作</th>
@@ -165,6 +165,10 @@
                     
                     <shiro:hasPermission name="record:create">
                     	<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#recordModal" type="button" onClick="holidayRecord(${holiday.holiId},'${holiday.startTime}','${holiday.endTime}')">登记</button>
+                    </shiro:hasPermission>
+                    
+                    <shiro:hasPermission name="record:view">
+                    	<a href="holiday/${holiday.holiId}/apart/record">查看</a>
                     </shiro:hasPermission>
                 </td>
             </tr>

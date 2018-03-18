@@ -63,7 +63,6 @@ insert into resource values(42, '假期新增', 'button', '', 41, '0/1/41/', 'holida
 insert into resource values(43, '假期修改', 'button', '', 41, '0/1/41/', 'holiday:update', true);
 insert into resource values(44, '假期删除', 'button', '', 41, '0/1/41/', 'holiday:delete', true);
 insert into resource values(45, '假期查看', 'button', '', 41, '0/1/41/', 'holiday:view', true);
-insert into resource values(51, '假期留校回家管理', 'menu', '/record', 1, '0/1/', 'record:*', true);
 insert into resource values(52, '假期留校回家新增', 'button', '', 51, '0/1/51/', 'record:create', true);
 insert into resource values(53, '假期留校回家修改', 'button', '', 51, '0/1/51/', 'record:update', true);
 insert into resource values(54, '假期留校回家删除', 'button', '', 51, '0/1/51/', 'record:delete', true);

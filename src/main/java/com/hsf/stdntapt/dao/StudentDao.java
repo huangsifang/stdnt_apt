@@ -12,4 +12,6 @@ public interface StudentDao {
 			@Param("isParty") boolean isParty, @Param("classId") int classId);
 
 	Student findOneStd(@Param("stdId") int stdId);
+
+	public String findStdName(@Param("stdId") int stdId);
 }

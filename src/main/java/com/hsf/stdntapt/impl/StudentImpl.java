@@ -17,4 +17,9 @@ public class StudentImpl implements StudentService {
 	public Student findOneStd(int stdId) {
 		return studentDao.findOneStd(stdId);
 	}
+
+	@Override
+	public String findStdName(int stdId) {
+		return studentDao.findStdName(stdId);
+	}
 }

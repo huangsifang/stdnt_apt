@@ -18,6 +18,8 @@ public interface HolidayDao {
 
 	public List<HoliRecord> findHoliRecord(@Param("holiId") int holiId, @Param("stdId") int stdId);
 
+	public List<HoliRecord> findApartAllRecords(@Param("holiId") int holiId, @Param("apartId") int apartId);
+
 	public List<HoliRecord> findApartAllHomeRecords();
 
 	public List<HoliRecord> findApartAllSchoolRecords();
