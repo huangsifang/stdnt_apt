@@ -170,6 +170,11 @@ public class ApartmentImpl implements ApartmentService {
 	}
 
 	@Override
+	public Dormitory findStdDorm(int stdId) {
+		return apartmentDao.findStdDorm(stdId);
+	}
+
+	@Override
 	public int findApartStdNum(int apartId) {
 		return apartmentDao.findApartStdNum(apartId);
 	}

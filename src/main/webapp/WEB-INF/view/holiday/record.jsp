@@ -31,6 +31,8 @@
             <th>留校&返家</th>
             <th>是否外出</th>
             <th>外出地址</th>
+            <th>是否返校</th>
+            <th>操作</th>
         </tr>
     </thead>
     <tbody>
@@ -43,6 +45,16 @@
                 <td>${record.homeOrSchool}</td>
                 <td>${record.isOutStr}</td>
                 <td>${record.address}</td>
+                <td>
+                	<c:if test="${record.inHome}">
+	                	<c:if test="${record.hasSign}">
+							已返校
+						</c:if>
+						<c:if test="${!record.hasSign}">
+							未返校
+						</c:if>
+					</c:if>
+                </td>
                 <td>
                     <shiro:hasPermission name="record:delete">
                     	<button class="btn btn-danger btn-md" type="button" onClick="deleteRecord(${record.holiId},${record.stdId})">删除</button>

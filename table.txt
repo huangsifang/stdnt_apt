@@ -67,6 +67,21 @@ insert into resource values(52, '假期留校回家新增', 'button', '', 51, '0/1/51/',
 insert into resource values(53, '假期留校回家修改', 'button', '', 51, '0/1/51/', 'record:update', true);
 insert into resource values(54, '假期留校回家删除', 'button', '', 51, '0/1/51/', 'record:delete', true);
 insert into resource values(55, '假期留校回家查看', 'button', '', 51, '0/1/51/', 'record:view', true);
+insert into resource values(61, '维修管理', 'menu', '/repair', 1, '0/1/', 'repair:*', true);
+insert into resource values(62, '维修新增', 'button', '', 61, '0/1/61/', 'repair:create', true);
+insert into resource values(63, '维修修改', 'button', '', 61, '0/1/61/', 'repair:update', true);
+insert into resource values(64, '维修删除', 'button', '', 61, '0/1/61/', 'repair:delete', true);
+insert into resource values(65, '维修查看', 'button', '', 61, '0/1/61/', 'repair:view', true);
+
+insert into repair_type values(1, '灯具', false);
+insert into repair_type values(2, '水龙头', false);
+insert into repair_type values(3, '淋浴头', false);
+insert into repair_type values(4, '门/门锁', false);
+insert into repair_type values(5, '家具', false);
+insert into repair_type values(6, '管道', false);
+insert into repair_type values(7, '墙面', false);
+insert into repair_type values(8, '饮水机', false);
+insert into repair_type values(9, '电梯', false);
 
 create table college(
 	college_id int(4) unsigned not null primary key,
@@ -129,15 +144,6 @@ create table student(
 	class_id int(6) unsigned,
 	deleted bit not null default 0,
 	foreign key(class_id) references class(class_id)
-);
-
-create table repairman(
-	repairman_id int(11) unsigned not null primary key,
-	repairman_name varchar(11) not null,
-	repairman_sex int(1),
-	repairman_tel varchar(11),
-	repair_type int(1),
-	deleted bit not null default 0
 );
 
 create table apartment(
@@ -269,4 +275,45 @@ create table vacation_sign(
 	sign_time datetime,
 	deleted bit not null default 0,
 	foreign key(std_id) references student(std_id)
+);
+
+create table repair_type (
+	type_id int(4) unsigned not null primary key,
+	type_name varchar(20) not null,
+	deleted bit not null default 0
+);
+
+create table repairman(
+	repairman_id int(11) unsigned not null primary key,
+	repairman_name varchar(11) not null,
+	repairman_sex int(1),
+	repairman_tel varchar(11),
+	repair_type int(4) unsigned not null,
+	deleted bit not null default 0,
+	foreign key(repair_type) references repair_type(type_id)
+);
+
+create table repair(
+	id int(20) unsigned not null primary key auto_increment,
+	dorm_id int(20) unsigned not null,
+	applicant_id int(20) unsigned not null,
+	repair_type int(4) unsigned not null,
+	apply_time datetime not null default current_timestamp,
+	remark varchar(50),
+	deleted bit not null default 0,
+	foreign key(dorm_id) references dormitory(id),
+	foreign key(applicant_id) references student(std_id),
+	foreign key(repair_type) references repair_type(type_id)
+);
+
+create table repair_record(
+	id int(20) unsigned not null primary key auto_increment,
+	repair_id int(20) unsigned not null,
+	repairman_id int(11) unsigned not null,
+	accept_time datetime not null default current_timestamp,
+	repair_time datetime,
+	state int(2) not null default 1,
+	deleted bit not null default 0,
+	foreign key(repair_id) references repair(id),
+	foreign key(repairman_id) references repairman(repairman_id)
 );

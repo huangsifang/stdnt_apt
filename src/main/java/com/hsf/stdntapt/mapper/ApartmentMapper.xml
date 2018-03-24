@@ -157,6 +157,11 @@
         	) and deleted=0
        	) and deleted=0
     </select>
+    <select id="findStdDorm" resultType="Dormitory">
+    	select id, dorm_no as dormNo, floor_id as floorId, fee, leader_id as leaderId from dormitory where id in(
+        	select dorm_id from bed where std_id=#{stdId} and deleted=0
+       	) and deleted=0
+    </select>
     <select id="findApartStdNum" resultType="int">
     	select count(*) from bed where std_id!=1 and dorm_id in(
     		select id from dormitory where floor_id in(

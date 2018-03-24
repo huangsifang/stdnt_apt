@@ -15,6 +15,7 @@ public class HoliRecord {
 	private String address;
 	private int apartId;
 	private String apartName;
+	private boolean hasSign;
 
 	public HoliRecord() {
 	}
@@ -134,6 +135,14 @@ public class HoliRecord {
 
 	public void setApartName(String apartName) {
 		this.apartName = apartName;
+	}
+
+	public boolean isHasSign() {
+		return hasSign;
+	}
+
+	public void setHasSign(boolean hasSign) {
+		this.hasSign = hasSign;
 	}
 
 }

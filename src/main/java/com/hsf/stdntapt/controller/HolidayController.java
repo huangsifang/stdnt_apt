@@ -182,6 +182,12 @@ public class HolidayController {
 			if (record.isInHome()) {
 				record.setHomeOrSchool("返家");
 				record.setIsOutStr("");
+				List<HoliBack> backList = holidayService.findStdHoliBack(holiId, record.getStdId());
+				boolean hasSign = false;
+				if (!backList.isEmpty()) {
+					hasSign = true;
+				}
+				record.setHasSign(hasSign);
 			} else {
 				record.setHomeOrSchool("留校");
 				if (record.isOut()) {

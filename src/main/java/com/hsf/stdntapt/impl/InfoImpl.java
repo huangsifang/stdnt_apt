@@ -12,7 +12,7 @@ import com.hsf.stdntapt.dao.ApartmentDao;
 import com.hsf.stdntapt.dao.ClassDao;
 import com.hsf.stdntapt.dao.CollegeDao;
 import com.hsf.stdntapt.dao.ConsellorDao;
-import com.hsf.stdntapt.dao.RepairmanDao;
+import com.hsf.stdntapt.dao.RepairDao;
 import com.hsf.stdntapt.dao.SpeYearsDao;
 import com.hsf.stdntapt.dao.SpecialityDao;
 import com.hsf.stdntapt.dao.StaffDao;
@@ -56,7 +56,7 @@ public class InfoImpl implements InfoService {
 	StaffDao staffDao;
 
 	@Resource
-	RepairmanDao repairmanDao;
+	RepairDao repairDao;
 
 	@Resource
 	UserDao userDao;
@@ -167,7 +167,7 @@ public class InfoImpl implements InfoService {
 	@Override
 	public void insertRepairmanList(int repairmanId, String repairmanName, int repairmanSex, String repairmanTel,
 			int repairType) {
-		repairmanDao.insertRepairmanList(repairmanId, repairmanName, repairmanSex, repairmanTel, repairType);
+		repairDao.insertRepairmanList(repairmanId, repairmanName, repairmanSex, repairmanTel, repairType);
 	}
 
 	@Override

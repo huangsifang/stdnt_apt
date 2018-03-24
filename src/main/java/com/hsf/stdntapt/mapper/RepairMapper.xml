@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hsf.stdntapt.dao.RepairDao">
+    <insert id="insertRepairmanList" parameterType="int">
+        INSERT INTO repairman(
+        	<if test="repairmanId != null">repairman_id,</if>
+	        <if test="repairmanName != null">repairman_name,</if>
+	        repairman_sex,
+	        repairman_tel,
+	        repair_type
+		) VALUES (
+	        <if test="repairmanId != null">#{repairmanId},</if>
+	        <if test="repairmanName != null">#{repairmanName},</if>
+	        #{repairmanSex},
+	        #{repairmanTel},
+	        #{repairType}
+		)
+    </insert>
+    
+    <select id="getApartRepairs" parameterType="int" resultType="Repair">
+        select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark from repair 
+        where dorm_id in(
+	        select id from dormitory
+	        where floor_id in(
+	        	select id from floor
+	        	where apart_id=#{apartId} and deleted=0
+	        )and deleted=0
+        )and deleted=0
+    </select>
+    
+    <select id="findDormRepairs" parameterType="int" resultType="Repair">
+        select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark from repair 
+        where dorm_id=#{dormId}
+    </select>
+    
+    <select id="findRepairTypeName" parameterType="int" resultType="String">
+        select type_name as typeName from repair_type 
+        where type_id=#{type}
+    </select>
+    
+    <select id="findRepairRecord" parameterType="long" resultType="RepairRecord">
+        select id, repair_id as repairId, repairman_id as repairmanId, accept_time as acceptTime, repair_time as repairTime, state from repair_record 
+        where repair_id=#{repairId} 
+        limit 1
+    </select>
+    
+    <select id="findRepairState" parameterType="long" resultType="int">
+        select state from repair_record 
+        where repair_id=#{repairId}
+    </select>
+    
+    <select id="findAllRepairType" resultType="RepairType">
+        select type_id as typeId, type_name as typeName from repair_type
+    </select>
+    
+    <insert id="createRepair" parameterType="Repair" useGeneratedKeys="true" keyProperty="repair.id">
+        INSERT INTO repair(
+        	<if test="repair.dormId != null">dorm_id,</if>
+	        <if test="repair.applicantId != null">applicant_id,</if>
+	        <if test="repair.repairType != null">repair_type,</if>
+	        <if test="repair.applyTime != null">apply_time,</if>
+	        <if test="repair.remark != null">remark</if>
+		) VALUES (
+	        <if test="repair.dormId != null">#{repair.dormId},</if>
+	        <if test="repair.applicantId != null">#{repair.applicantId},</if>
+	        <if test="repair.repairType != null">#{repair.repairType},</if>
+	        <if test="repair.applyTime != null">#{repair.applyTime},</if>
+	        <if test="repair.remark != null">#{repair.remark}</if>
+		)
+    </insert>
+</mapper>
