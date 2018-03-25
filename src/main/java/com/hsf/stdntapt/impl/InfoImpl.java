@@ -165,12 +165,6 @@ public class InfoImpl implements InfoService {
 	}
 
 	@Override
-	public void insertRepairmanList(int repairmanId, String repairmanName, int repairmanSex, String repairmanTel,
-			int repairType) {
-		repairDao.insertRepairmanList(repairmanId, repairmanName, repairmanSex, repairmanTel, repairType);
-	}
-
-	@Override
 	public List<Apartment> getApartmentInfo(String name, MultipartFile file) {
 		ReadExcel ReadExcel = new ReadExcel();
 		List<Apartment> excelInfo = ReadExcel.getApartmentExcelInfo(name, file);

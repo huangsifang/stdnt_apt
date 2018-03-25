@@ -72,6 +72,10 @@ insert into resource values(62, '维修新增', 'button', '', 61, '0/1/61/', 'repair
 insert into resource values(63, '维修修改', 'button', '', 61, '0/1/61/', 'repair:update', true);
 insert into resource values(64, '维修删除', 'button', '', 61, '0/1/61/', 'repair:delete', true);
 insert into resource values(65, '维修查看', 'button', '', 61, '0/1/61/', 'repair:view', true);
+insert into resource values(72, '维修记录新增', 'button', '', 71, '0/1/71/', 'repairRecord:create', true);
+insert into resource values(81, '我的维修管理', 'menu', '/repair/myRepair', 1, '0/1/', 'myRrepair:*', true);
+insert into resource values(83, '我的维修修改', 'button', '', 81, '0/1/81/', 'repairRecord:update', true);
+insert into resource values(85, '我的维修查看', 'button', '', 81, '0/1/81/', 'repairRecord:view', true);
 
 insert into repair_type values(1, '灯具', false);
 insert into repair_type values(2, '水龙头', false);
@@ -288,9 +292,16 @@ create table repairman(
 	repairman_name varchar(11) not null,
 	repairman_sex int(1),
 	repairman_tel varchar(11),
-	repair_type int(4) unsigned not null,
+	deleted bit not null default 0
+);
+
+create table repairman_type_relation(
+	id int(20) unsigned not null primary key auto_increment,
+	repairman_id int(11) unsigned not null,
+	type_id int(4) unsigned not null,
 	deleted bit not null default 0,
-	foreign key(repair_type) references repair_type(type_id)
+	foreign key(repairman_id) references repairman(repairman_id),
+	foreign key(type_id) references repair_type(type_id)
 );
 
 create table repair(

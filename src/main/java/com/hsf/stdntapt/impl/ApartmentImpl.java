@@ -100,8 +100,13 @@ public class ApartmentImpl implements ApartmentService {
 	}
 
 	@Override
-	public List<Floor> findFloorAll(int floorId) {
-		return apartmentDao.findFloorAll(floorId);
+	public List<Floor> findFloorAll(int apartId) {
+		return apartmentDao.findFloorAll(apartId);
+	}
+
+	@Override
+	public Floor findOneFloor(int floorId) {
+		return apartmentDao.findOneFloor(floorId);
 	}
 
 	@Override

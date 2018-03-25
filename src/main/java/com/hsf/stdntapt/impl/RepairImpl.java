@@ -10,6 +10,7 @@ import com.hsf.stdntapt.dao.RepairDao;
 import com.hsf.stdntapt.entity.Repair;
 import com.hsf.stdntapt.entity.RepairRecord;
 import com.hsf.stdntapt.entity.RepairType;
+import com.hsf.stdntapt.entity.Repairman;
 import com.hsf.stdntapt.service.RepairService;
 
 @Service
@@ -18,8 +19,33 @@ public class RepairImpl implements RepairService {
 	RepairDao repairDao;
 
 	@Override
+	public void insertRepairmanList(int repairmanId, String repairmanName, int repairmanSex, String repairmanTel) {
+		repairDao.insertRepairmanList(repairmanId, repairmanName, repairmanSex, repairmanTel);
+	}
+
+	@Override
+	public int insertRepairmanTypeRelation(int repairmanId, int typeId) {
+		return repairDao.insertRepairmanTypeRelation(repairmanId, typeId);
+	}
+
+	@Override
+	public Repairman findRepairman(int repairmanId) {
+		return repairDao.findRepairman(repairmanId);
+	}
+
+	@Override
 	public List<Repair> getApartRepairs(int apartId) {
 		return repairDao.getApartRepairs(apartId);
+	}
+
+	@Override
+	public List<Repair> getRepairsByType(int typeId) {
+		return repairDao.getRepairsByType(typeId);
+	}
+
+	@Override
+	public Repair findOneRepair(long repairId) {
+		return repairDao.findOneRepair(repairId);
 	}
 
 	@Override
@@ -50,5 +76,30 @@ public class RepairImpl implements RepairService {
 	@Override
 	public int createRepair(Repair repair) {
 		return repairDao.createRepair(repair);
+	}
+
+	@Override
+	public int createRepairRecord(RepairRecord record) {
+		return repairDao.createRepairRecord(record);
+	}
+
+	@Override
+	public List<String> findRepairmanTypes(int repairmanId) {
+		return repairDao.findRepairmanTypes(repairmanId);
+	}
+
+	@Override
+	public List<RepairRecord> findMyRepairRecordList(int repairmanId) {
+		return repairDao.findMyRepairRecordList(repairmanId);
+	}
+
+	@Override
+	public RepairRecord findOneRepairRecordFromRepairId(long repairId) {
+		return repairDao.findOneRepairRecordFromRepairId(repairId);
+	}
+
+	@Override
+	public int finishedRepairRecord(long repairId) {
+		return repairDao.finishedRepairRecord(repairId);
 	}
 }

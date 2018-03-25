@@ -4,9 +4,12 @@ import java.util.Date;
 
 public class Repair {
 	private long id;
+	private String apartName;
 	private int dormId;
+	private int dormNo;
 	private int applicantId;
 	private String applicantName;
+	private String applicantTel;
 	private int repairType;
 	private String repairTypeName;
 	private Date applyTime;
@@ -30,12 +33,28 @@ public class Repair {
 		this.id = id;
 	}
 
+	public String getApartName() {
+		return apartName;
+	}
+
+	public void setApartName(String apartName) {
+		this.apartName = apartName;
+	}
+
 	public int getDormId() {
 		return dormId;
 	}
 
 	public void setDormId(int dormId) {
 		this.dormId = dormId;
+	}
+
+	public int getDormNo() {
+		return dormNo;
+	}
+
+	public void setDormNo(int dormNo) {
+		this.dormNo = dormNo;
 	}
 
 	public int getApplicantId() {
@@ -52,6 +71,14 @@ public class Repair {
 
 	public void setApplicantName(String applicantName) {
 		this.applicantName = applicantName;
+	}
+
+	public String getApplicantTel() {
+		return applicantTel;
+	}
+
+	public void setApplicantTel(String applicantTel) {
+		this.applicantTel = applicantTel;
 	}
 
 	public int getRepairType() {

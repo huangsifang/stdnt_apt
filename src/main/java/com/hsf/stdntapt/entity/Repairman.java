@@ -5,7 +5,7 @@ public class Repairman {
 	private String repairmanName;
 	private int repairmanSex;
 	private String repairmanTel;
-	private int repairType;
+	private String typeIds;
 
 	public int getRepairmanId() {
 		return repairmanId;
@@ -39,12 +39,12 @@ public class Repairman {
 		this.repairmanTel = repairmanTel;
 	}
 
-	public int getRepairType() {
-		return repairType;
+	public String getTypeIds() {
+		return typeIds;
 	}
 
-	public void setRepairType(int repairType) {
-		this.repairType = repairType;
+	public void setTypeIds(String typeIds) {
+		this.typeIds = typeIds;
 	}
 
 }

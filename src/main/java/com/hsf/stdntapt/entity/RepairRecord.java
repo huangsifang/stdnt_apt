@@ -9,6 +9,16 @@ public class RepairRecord {
 	private Date acceptTime;
 	private Date repairTime;
 	private int state;
+	private Repair repair;
+	private Repairman repairman;
+
+	public RepairRecord() {
+	}
+
+	public RepairRecord(long repairId, int repairmanId) {
+		this.repairId = repairId;
+		this.repairmanId = repairmanId;
+	}
 
 	public long getId() {
 		return id;
@@ -56,6 +66,22 @@ public class RepairRecord {
 
 	public void setState(int state) {
 		this.state = state;
+	}
+
+	public Repair getRepair() {
+		return repair;
+	}
+
+	public void setRepair(Repair repair) {
+		this.repair = repair;
+	}
+
+	public Repairman getRepairman() {
+		return repairman;
+	}
+
+	public void setRepairman(Repairman repairman) {
+		this.repairman = repairman;
 	}
 
 }

@@ -100,6 +100,9 @@
     <select id="findFloorAll" resultType="Floor">
     	select id, apart_id as apartId, floor_no as floorNo from floor where apart_id=#{apartId} and deleted=0
     </select>
+    <select id="findOneFloor" parameterType="int" resultType="Floor">
+    	select id, apart_id as apartId, floor_no as floorNo from floor where id=#{floorId} and deleted=0
+    </select>
     <select id="findFloorByApartIdFloorNo" resultType="Floor">
     	select id, apart_id as apartId, floor_no as floorNo from floor where apart_id=#{apartId} and floor_no=#{floorNo} and deleted=0
     </select>

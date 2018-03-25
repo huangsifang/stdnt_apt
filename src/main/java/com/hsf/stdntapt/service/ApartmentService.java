@@ -41,7 +41,9 @@ public interface ApartmentService {
 
 	public int findFloorNum(int apartId);
 
-	List<Floor> findFloorAll(int floorId);
+	List<Floor> findFloorAll(int apartId);
+
+	public Floor findOneFloor(int floorId);
 
 	Floor findFloorByApartIdFloorNo(int apartId, int floorNo);
 

@@ -262,7 +262,6 @@ $(function() {
 			data: $("#holidayForm").serializeArray(),
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
-				alert(data);
 				$('#holidayModal').modal('hide');
 			},
 			error: function() {
@@ -279,7 +278,6 @@ $(function() {
 			data: $("#recordForm").serializeArray(),
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
-				alert(data);
 				$('#recordModal').modal('hide');
 			},
 			error: function() {

@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hsf.stdntapt.entity.Apartment;
 import com.hsf.stdntapt.entity.Dormitory;
+import com.hsf.stdntapt.entity.Floor;
 import com.hsf.stdntapt.entity.Repair;
 import com.hsf.stdntapt.entity.RepairRecord;
 import com.hsf.stdntapt.entity.RepairType;
+import com.hsf.stdntapt.entity.Repairman;
 import com.hsf.stdntapt.entity.Student;
 import com.hsf.stdntapt.service.ApartmentService;
 import com.hsf.stdntapt.service.RepairService;
@@ -44,22 +46,22 @@ public class RepairController {
 	@RequestMapping(method = RequestMethod.GET)
 	public String repairList(final ModelMap model) {
 		String username = SecurityUtils.getSubject().getPrincipal().toString();
+		Set<String> permissions = userService.findPermissions(username);
+		List<RepairType> allType = repairService.findAllRepairType();
 		List<Apartment> apartList = null;
 		if (username.equals("admin")) {
 			apartList = apartmentService.findAll();
 		} else {
-			Set<String> roles = userService.findRoles(username);
-			for (String role : roles) {
-				if (role.equals("staff")) {
-					apartList = apartmentService.findStaffAparts(Integer.parseInt(username));
-					break;
-				}
-			}
+			apartList = apartmentService.findStaffAparts(Integer.parseInt(username));
 		}
-		if (apartList != null) {
+		if (apartList != null && permissions.contains("repair:*")) {
 			int apartId = apartList.get(0).getApartId();
 			final List<Repair> repairList = repairService.getApartRepairs(apartId);
 			for (Repair repair : repairList) {
+				int dormId = repair.getDormId();
+				Dormitory dorm = apartmentService.findOneDorm(dormId);
+				Floor floor = apartmentService.findOneFloor(dorm.getFloorId());
+				repair.setDormNo(floor.getFloorNo() * 100 + dorm.getDormNo());
 				Student std = studentService.findOneStd(repair.getApplicantId());
 				if (std != null) {
 					repair.setApplicantName(std.getStdName());
@@ -73,7 +75,8 @@ public class RepairController {
 				}
 			}
 			model.addAttribute("repairList", repairList);
-		} else {
+			return "repair/apartRepairList";
+		} else if (permissions.contains("repair:create")) {
 			Dormitory dorm = apartmentService.findStdDorm(Integer.parseInt(username));
 			if (dorm != null) {
 				List<Repair> dormRepairList = repairService.findDormRepairs(dorm.getId());
@@ -92,15 +95,38 @@ public class RepairController {
 				}
 				model.addAttribute("dormRepairList", dormRepairList);
 			}
+			model.addAttribute("allType", allType);
+			return "repair/dormRepairList";
+		} else if (permissions.contains("repairRecord:create")) {
+			final List<Repair> repairByTypeList = repairService.getRepairsByType(allType.get(0).getTypeId());
+			for (Repair repair : repairByTypeList) {
+				int dormId = repair.getDormId();
+				Dormitory dorm = apartmentService.findOneDorm(dormId);
+				Floor floor = apartmentService.findOneFloor(dorm.getFloorId());
+				repair.setDormNo(floor.getFloorNo() * 100 + dorm.getDormNo());
+				Apartment apart = apartmentService.findOne(floor.getApartId());
+				repair.setApartName(apart.getApartName());
+				Student std = studentService.findOneStd(repair.getApplicantId());
+				if (std != null) {
+					repair.setApplicantName(std.getStdName());
+				}
+				repair.setRepairTypeName(repairService.findRepairTypeName(repair.getRepairType()));
+				RepairRecord record = repairService.findRepairRecord(repair.getId());
+				if (record != null) {
+					repair.setState(record.getState());
+				} else {
+					repair.setState(0);
+				}
+			}
+			model.addAttribute("allType", allType);
+			model.addAttribute("repairByTypeList", repairByTypeList);
+			return "repair/typeRepairList";
 		}
-		List<RepairType> allType = repairService.findAllRepairType();
-		model.addAttribute("allType", allType);
-		model.addAttribute("apartList", apartList);
-		return "repair/list";
+		return "unauthorized";
 	}
 
 	@RequiresPermissions("repair:view")
-	@RequestMapping(value = "/{apartId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/apart/{apartId}", method = RequestMethod.GET)
 	public String apartRepairList(@PathVariable("apartId") int apartId, final ModelMap model) {
 		String username = SecurityUtils.getSubject().getPrincipal().toString();
 		List<Apartment> apartList = null;
@@ -111,18 +137,62 @@ public class RepairController {
 		}
 		final List<Repair> repairList = repairService.getApartRepairs(apartId);
 		for (Repair repair : repairList) {
+			int dormId = repair.getDormId();
+			Dormitory dorm = apartmentService.findOneDorm(dormId);
+			Floor floor = apartmentService.findOneFloor(dorm.getFloorId());
+			repair.setDormNo(floor.getFloorNo() * 100 + dorm.getDormNo());
+			Student std = studentService.findOneStd(repair.getApplicantId());
+			if (std != null) {
+				repair.setApplicantName(std.getStdName());
+			}
 			repair.setRepairTypeName(repairService.findRepairTypeName(repair.getRepairType()));
-			repair.setState(repairService.findRepairState(repair.getId()));
+			RepairRecord record = repairService.findRepairRecord(repair.getId());
+			if (record != null) {
+				repair.setState(record.getState());
+			} else {
+				repair.setState(0);
+			}
 		}
+		model.addAttribute("role", "staff");
 		model.addAttribute("apartList", apartList);
 		model.addAttribute("repairList", repairList);
-		return "repair/list";
+		return "repair/apartRepairList";
+	}
+
+	@RequiresPermissions("repairRecord:create")
+	@RequestMapping(value = "/type/{typeId}", method = RequestMethod.GET)
+	public String repairByTypeList(@PathVariable("typeId") int typeId, final ModelMap model) {
+		List<RepairType> allType = repairService.findAllRepairType();
+		final List<Repair> repairByTypeList = repairService.getRepairsByType(typeId);
+		for (Repair repair : repairByTypeList) {
+			int dormId = repair.getDormId();
+			Dormitory dorm = apartmentService.findOneDorm(dormId);
+			Floor floor = apartmentService.findOneFloor(dorm.getFloorId());
+			repair.setDormNo(floor.getFloorNo() * 100 + dorm.getDormNo());
+			Apartment apart = apartmentService.findOne(floor.getApartId());
+			repair.setApartName(apart.getApartName());
+			Student std = studentService.findOneStd(repair.getApplicantId());
+			if (std != null) {
+				repair.setApplicantName(std.getStdName());
+			}
+			repair.setRepairTypeName(repairService.findRepairTypeName(repair.getRepairType()));
+			RepairRecord record = repairService.findRepairRecord(repair.getId());
+			if (record != null) {
+				repair.setState(record.getState());
+			} else {
+				repair.setState(0);
+			}
+		}
+		model.addAttribute("role", "repairman");
+		model.addAttribute("repairByTypeList", repairByTypeList);
+		model.addAttribute("allType", allType);
+		return "repair/typeRepairList";
 	}
 
 	@RequiresPermissions("repair:create")
 	@RequestMapping(value = "/create", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
-	public String createHoliday(@RequestParam("repairType") int repairType, @RequestParam("remark") String remark) {
+	public String createRepair(@RequestParam("repairType") int repairType, @RequestParam("remark") String remark) {
 		String msg = "";
 		try {
 			String username = SecurityUtils.getSubject().getPrincipal().toString();
@@ -137,6 +207,103 @@ public class RepairController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			msg = "新增失败！";
+		}
+		return msg;
+	}
+
+	@RequestMapping(value = "/{repairId}/record", method = RequestMethod.GET)
+	public String repairRecord(@PathVariable("repairId") long repairId, final ModelMap model) {
+		Repair repair = repairService.findOneRepair(repairId);
+		int dormId = repair.getDormId();
+		Dormitory dorm = apartmentService.findOneDorm(dormId);
+		Floor floor = apartmentService.findOneFloor(dorm.getFloorId());
+		repair.setDormNo(floor.getFloorNo() * 100 + dorm.getDormNo());
+		Apartment apart = apartmentService.findOne(floor.getApartId());
+		repair.setApartName(apart.getApartName());
+		Student std = studentService.findOneStd(repair.getApplicantId());
+		if (std != null) {
+			repair.setApplicantName(std.getStdName());
+			repair.setApplicantTel(std.getStdTel());
+		}
+		repair.setRepairTypeName(repairService.findRepairTypeName(repair.getRepairType()));
+
+		RepairRecord record = repairService.findOneRepairRecordFromRepairId(repairId);
+		if (record != null) {
+			Repairman repairman = repairService.findRepairman(record.getRepairmanId());
+			repair.setState(repair.getState());
+			model.addAttribute("record", record);
+			model.addAttribute("repairman", repairman);
+		}
+
+		repair.setState(0);
+		model.addAttribute("repair", repair);
+		return "repair/repairRecord";
+	}
+
+	@RequiresPermissions("repairRecord:create")
+	@RequestMapping(value = "/{repairId}/record/create", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String createRepairRecord(@PathVariable("repairId") int repairId,
+			@RequestParam("repairType") int repairType) {
+		String msg = "";
+		try {
+			String username = SecurityUtils.getSubject().getPrincipal().toString();
+			int repairmanId = Integer.parseInt(username);
+			List<String> types = repairService.findRepairmanTypes(repairmanId);
+			if (types.contains(String.valueOf(repairType))) {
+				RepairRecord record = new RepairRecord(repairId, repairmanId);
+				record.setState(1);
+				repairService.createRepairRecord(record);
+				msg = "接单成功!";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "接单失败！";
+		}
+		return msg;
+	}
+
+	@RequiresPermissions("repairRecord:view")
+	@RequestMapping(value = "/myRepair", method = RequestMethod.GET)
+	public String myRepairList(final ModelMap model) {
+		String username = SecurityUtils.getSubject().getPrincipal().toString();
+		List<RepairRecord> myRepairRecordList = repairService.findMyRepairRecordList(Integer.parseInt(username));
+		for (RepairRecord record : myRepairRecordList) {
+			Repair repair = repairService.findOneRepair(record.getRepairId());
+			int dormId = repair.getDormId();
+			Dormitory dorm = apartmentService.findOneDorm(dormId);
+			Floor floor = apartmentService.findOneFloor(dorm.getFloorId());
+			repair.setDormNo(floor.getFloorNo() * 100 + dorm.getDormNo());
+			Apartment apart = apartmentService.findOne(floor.getApartId());
+			repair.setApartName(apart.getApartName());
+			Student std = studentService.findOneStd(repair.getApplicantId());
+			if (std != null) {
+				repair.setApplicantName(std.getStdName());
+				repair.setApplicantTel(std.getStdTel());
+			}
+			repair.setRepairTypeName(repairService.findRepairTypeName(repair.getRepairType()));
+			record.setRepair(repair);
+		}
+		model.addAttribute("myRepairRecordList", myRepairRecordList);
+		return "repair/repairmanRecordList";
+	}
+
+	@RequiresPermissions("repairRecord:update")
+	@RequestMapping(value = "/{repairId}/record/finish", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String finishRepairRecord(@PathVariable("repairId") int repairId) {
+		String msg = "";
+		try {
+			String username = SecurityUtils.getSubject().getPrincipal().toString();
+			int repairmanId = Integer.parseInt(username);
+			RepairRecord record = repairService.findOneRepairRecordFromRepairId(repairId);
+			if (record.getRepairmanId() == repairmanId) {
+				repairService.finishedRepairRecord(repairId);
+				msg = "处理成功!";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "处理失败！";
 		}
 		return msg;
 	}

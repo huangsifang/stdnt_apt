@@ -6,16 +6,29 @@
         	<if test="repairmanId != null">repairman_id,</if>
 	        <if test="repairmanName != null">repairman_name,</if>
 	        repairman_sex,
-	        repairman_tel,
-	        repair_type
+	        repairman_tel
 		) VALUES (
 	        <if test="repairmanId != null">#{repairmanId},</if>
 	        <if test="repairmanName != null">#{repairmanName},</if>
 	        #{repairmanSex},
-	        #{repairmanTel},
-	        #{repairType}
+	        #{repairmanTel}
 		)
     </insert>
+    
+    <insert id="insertRepairmanTypeRelation" parameterType="int">
+        INSERT INTO repairman_type_relation(
+        	<if test="repairmanId != null">repairman_id,</if>
+	        <if test="typeId != null">type_id</if>
+		) VALUES (
+	        <if test="repairmanId != null">#{repairmanId},</if>
+	        <if test="typeId != null">#{typeId}</if>
+		)
+    </insert>
+    
+    <select id="findRepairman" parameterType="int" resultType="Repairman">
+        select repairman_id as repairmanId, repairman_name as repairmanName, repairman_sex as repairmanSex, repairman_tel as repairmanTel from repairman 
+        where repairman_id=#{repairmanId}
+    </select>
     
     <select id="getApartRepairs" parameterType="int" resultType="Repair">
         select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark from repair 
@@ -26,6 +39,16 @@
 	        	where apart_id=#{apartId} and deleted=0
 	        )and deleted=0
         )and deleted=0
+    </select>
+    
+    <select id="getRepairsByType" parameterType="int" resultType="Repair">
+        select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark from repair 
+        where repair_type=#{typeId}
+    </select>
+    
+     <select id="findOneRepair" parameterType="long" resultType="Repair">
+        select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark from repair 
+        where id=#{repairId}
     </select>
     
     <select id="findDormRepairs" parameterType="int" resultType="Repair">
@@ -68,4 +91,39 @@
 	        <if test="repair.remark != null">#{repair.remark}</if>
 		)
     </insert>
+    
+    <insert id="createRepairRecord" parameterType="RepairRecord" useGeneratedKeys="true" keyProperty="record.id">
+        INSERT INTO repair_record(
+        	<if test="record.repairId != null">repair_id,</if>
+        	<if test="record.repairmanId != null">repairman_id,</if>
+        	<if test="record.acceptTime != null">accept_time,</if>
+        	<if test="record.repairTime != null">repair_time,</if>
+        	<if test="record.state != null">state</if>
+		) VALUES (
+	        <if test="record.repairId != null">#{record.repairId},</if>
+        	<if test="record.repairmanId != null">#{record.repairmanId},</if>
+        	<if test="record.acceptTime != null">#{record.acceptTime},</if>
+        	<if test="record.repairTime != null">#{record.repairTime},</if>
+        	<if test="record.state != null">#{record.state}</if>
+		)
+    </insert>
+    
+    <select id="findRepairmanTypes" resultType="String">
+        select type_id as typeId from repairman_type_relation where repairman_id=#{repairmanId}
+    </select>
+    
+    <select id="findMyRepairRecordList" parameterType="int" resultType="RepairRecord">
+        select repair_id as repairId, repairman_id as repairmanId, accept_time as accepttime, repair_time as repairTime, state from repair_record where repairman_id=#{repairmanId}
+    </select>
+    
+    <select id="findOneRepairRecordFromRepairId" parameterType="long" resultType="RepairRecord">
+        select repair_id as repairId, repairman_id as repairmanId, accept_time as accepttime, repair_time as repairTime, state from repair_record where repair_id=#{repairId}
+    </select>
+    
+    <update id="finishedRepairRecord" parameterType="long" useGeneratedKeys="true" keyProperty="id">
+    	UPDATE repair_record SET 
+    		state = 2, 
+    		repair_time = now() 
+    		where repair_id = #{repairId}
+    </update>
 </mapper>

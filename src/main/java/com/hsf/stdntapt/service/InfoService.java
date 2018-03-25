@@ -52,8 +52,4 @@ public interface InfoService {
 
 	public void insertStaffList(int staffId, String staffName, int staffSex, String staffTel, Date hiredate,
 			Date leavedate);
-
-	public void insertRepairmanList(int repairmanId, String repairmanName, int repairmanSex, String repairmanTel,
-			int repairType);
-
 }

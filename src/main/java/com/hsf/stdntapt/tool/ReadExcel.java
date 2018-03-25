@@ -914,7 +914,7 @@ public class ReadExcel {
 						repairmans.setRepairmanTel(cell.getStringCellValue());
 					} else if (c == 4) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
-						repairmans.setRepairType(Integer.parseInt(cell.getStringCellValue()));
+						repairmans.setTypeIds(cell.getStringCellValue());
 					}
 				}
 			}

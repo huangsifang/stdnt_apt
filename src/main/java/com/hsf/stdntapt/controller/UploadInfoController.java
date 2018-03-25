@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,6 +28,7 @@ import com.hsf.stdntapt.entity.StudentBed;
 import com.hsf.stdntapt.entity.User;
 import com.hsf.stdntapt.service.ApartmentService;
 import com.hsf.stdntapt.service.InfoService;
+import com.hsf.stdntapt.service.RepairService;
 import com.hsf.stdntapt.service.UserService;
 
 @Controller
@@ -41,6 +43,9 @@ public class UploadInfoController {
 
 	@Resource
 	ApartmentService apartmentService;
+
+	@Resource
+	RepairService repairService;
 
 	@RequiresRoles("admin")
 	@RequestMapping(value = "/uploadInfo")
@@ -134,9 +139,18 @@ public class UploadInfoController {
 			} else if (type.equals("repairman")) {
 				List<Repairman> repairmanList = infoService.getRepairmanInfo(name, file);
 				for (int i = 0; i < repairmanList.size(); i++) {
-					infoService.insertRepairmanList(repairmanList.get(i).getRepairmanId(),
+					repairService.insertRepairmanList(repairmanList.get(i).getRepairmanId(),
 							repairmanList.get(i).getRepairmanName(), repairmanList.get(i).getRepairmanSex(),
-							repairmanList.get(i).getRepairmanTel(), repairmanList.get(i).getRepairType());
+							repairmanList.get(i).getRepairmanTel());
+					String typeIds = repairmanList.get(i).getTypeIds();
+					String[] typeIdsArray = typeIds.split(",");
+					for (String typeId : typeIdsArray) {
+						if (StringUtils.isEmpty(typeId)) {
+							continue;
+						}
+						repairService.insertRepairmanTypeRelation(repairmanList.get(i).getRepairmanId(),
+								Integer.parseInt(typeId));
+					}
 					User user = new User(repairmanList.get(i).getRepairmanId() + "", "123456");
 					user.setRoleIdsStr("5");
 					userService.createUser(user);

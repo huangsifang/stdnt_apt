@@ -46,6 +46,8 @@ public interface ApartmentDao {
 
 	List<Floor> findFloorAll(@Param("apartId") int apartId);
 
+	public Floor findOneFloor(@Param("floorId") int floorId);
+
 	Floor findFloorByApartIdFloorNo(@Param("apartId") int apartId, @Param("floorNo") int floorNo);
 
 	public int findFloorDormNum(@Param("floorId") int floorId);

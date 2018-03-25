@@ -50,52 +50,6 @@
     </div><!-- /.modal -->
 </div>
 
-<c:if test="${not empty repairList}">
-	<ul class="nav nav-tabs">
-		<c:forEach items="${apartList}" var="apart">
-			<li><a href="${pageContext.request.contextPath}/repair/${apart.apartId}">${apart.apartName}</a></li>
-	    </c:forEach>
-	</ul>
-	
-	<table class="table">
-	    <thead>
-	        <tr>
-	            <th>寝室号</th>
-	            <th>申请者</th>
-	            <th>维修类型</th>
-	            <th>申请时间</th>
-	            <th>备注</th>
-	            <th>状态</th>
-	            <th>操作</th>
-	        </tr>
-	    </thead>
-	    <tbody>
-	        <c:forEach items="${repairList}" var="repair">
-	            <tr>
-	                <td>${repair.dormId}</td>
-	                <td>${repair.applicantName}</td>
-	                <td>${repair.repairTypeName}</td>
-	                <td><fmt:formatDate value="${repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></td>
-	                <td>${repair.remark}</td>
-	                <c:if test="${repair.state == 0}">
-	                	<td>未接单</td>
-	                </c:if>
-	                <c:if test="${repair.state == 1}">
-	                	<td>已接单</td>
-	                </c:if>
-	                <c:if test="${repair.state == 2}">
-	                	<td>已结束</td>
-	                </c:if>
-	                <td>
-	                	<shiro:hasPermission name="repair:view">
-	                    	<a href="repair/${repair.id}/record">查看</a>
-	                    </shiro:hasPermission>
-	                </td>
-	            </tr>
-	        </c:forEach>
-	    </tbody>
-	</table>
-</c:if>
 <shiro:hasPermission name="repair:create">
 	<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#repairModal">新增</button>
 </shiro:hasPermission>
@@ -133,20 +87,21 @@
 <script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
 <script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
-$("#repairBtn").click(function() {
-	$.ajax({
-		type: "POST",
-		datatype: "json",
-		url: "repair/create",
-		data: $("#repairForm").serializeArray(),
-		contentType: "application/x-www-form-urlencoded",
-		success: function(data) {
-			alert(data);
-			$('#repairModal').modal('hide');
-		},
-		error: function() {
-        	alert('error');
-        }
+$(function() {
+	$("#repairBtn").click(function() {
+		$.ajax({
+			type: "POST",
+			datatype: "json",
+			url: "repair/create",
+			data: $("#repairForm").serializeArray(),
+			contentType: "application/x-www-form-urlencoded",
+			success: function(data) {
+				$('#repairModal').modal('hide');
+			},
+			error: function() {
+	        	alert('error');
+	        }
+		});
 	});
 });
 </script>
