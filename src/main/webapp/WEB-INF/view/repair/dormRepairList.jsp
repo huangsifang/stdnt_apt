@@ -54,27 +54,58 @@
 	<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#repairModal">新增</button>
 </shiro:hasPermission>
 <c:if test="${not empty dormRepairList}">
-	<div class="row">
+	<div class="row" style="padding: 20px">
 		<c:forEach items="${dormRepairList}" var="repair">
 			<a href="${pageContext.request.contextPath}/repair/${repair.id}/record">
-				<div class="col-sm-3 panel panel-default">
-					<div class="panel-body">
-					<label for="dormId">公寓号：${repair.dormId}</label><br />
-					<label for="applicantId">申请者：${repair.applicantName}</label><br />
-					<label for="repairType">维修类型：${repair.repairTypeName}</label><br />
-					<label for="applyTime">申请时间：<fmt:formatDate value="${repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></label><br />
-					<label for="state">
-						<c:if test="${repair.state == 0}">
-		                	<td>未接单</td>
-		                </c:if>
-		                <c:if test="${repair.state == 1}">
-		                	<td>已接单</td>
-		                </c:if>
-		                <c:if test="${repair.state == 2}">
-		                	<td>已结束</td>
-		                </c:if>
-	                </label><br />
-					<label for="remark">备注：${repair.remark}</label>
+				<div class="col-sm-3">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="form-group row">
+		                      <label class="col-sm-4 control-label">公寓号：</label>
+		                      <div class="col-sm-8">
+		                         <span>${repair.dormId}</span>
+		                      </div>
+		                   </div>
+		                   <div class="form-group row">
+		                      <label class="col-sm-4 control-label">申请者：</label>
+		                      <div class="col-sm-8">
+		                         <span>${repair.applicantName}</span>
+		                      </div>
+		                   </div>
+		                   <div class="form-group row">
+		                      <label class="col-sm-4 control-label">维修类型：</label>
+		                      <div class="col-sm-8">
+		                         <span>${repair.repairTypeName}</span>
+		                      </div>
+		                   </div>
+		                   <div class="form-group row">
+		                      <label class="col-sm-4 control-label">申请时间：</label>
+		                      <div class="col-sm-8">
+		                         <span><fmt:formatDate value="${repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></span>
+		                      </div>
+		                   </div>
+		                   <div class="form-group row">
+		                      <div class="col-sm-offset-4 col-sm-8">
+		                         <span>
+		                         	<c:if test="${repair.state == 0}">
+					                	<td>未接单</td>
+					                </c:if>
+					                <c:if test="${repair.state == 1}">
+					                	<td>已接单</td>
+					                </c:if>
+					                <c:if test="${repair.state == 2}">
+					                	<td>已结束</td>
+					                </c:if>
+		                         </span>
+		                      </div>
+		                   </div>
+		                   <div class="form-group row">
+		                      <label class="col-sm-4 control-label">备注：</label>
+		                      <div class="col-sm-8">
+		                         <span>${repair.remark}</span>
+		                      </div>
+		                   </div>
+						</div>
 					</div>
 				</div>
 			</a>
@@ -97,6 +128,7 @@ $(function() {
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
 				$('#repairModal').modal('hide');
+				window.location.reload();
 			},
 			error: function() {
 	        	alert('error');

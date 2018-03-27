@@ -21,6 +21,7 @@ import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
 import com.hsf.stdntapt.service.ApartmentService;
 import com.hsf.stdntapt.service.DormService;
+import com.hsf.stdntapt.service.UserService;
 
 @Controller
 @RequestMapping("/score")
@@ -31,42 +32,56 @@ public class ScoreController {
 	@Resource
 	ApartmentService apartmentService;
 
+	@Resource
+	UserService userService;
+
 	@RequestMapping(method = RequestMethod.GET)
 	public String scoreList(final ModelMap model) {
 		String username = SecurityUtils.getSubject().getPrincipal().toString();
-		List<Apartment> apartList = null;
-		if (username.equals("admin")) {
-			apartList = apartmentService.findAll();
+		if (userService.findRoles(username).contains("student")) {
+			int stdId = Integer.parseInt(username);
+			int apartId = apartmentService.findStdApartId(stdId);
+			Dormitory dorm = apartmentService.findStdDorm(stdId);
+			int dormId = dorm.getId();
+			int dormNo = dorm.getDormNo();
+			Floor floor = apartmentService.findFloorFromDormId(dormId);
+			int floorDormNo = floor.getFloorNo() * 100 + dormNo;
+			return "redirect:/score/" + apartId + "/dorm/" + floorDormNo;
 		} else {
-			apartList = apartmentService.findStaffAparts(Integer.parseInt(username));
-		}
-		final List<DormScore> newScoreList = dormService.getNewScores();
-		for (DormScore score : newScoreList) {
-			Floor floor = apartmentService.findFloorFromDormId(score.getDormId());
-			int floorId = 0;
-			int floorNo = 0;
-			int scoreApartId = 0;
-			if (floor != null) {
-				floorId = floor.getId();
-				floorNo = floor.getFloorNo();
+			List<Apartment> apartList = null;
+			if (username.equals("admin")) {
+				apartList = apartmentService.findAll();
 			} else {
-				model.addAttribute("msg", "没有找到对应的楼层！");
+				apartList = apartmentService.findStaffAparts(Integer.parseInt(username));
 			}
-			Apartment apart = apartmentService.findApartFromFloorId(floorId);
-			if (apart != null) {
-				scoreApartId = apart.getApartId();
-			} else {
-				model.addAttribute("msg", "没有找到对应的公寓！");
+			final List<DormScore> newScoreList = dormService.getNewScores();
+			for (DormScore score : newScoreList) {
+				Floor floor = apartmentService.findFloorFromDormId(score.getDormId());
+				int floorId = 0;
+				int floorNo = 0;
+				int scoreApartId = 0;
+				if (floor != null) {
+					floorId = floor.getId();
+					floorNo = floor.getFloorNo();
+				} else {
+					model.addAttribute("msg", "没有找到对应的楼层！");
+				}
+				Apartment apart = apartmentService.findApartFromFloorId(floorId);
+				if (apart != null) {
+					scoreApartId = apart.getApartId();
+				} else {
+					model.addAttribute("msg", "没有找到对应的公寓！");
+				}
+				Dormitory dorm = apartmentService.findOneDorm(score.getDormId());
+				if (dorm != null) {
+					score.setFloorDormNo(floorNo * 100 + dorm.getDormNo());
+				}
+				score.setApartId(scoreApartId);
 			}
-			Dormitory dorm = apartmentService.findOneDorm(score.getDormId());
-			if (dorm != null) {
-				score.setFloorDormNo(floorNo * 100 + dorm.getDormNo());
-			}
-			score.setApartId(scoreApartId);
+			model.addAttribute("apartList", apartList);
+			model.addAttribute("newScoreList", newScoreList);
+			return "score/list";
 		}
-		model.addAttribute("apartList", apartList);
-		model.addAttribute("newScoreList", newScoreList);
-		return "score/list";
 	}
 
 	@RequiresPermissions("score:create")

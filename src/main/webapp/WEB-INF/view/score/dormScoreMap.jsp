@@ -8,6 +8,9 @@
 <title>Insert title here</title>
 </head>
 <body>
+
+	欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a>
+
     <!--定义页面图表容器-->
     <!-- 必须制定容器的大小（height、width） -->
     <div id="main" style="height: 400px; border: 1px solid #ccc; padding: 10px;"></div>

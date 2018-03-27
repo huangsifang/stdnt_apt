@@ -11,68 +11,99 @@
 
 欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a>
 
-<form id="recordForm" action="" method="post" class="form-horizontal" role="form">
-	<div class="form-group">
-		<label for="holiId" class="col-sm-3 control-label">假期名：</label>
-		<div class="col-sm-8">
-			<input type="text" class="form-control" id="holiName" name="holiName" value="${stdRecord.holiName}" disabled>
-	   	</div>
-	</div>
-	<div class="form-group">
-		<label for="holiId" class="col-sm-3 control-label">公寓名：</label>
-		<div class="col-sm-8">
-			<input type="text" class="form-control" id="apartId" name="apartId" value="${stdRecord.apartName}" disabled>
-	   	</div>
-	</div>
-	<div class="form-group">
-		<label for="holiId" class="col-sm-3 control-label">留校|返家：</label>
-		<div class="col-sm-8">
-			<input type="text" class="form-control" id="homeOrSchool" name="HomeOrSchool" value="${stdRecord.homeOrSchool}" disabled>
-	   	</div>
-	</div>
-	<div class="form-group">
-		<label for="startTime" class="col-sm-3 control-label">开始时间：</label>
-		<div class="col-sm-8">
-			<input type="text" class="form-control" id="startTime" name="startTime" value="${stdRecord.startTime}" disabled>
-	   	</div>
-	</div>
-	<div class="form-group">
-		<label for="endTime" class="col-sm-3 control-label">结束时间：</label>
-		<div class="col-sm-8">
-			<input type="text" class="form-control" id="endTime" name="endTime" value="${stdRecord.endTime}" disabled>
-	   	</div>
-	</div>
-	<c:if test="${!stdRecord.inHome}">
-		<div class="form-group">
-			<label for="holiId" class="col-sm-3 control-label">是否外出：</label>
-			<div class="col-sm-8">
-				<input type="text" class="form-control" id="isOut" name="isOut" value="${stdRecord.isOutStr}" disabled>
-		   	</div>
-		</div>
-	</c:if>
-	<c:if test="${stdRecord.inHome}">
-		<div class="form-group" id="addressGroup">
-			<label for="address" class="col-sm-3 control-label">地址：</label>
-			<div class="col-sm-8">
-				<input type="text" class="form-control" id="address" name="address" value="${stdRecord.address}" disabled>
-		   	</div>
-		</div>
-		<c:if test="${!hasSign}">
-			<div class="form-group">
-				<div class="col-sm-offset-3 col-sm-8">
-					<button type="button" class="btn btn-default" onClick="sign(${stdRecord.holiId})">签到</button>
-			   	</div>
-			</div>
-		</c:if>
-		<c:if test="${hasSign}">
-			<div class="form-group">
-				<div class="col-sm-offset-3 col-sm-8">
-					<button type="button" class="btn btn-default">已签到</button>
-			   	</div>
-			</div>
-		</c:if>
-	</c:if>
-</form>
+<div class="row">
+	<div class="col-md-offset-2 col-md-8">
+		<div class="panel panel-default">
+		    <div class="panel-heading">
+		        <h3 class="panel-title">
+		        	我的假期信息
+		        </h3>
+		    </div>
+		    <div class="panel-body">
+				<form id="recordForm" action="" method="post" class="form-horizontal" role="form">
+					<fieldset>
+						<div class="form-group">
+							<label for="holiId" class="col-sm-4 control-label">假期名：</label>
+							<div class="col-sm-8">
+								<span>${stdRecord.holiName}</span>
+						   	</div>
+						</div>
+					</fieldset>
+					<fieldset>
+						<div class="form-group">
+							<label for="holiId" class="col-sm-4 control-label">公寓名：</label>
+							<div class="col-sm-8">
+								<span>${stdRecord.apartName}</span>
+						   	</div>
+						</div>
+					</fieldset>
+					<fieldset>
+						<div class="form-group">
+							<label for="holiId" class="col-sm-4 control-label">留校|返家：</label>
+							<div class="col-sm-8">
+								<span>${stdRecord.homeOrSchool}</span>
+						   	</div>
+						</div>
+					</fieldset>
+					<fieldset>
+						<div class="form-group">
+							<label for="startTime" class="col-sm-4 control-label">开始时间：</label>
+							<div class="col-sm-8">
+								<span>${stdRecord.startTime}</span>
+						   	</div>
+						</div>
+					</fieldset>
+					<fieldset>
+						<div class="form-group">
+							<label for="endTime" class="col-sm-4 control-label">结束时间：</label>
+							<div class="col-sm-8">
+								<span>${stdRecord.endTime}</span>
+						   	</div>
+						</div>
+					</fieldset>
+					<fieldset>
+						<c:if test="${!stdRecord.inHome}">
+							<div class="form-group">
+								<label for="holiId" class="col-sm-4 control-label">是否外出：</label>
+								<div class="col-sm-8">
+									<span>${stdRecord.isOutStr}</span>
+							   	</div>
+							</div>
+						</c:if>
+					</fieldset>
+					<c:if test="${stdRecord.inHome}">
+						<fieldset>
+							<div class="form-group" id="addressGroup">
+								<label for="address" class="col-sm-4 control-label">地址：</label>
+								<div class="col-sm-8">
+									<span>${stdRecord.address}</span>
+							   	</div>
+							</div>
+						</fieldset>
+						<c:if test="${!hasSign}">
+							<fieldset>
+								<div class="form-group">
+									<div class="col-sm-offset-4 col-sm-8">
+										<button type="button" class="btn btn-default" onClick="sign(${stdRecord.holiId})">签到</button>
+								   	</div>
+								</div>
+							</fieldset>
+						</c:if>
+						<c:if test="${hasSign}">
+							<fieldset>
+								<div class="form-group">
+									<div class="col-sm-offset-4 col-sm-8">
+										<button type="button" class="btn btn-default">已签到</button>
+								   	</div>
+								</div>
+							</fieldset>
+						</c:if>
+					</c:if>
+				</form>
+		    </div>
+  		</div>
+    </div>
+</div>
 </body>
 <script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
 <script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>

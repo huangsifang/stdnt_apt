@@ -133,7 +133,7 @@
     </div><!-- /.modal -->
 </div>
 
-<shiro:hasPermission name="record:create">
+<shiro:hasPermission name="holiday:create">
 	<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#holidayModal" onClick="createHoliday()">新增</button>
 </shiro:hasPermission>
 
@@ -148,6 +148,11 @@
         </tr>
     </thead>
     <tbody>
+    	<c:if test="${empty holidayList}">
+			<tr>
+				<td colspan="5" style="text-align:center">还未添加任何假期！</td>
+			</tr>
+		</c:if>
         <c:forEach items="${holidayList}" var="holiday">
             <tr>
                 <td>${holiday.holiId}</td>

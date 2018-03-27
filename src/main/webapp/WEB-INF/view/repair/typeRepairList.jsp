@@ -31,7 +31,9 @@
     </thead>
     <tbody>
     	<c:if test="${empty repairByTypeList}">
-			此类型没有任何维修申请！
+			<tr>
+				<td colspan="7" style="text-align:center">此类型没有任何维修申请！</td>
+			</tr>
 		</c:if>
         <c:forEach items="${repairByTypeList}" var="repair">
             <tr>
@@ -62,7 +64,7 @@
 function takeOrder(repairId, repairType) {
 	swal({ 
 		title: "确定接单吗？", 
-		text: "接单后将无法取消", 
+		text: "接单后请尽快前往", 
 		type: "info", 
 		showCancelButton: true, 
 		closeOnConfirm: false

@@ -43,5 +43,11 @@ public interface RepairDao {
 
 	public RepairRecord findOneRepairRecordFromRepairId(@Param("repairId") long repairId);
 
-	public int finishedRepairRecord(@Param("repairId") long repairId);
+	public List<RepairRecord> findRepairHistoryRecordFromRepairId(@Param("repairId") long repairId);
+
+	public int finishedRepairRecord(@Param("repairId") long repairId, @Param("repairTime") String repairTime);
+
+	public int deleteRepair(@Param("repairId") long repairId);
+
+	public int deleteRepairRecord(@Param("repairId") long repairId);
 }

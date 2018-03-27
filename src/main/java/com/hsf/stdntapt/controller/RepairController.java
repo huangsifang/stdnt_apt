@@ -67,14 +67,19 @@ public class RepairController {
 					repair.setApplicantName(std.getStdName());
 				}
 				repair.setRepairTypeName(repairService.findRepairTypeName(repair.getRepairType()));
-				RepairRecord record = repairService.findRepairRecord(repair.getId());
-				if (record != null) {
-					repair.setState(record.getState());
+				if (repair.isDeleted()) {
+					repair.setState(3);
 				} else {
-					repair.setState(0);
+					RepairRecord record = repairService.findRepairRecord(repair.getId());
+					if (record != null) {
+						repair.setState(record.getState());
+					} else {
+						repair.setState(0);
+					}
 				}
 			}
 			model.addAttribute("repairList", repairList);
+			model.addAttribute("apartList", apartList);
 			return "repair/apartRepairList";
 		} else if (permissions.contains("repair:create")) {
 			Dormitory dorm = apartmentService.findStdDorm(Integer.parseInt(username));
@@ -146,14 +151,17 @@ public class RepairController {
 				repair.setApplicantName(std.getStdName());
 			}
 			repair.setRepairTypeName(repairService.findRepairTypeName(repair.getRepairType()));
-			RepairRecord record = repairService.findRepairRecord(repair.getId());
-			if (record != null) {
-				repair.setState(record.getState());
+			if (repair.isDeleted()) {
+				repair.setState(3);
 			} else {
-				repair.setState(0);
+				RepairRecord record = repairService.findRepairRecord(repair.getId());
+				if (record != null) {
+					repair.setState(record.getState());
+				} else {
+					repair.setState(0);
+				}
 			}
 		}
-		model.addAttribute("role", "staff");
 		model.addAttribute("apartList", apartList);
 		model.addAttribute("repairList", repairList);
 		return "repair/apartRepairList";
@@ -183,7 +191,6 @@ public class RepairController {
 				repair.setState(0);
 			}
 		}
-		model.addAttribute("role", "repairman");
 		model.addAttribute("repairByTypeList", repairByTypeList);
 		model.addAttribute("allType", allType);
 		return "repair/typeRepairList";
@@ -228,14 +235,21 @@ public class RepairController {
 		repair.setRepairTypeName(repairService.findRepairTypeName(repair.getRepairType()));
 
 		RepairRecord record = repairService.findOneRepairRecordFromRepairId(repairId);
+		List<RepairRecord> recordHistory = repairService.findRepairHistoryRecordFromRepairId(repairId);
+		for (RepairRecord history : recordHistory) {
+			Repairman repairman = repairService.findRepairman(history.getRepairmanId());
+			history.setRepairman(repairman);
+		}
+		model.addAttribute("recordHistory", recordHistory);
 		if (record != null) {
 			Repairman repairman = repairService.findRepairman(record.getRepairmanId());
-			repair.setState(repair.getState());
+			repair.setState(record.getState());
 			model.addAttribute("record", record);
 			model.addAttribute("repairman", repairman);
+		} else {
+			repair.setState(0);
 		}
 
-		repair.setState(0);
 		model.addAttribute("repair", repair);
 		return "repair/repairRecord";
 	}
@@ -263,7 +277,7 @@ public class RepairController {
 		return msg;
 	}
 
-	@RequiresPermissions("repairRecord:view")
+	@RequiresPermissions("myRepair:view")
 	@RequestMapping(value = "/myRepair", method = RequestMethod.GET)
 	public String myRepairList(final ModelMap model) {
 		String username = SecurityUtils.getSubject().getPrincipal().toString();
@@ -288,18 +302,21 @@ public class RepairController {
 		return "repair/repairmanRecordList";
 	}
 
-	@RequiresPermissions("repairRecord:update")
-	@RequestMapping(value = "/{repairId}/record/finish", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@RequiresPermissions("myRepair:update")
+	@RequestMapping(value = "/record/finish", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
-	public String finishRepairRecord(@PathVariable("repairId") int repairId) {
+	public String finishRepairRecord(@RequestParam("repairId") int repairId,
+			@RequestParam("repairTime") String repairTime) {
 		String msg = "";
 		try {
 			String username = SecurityUtils.getSubject().getPrincipal().toString();
 			int repairmanId = Integer.parseInt(username);
 			RepairRecord record = repairService.findOneRepairRecordFromRepairId(repairId);
 			if (record.getRepairmanId() == repairmanId) {
-				repairService.finishedRepairRecord(repairId);
+				repairService.finishedRepairRecord(repairId, repairTime);
 				msg = "处理成功!";
+			} else {
+				msg = "您没有权限处理该维修!";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -307,4 +324,44 @@ public class RepairController {
 		}
 		return msg;
 	}
+
+	@RequiresPermissions("repair:delete")
+	@RequestMapping(value = "/{repairId}/delete", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String deleteRepair(@PathVariable("repairId") int repairId) {
+		String msg = "";
+		try {
+			String username = SecurityUtils.getSubject().getPrincipal().toString();
+			Repair repair = repairService.findOneRepair(repairId);
+			RepairRecord record = repairService.findOneRepairRecordFromRepairId(repairId);
+			if (record == null && username.equals(String.valueOf(repair.getApplicantId()))) {
+				repairService.deleteRepair(repairId);
+				msg = "删除成功!";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "删除失败！";
+		}
+		return msg;
+	}
+
+	@RequiresPermissions("repairRecord:delete")
+	@RequestMapping(value = "/{repairId}/record/delete", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String deleteRepairRecord(@PathVariable("repairId") int repairId) {
+		String msg = "";
+		try {
+			String username = SecurityUtils.getSubject().getPrincipal().toString();
+			RepairRecord record = repairService.findOneRepairRecordFromRepairId(repairId);
+			if (record.getState() == 1 && username.equals(String.valueOf(record.getRepairmanId()))) {
+				repairService.deleteRepairRecord(repairId);
+				msg = "删除成功!";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "删除失败！";
+		}
+		return msg;
+	}
+
 }

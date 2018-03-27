@@ -41,5 +41,11 @@ public interface RepairService {
 
 	public RepairRecord findOneRepairRecordFromRepairId(long repairId);
 
-	public int finishedRepairRecord(long repairId);
+	public List<RepairRecord> findRepairHistoryRecordFromRepairId(long repairId);
+
+	public int finishedRepairRecord(long repairId, String repairTime);
+
+	public int deleteRepair(long repairId);
+
+	public int deleteRepairRecord(long repairId);
 }

@@ -27,53 +27,53 @@
     
     <select id="findRepairman" parameterType="int" resultType="Repairman">
         select repairman_id as repairmanId, repairman_name as repairmanName, repairman_sex as repairmanSex, repairman_tel as repairmanTel from repairman 
-        where repairman_id=#{repairmanId}
+        where repairman_id=#{repairmanId} and deleted=0
     </select>
     
     <select id="getApartRepairs" parameterType="int" resultType="Repair">
-        select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark from repair 
+        select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark, deleted from repair 
         where dorm_id in(
 	        select id from dormitory
 	        where floor_id in(
 	        	select id from floor
 	        	where apart_id=#{apartId} and deleted=0
 	        )and deleted=0
-        )and deleted=0
+        )
     </select>
     
     <select id="getRepairsByType" parameterType="int" resultType="Repair">
         select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark from repair 
-        where repair_type=#{typeId}
+        where repair_type=#{typeId} and deleted=0
     </select>
     
      <select id="findOneRepair" parameterType="long" resultType="Repair">
         select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark from repair 
-        where id=#{repairId}
+        where id=#{repairId} and deleted=0
     </select>
     
     <select id="findDormRepairs" parameterType="int" resultType="Repair">
         select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark from repair 
-        where dorm_id=#{dormId}
+        where dorm_id=#{dormId} and deleted=0
     </select>
     
     <select id="findRepairTypeName" parameterType="int" resultType="String">
         select type_name as typeName from repair_type 
-        where type_id=#{type}
+        where type_id=#{type} and deleted=0
     </select>
     
     <select id="findRepairRecord" parameterType="long" resultType="RepairRecord">
         select id, repair_id as repairId, repairman_id as repairmanId, accept_time as acceptTime, repair_time as repairTime, state from repair_record 
-        where repair_id=#{repairId} 
+        where repair_id=#{repairId}  and deleted=0 
         limit 1
     </select>
     
     <select id="findRepairState" parameterType="long" resultType="int">
         select state from repair_record 
-        where repair_id=#{repairId}
+        where repair_id=#{repairId} and deleted=0
     </select>
     
     <select id="findAllRepairType" resultType="RepairType">
-        select type_id as typeId, type_name as typeName from repair_type
+        select type_id as typeId, type_name as typeName from repair_type where deleted=0
     </select>
     
     <insert id="createRepair" parameterType="Repair" useGeneratedKeys="true" keyProperty="repair.id">
@@ -109,21 +109,42 @@
     </insert>
     
     <select id="findRepairmanTypes" resultType="String">
-        select type_id as typeId from repairman_type_relation where repairman_id=#{repairmanId}
+        select type_id as typeId from repairman_type_relation where repairman_id=#{repairmanId} and deleted=0
     </select>
     
     <select id="findMyRepairRecordList" parameterType="int" resultType="RepairRecord">
-        select repair_id as repairId, repairman_id as repairmanId, accept_time as accepttime, repair_time as repairTime, state from repair_record where repairman_id=#{repairmanId}
+        select repair_id as repairId, repairman_id as repairmanId, accept_time as accepttime, repair_time as repairTime, state from repair_record 
+        where repairman_id=#{repairmanId} and deleted=0
     </select>
     
     <select id="findOneRepairRecordFromRepairId" parameterType="long" resultType="RepairRecord">
-        select repair_id as repairId, repairman_id as repairmanId, accept_time as accepttime, repair_time as repairTime, state from repair_record where repair_id=#{repairId}
+        select repair_id as repairId, repairman_id as repairmanId, accept_time as accepttime, repair_time as repairTime, state from repair_record 
+        where repair_id=#{repairId} and deleted=0
+    </select>
+    
+    <select id="findRepairHistoryRecordFromRepairId" parameterType="long" resultType="RepairRecord">
+        select repair_id as repairId, repairman_id as repairmanId, accept_time as accepttime, repair_time as repairTime, state from repair_record 
+        where repair_id=#{repairId} and deleted = 1
+        order by accept_time
     </select>
     
     <update id="finishedRepairRecord" parameterType="long" useGeneratedKeys="true" keyProperty="id">
     	UPDATE repair_record SET 
     		state = 2, 
-    		repair_time = now() 
-    		where repair_id = #{repairId}
+    		<if test="repairTime == null">repair_time = now()</if>
+    		<if test="repairTime != null">repair_time = #{repairTime}</if>
+    		where repair_id = #{repairId} and deleted=0
+    </update>
+    
+    <update id="deleteRepair" parameterType="long" useGeneratedKeys="true" keyProperty="id">
+    	UPDATE repair SET 
+    		deleted = 1 
+    		where id = #{repairId} and deleted=0
+    </update>
+    
+    <update id="deleteRepairRecord" parameterType="long" useGeneratedKeys="true" keyProperty="id">
+    	UPDATE repair_record SET 
+    		deleted = 1 
+    		where repair_id = #{repairId} and deleted=0
     </update>
 </mapper>

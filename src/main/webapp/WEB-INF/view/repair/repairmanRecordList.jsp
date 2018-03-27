@@ -6,11 +6,39 @@
 <head>
     <title></title>
     <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/public/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
 </head>
 <body>
 
 欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a>
+
+<!-- 完成维修模态框（Modal） -->
+<div class="modal fade" id="repairRecordModal" tabindex="-1" role="dialog" aria-labelledby="repairRecordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="repairRecordModalLabel">完成维修</h4>
+            </div>
+            <div class="modal-body">
+			    <form id="repairRecordForm" action="" method="post" class="form-horizontal" role="form">
+			    	<input type="text" class="form-control" id="repairId" name="repairId" style="display:none"/>
+			    	<div class="form-group">
+						<label for="repairTime" class="col-sm-3 control-label">维修时间：</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" id="repairTime" name="repairTime" placeholder="请选择维修时间">
+				    	</div>
+					</div>
+			    </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="repairRecordBtn">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 
 <table class="table">
     <thead>
@@ -47,7 +75,11 @@
                 	</c:if>
                 </td>
                 <c:if test="${record.state == 1}">
-                	<td>已接单  <button onClick="finishOrder(${record.repairId})">确认已维修</button></td>
+                	<td>
+	                	已接单  
+	                	<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#repairRecordModal" type="button" onClick="finishOrder(${record.repairId})">确认已维修</button>
+	                	<button onClick="deleteRepairRecord(${record.repairId})">取消订单</button>
+                	</td>
                 </c:if>
                 <c:if test="${record.state == 2}">
                 	<td>已结束</td>
@@ -56,15 +88,43 @@
         </c:forEach>
     </tbody>
 </table>
-
 </body>
 <script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
+<script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
+<script src="${pageContext.request.contextPath}/public/js/bootstrap-datetimepicker.min.js" ></script>
+<script src="${pageContext.request.contextPath}/public/js/bootstrap-datetimepicker.zh-CN.js" ></script>
 <script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 function finishOrder(repairId) {
+	$("#repairId").val(repairId);
+}
+$(function() {
+	$("#repairRecordBtn").click(function() {
+		$.ajax({
+			type: "POST",
+			datatype: "json",
+			data: $("#repairRecordForm").serializeArray(),
+			url: getRootPath() + "/repair/record/finish",
+			contentType: "application/x-www-form-urlencoded",
+			success: function(data) {
+				if(data != "处理失败!") {
+					swal("成功！", data, "success");
+				} else if(data == "处理失败!") {
+					swal("成功！", data, "error");
+				}
+				$('#repairRecordModal').modal('hide');
+			},
+			error: function() {
+	        	alert('error');
+	        }
+		});
+	});
+});
+
+function deleteRepairRecord(repairId) {
 	swal({ 
-		title: "确定已完成该维修吗？", 
-		text: "确定后将无法取消", 
+		title: "确定删除该维修吗？", 
+		text: "删除后将无法恢复", 
 		type: "info", 
 		showCancelButton: true, 
 		closeOnConfirm: false
@@ -73,14 +133,14 @@ function finishOrder(repairId) {
 		$.ajax({
 			type: "POST",
 			datatype: "json",
-			url: getRootPath() + "/repair/"+repairId+"/record/finish",
+			url: getRootPath() + "/repair/"+repairId+"/record/delete",
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
 				if(data == "") {
-					swal("失败！", "您没有权限接受该记录!", "error");
-				} else if(data == "处理成功!") {
+					swal("删除！", "您没有权限删除该维修!", "error");
+				} else if(data == "删除成功!") {
 					swal("成功！", data, "success");
-				} else if(data == "处理失败!") {
+				} else if(data == "删除失败!") {
 					swal("成功！", data, "error");
 				}
 			},
@@ -99,5 +159,17 @@ function getRootPath() {//获得根目录
 	var postPath = strPath.substring(0, strPath.substr(1).indexOf('/') + 1);
 	return (prePath + postPath);
 }
+
+$("#repairTime").datetimepicker({
+	language:  'zh-CN', 
+	format:'yyyy-mm-dd', 
+	weekStart: 1, /*以星期一为一星期开始*/
+	todayBtn:  1,
+	autoclose: 1, 
+	minView:2, /*精确到天*/
+	pickerPosition: "bottom-left" 
+}).on("changeDate",function(ev){  //值改变事件
+	
+});
 </script>
 </html>

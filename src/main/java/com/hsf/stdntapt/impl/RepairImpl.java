@@ -99,7 +99,22 @@ public class RepairImpl implements RepairService {
 	}
 
 	@Override
-	public int finishedRepairRecord(long repairId) {
-		return repairDao.finishedRepairRecord(repairId);
+	public List<RepairRecord> findRepairHistoryRecordFromRepairId(long repairId) {
+		return repairDao.findRepairHistoryRecordFromRepairId(repairId);
+	}
+
+	@Override
+	public int finishedRepairRecord(long repairId, String repairTime) {
+		return repairDao.finishedRepairRecord(repairId, repairTime);
+	}
+
+	@Override
+	public int deleteRepair(long repairId) {
+		return repairDao.deleteRepair(repairId);
+	}
+
+	@Override
+	public int deleteRepairRecord(long repairId) {
+		return repairDao.deleteRepairRecord(repairId);
 	}
 }

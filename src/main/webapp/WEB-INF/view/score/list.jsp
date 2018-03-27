@@ -60,14 +60,31 @@
     </c:forEach>
 </ul>
 
-<div class="row">
+<div class="row" style="padding: 20px">
 	<c:forEach items="${newScoreList}" var="score">
 		<a href="${pageContext.request.contextPath}/score/${score.apartId}/dorm/${score.floorDormNo}">
-			<div class="col-sm-3 panel panel-default">
-				<div class="panel-body">
-				<label for="apartId">公寓号：${score.apartId}</label><br />
-				<label for="floorDormNo">寝室号：${score.floorDormNo}</label><br />
-				<label for="score">分数：${score.score}</label>
+			<div class="col-sm-3">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="form-group row">
+	                      <label class="col-sm-6 control-label">公寓号：</label>
+	                      <div class="col-sm-6">
+	                         <span>${score.apartId}</span>
+	                      </div>
+	                   </div>
+	                   <div class="form-group row">
+	                      <label class="col-sm-6 control-label">寝室号：</label>
+	                      <div class="col-sm-6">
+	                         <span>${score.floorDormNo}</span>
+	                      </div>
+	                   </div>
+	                   <div class="form-group row">
+	                      <label class="col-sm-6 control-label">分数：</label>
+	                      <div class="col-sm-6">
+	                         <span>${score.score}</span>
+	                      </div>
+	                   </div>
+					</div>
 				</div>
 			</div>
 		</a>

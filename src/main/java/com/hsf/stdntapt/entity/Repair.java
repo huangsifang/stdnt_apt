@@ -15,6 +15,7 @@ public class Repair {
 	private Date applyTime;
 	private String remark;
 	private int state;
+	private boolean deleted;
 
 	public Repair() {
 	}
@@ -119,6 +120,14 @@ public class Repair {
 
 	public void setState(int state) {
 		this.state = state;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 
 }

@@ -36,6 +36,11 @@
         </tr>
     </thead>
     <tbody>
+    	<c:if test="${empty recordList}">
+			<tr>
+				<td colspan="9" style="text-align:center">此公寓该假期还未添加任何记录！</td>
+			</tr>
+		</c:if>
         <c:forEach items="${recordList}" var="record">
             <tr>
                 <td>${record.holiId}</td>
