@@ -183,4 +183,19 @@ public class ApartmentImpl implements ApartmentService {
 	public int findApartStdNum(int apartId) {
 		return apartmentDao.findApartStdNum(apartId);
 	}
+
+	@Override
+	public int deleteFloor(int floorId) {
+		return apartmentDao.deleteFloor(floorId);
+	}
+
+	@Override
+	public int deleteDorm(int dormId) {
+		return apartmentDao.deleteDorm(dormId);
+	}
+
+	@Override
+	public int deleteBed(int bedId) {
+		return apartmentDao.deleteBed(bedId);
+	}
 }

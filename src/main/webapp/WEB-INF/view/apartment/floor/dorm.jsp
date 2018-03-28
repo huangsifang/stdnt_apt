@@ -30,8 +30,8 @@
 </c:forEach>
 
 <form id="dormStdForm" action="" method="post">
-	<input type="number" name="bedId" id="bedId" hidden/>
-	<input type="number" name="dormId" id="dormId" hidden/>
+	<input type="number" name="bedId" id="bedId" hidden/><br />
+	<input type="number" name="dormId" value="${dorm.id}" id="dormId" hidden/>
 	学号：<input type="number" name="stdId" id="stdId"/><br />
 	姓名：<span id="stdName"></span><br />
 	<button type="button" id="dormStdChangeBtn">确定</button>

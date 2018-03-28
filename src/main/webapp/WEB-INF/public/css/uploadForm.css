@@ -1,0 +1,53 @@
+input[type="file"] {
+	display: inline-block;
+	width: 134px;
+}
+
+.fileForm {
+	padding:10px;
+	margin:10px 0;
+	border:1px solid #eee;
+	box-shadow:1px 1px 5px #eee;
+}
+.file {
+    position: relative;
+    display: inline-block;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px 12px;
+    overflow: hidden;
+    color: #333;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 20px;
+    margin-bottom: -13px;
+    cursor: pointer;
+}
+.file input {
+    position: absolute;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.file:hover {
+    background: #e6e6e6;
+    border-color: #adadad;
+    color: #333;
+    text-decoration: none;
+}
+.fileName {
+	background-color: transparent;
+    border: 0;
+}
+@media screen and (max-width: 685px) {
+	.fileName {
+		width: 60%;
+	}
+    .importFileBtn {
+        margin-top: 15px;
+    }
+    .exportInfo {
+    	margin-top: 0;
+    }
+}

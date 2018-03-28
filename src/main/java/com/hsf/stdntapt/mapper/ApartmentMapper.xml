@@ -172,4 +172,13 @@
     		) and deleted=0
     	) and deleted=0
     </select>
+    <delete id="deleteFloor" parameterType="int">
+		delete from floor where id=#{floorId}
+	</delete>
+	<delete id="deleteDorm" parameterType="int">
+		delete from dormitory where id=#{dormId}
+	</delete>
+	<delete id="deleteBed" parameterType="int">
+		delete from bed where bed_id=#{bedId}
+	</delete>
 </mapper>

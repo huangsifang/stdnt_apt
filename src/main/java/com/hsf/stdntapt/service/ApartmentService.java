@@ -74,4 +74,10 @@ public interface ApartmentService {
 	public Dormitory findStdDorm(int stdId);
 
 	public int findApartStdNum(int apartId);
+
+	public int deleteFloor(int floorId);
+
+	public int deleteDorm(int dormId);
+
+	public int deleteBed(int bedId);
 }

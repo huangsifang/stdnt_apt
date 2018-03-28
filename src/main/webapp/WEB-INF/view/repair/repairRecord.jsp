@@ -240,11 +240,11 @@ function deleteRepair(repairId) {
 						window.location.href = getRootPath() + "/repair";
 					});
 				} else if(data == "删除失败!") {
-					swal("成功！", data, "error");
+					swal("失败！", data, "error");
 				}
 			},
 			error: function() {
-	        	alert('error');
+				swal("失败！", "发生错误", "error");
 	        }
 		});
 	});

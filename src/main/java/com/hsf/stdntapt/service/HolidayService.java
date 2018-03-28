@@ -21,6 +21,8 @@ public interface HolidayService {
 
 	public List<HoliRecord> findApartAllRecords(int holiId, int apartId);
 
+	public List<HoliRecord> findApartAllHoliRecords(int apartId);
+
 	public List<HoliRecord> findApartAllHomeRecords();
 
 	public List<HoliRecord> findApartAllSchoolRecords();

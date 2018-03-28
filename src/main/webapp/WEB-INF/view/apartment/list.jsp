@@ -4,36 +4,125 @@
 <html>
 <head>
     <title></title>
+    <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/public/css/uploadForm.css" rel="stylesheet">
 </head>
 <body>
 
-欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a>
+<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 
-<c:if test="${not empty msg}">
-    <div>${msg}</div>
-</c:if>
+<!-- 修改公寓模态框（Modal） -->
+<div class="modal fade" id="apartModal" tabindex="-1" role="dialog" aria-labelledby="apartModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="apartModalLabel">公寓修改</h4>
+            </div>
+            <div class="modal-body">
+            	<form id="apartForm" method="post" class="form-horizontal" role="form">
+            		<div class="form-group">
+						<label for="apartId" class="col-sm-3 control-label">寝室号：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="number" id="apartId" name="apartId" disabled/>
+				    	</div>
+					</div>
+					<div class="form-group">
+						<label for="apartName" class="col-sm-3 control-label">寝室名：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="text" id="apartName" name="apartName"/>
+				    	</div>
+					</div>
+					<div class="form-group" id="staff">
+						<div class="col-sm-3 control-label">
+							<div><label for="apartName">管理员：</label></div>
+							<button class="btn btn-default" id="addStaff" type="button">增加</button>
+						</div>
+						<div class="col-sm-8" id="staffInfo"></div>
+					</div>
+				</form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="apartChangeBtn">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- 新增公寓模态框（Modal） -->
+<div class="modal fade" id="apartAddModal" tabindex="-1" role="dialog" aria-labelledby="apartAddModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="apartAddModalLabel">公寓新增</h4>
+            </div>
+            <div class="modal-body">
+            	<form id="apartAddForm" method="post" class="form-horizontal" role="form">
+            		<div class="form-group">
+						<label for="apartId" class="col-sm-3 control-label">寝室号：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="number" name="apartId"/>
+				    	</div>
+					</div>
+					<div class="form-group">
+						<label for="apartName" class="col-sm-3 control-label">寝室名：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="text" name="apartName"/>
+				    	</div>
+					</div>
+					<div class="form-group">
+						<label for="floorNum" class="col-sm-3 control-label">楼层数：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="text" name="floorNum"/>
+				    	</div>
+					</div>
+					<div class="form-group">
+						<label for="aFloorDormNum" class="col-sm-3 control-label">寝室数/层：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="text" name="aFloorDormNum"/>
+				    	</div>
+					</div>
+					<div class="form-group">
+						<label for="aDormBedNum" class="col-sm-3 control-label">床位数/寝室：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="text" name="aDormBedNum"/>
+				    	</div>
+					</div>
+					<div class="form-group">
+						<label for="aStdYearFee" class="col-sm-3 control-label">费用/人：</label>
+						<div class="col-sm-8">
+							<input class="form-control" type="text" name="aStdYearFee"/>
+				    	</div>
+					</div>
+				</form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="apartAddBtn">提交更改</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 
 <shiro:hasPermission name="apartment:create">
-    <a href="apartment/create">公寓新增</a><br/>
-</shiro:hasPermission>
-
-<form class="uploadForm" action="${pageContext.request.contextPath}/uploadInfo/uploadInfoFromType.do" method="post" enctype="multipart/form-data">
-	<div class="row">
-	　　	<div class="col-sm-6" style="width: 50%;">
-	   		<div class="box box-primary">
-	        	<div class="box-header with-border">
-	            	<h3 class="box-title">请选择上传的公寓文件:</h3>
-	                <div class="box-body">
-	　　　　　　　　　　　　  	<input class="excel_file" class="form-control" type="file" name="filename" accept="xlsx" size="80" />
-						<input class="file_type" class="form-control" name="filetype" value="apartment" hidden/>
-	                </div>
-	                <span class="box-title"><c:if test="${msg !=''}">${msg}</c:if></span>
-	 				<input class="btn btn-primary pull-right" class="excel_button" type="submit" value="导入" />
-				</div>
-			</div>
-		</div>
+	<div class="pull-left" style="padding:20px">
+		<button class="btn btn-default" type="button" data-toggle="modal" data-target="#apartAddModal">公寓新增</button>
 	</div>
-</form>
+    <form action="${pageContext.request.contextPath}/uploadInfo/uploadInfoFromType.do" method="post" name="formApart" id="formApart" onsubmit="return validate(formApart)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
+	     导入公寓信息： 
+		<a href="javascript:;" class="file">选择文件
+		    <input type="file" name="filename" id="importApartFile" accept="xlsx" onchange="importFileFun(importApartFile, apartFileName)"/>
+		</a>
+		<input class="fileName" id="apartFileName" value="未选择文件" disabled/>
+		<input type="hidden" name="filetype" value="apartment"/>
+		<input type="submit" name="Submit" value="确定" class="btn btn-primary importFileBtn"/> 
+		<input type="reset" name="Submit2" value="重置" class="btn btn-default importFileBtn"/>
+	</form>
+</shiro:hasPermission>
 
 <table class="table">
     <thead>
@@ -60,26 +149,22 @@
                 </td>
                 <td>
                     <shiro:hasPermission name="apartment:update">
-                    	<button type="button" onClick="updateApart(${apart.apartId},'${apart.apartName}','${apart.staffsStr}')">修改</button>
+                    	<button class="btn btn-default" type="button" data-toggle="modal" data-target="#apartModal" onClick="updateApart(${apart.apartId},'${apart.apartName}','${apart.staffsStr}')">修改</button>
                     </shiro:hasPermission>
 
                     <shiro:hasPermission name="apartment:delete">
-                        <a href="apartment/${apart.apartId}/delete">删除</a>
+                    	<button class="btn btn-danger" onClick="deleteApart(${apart.apartId})">删除</button>
                     </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>
     </tbody>
 </table>
-<form id="apartForm" method="post">
-	寝室号：<input id="apartId" type="number" name="apartId" disabled/><br />
-	寝室名：<input id="apartName" type="text" name="apartName"/><br />
-	<span id="staff">管理员：<button id="addStaff" type="button">增加</button></span><div id="staffInfo"></div>
-	<button type="button" id="apartChangeBtn">提交</button>
-</form>
 </body>
 <script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
 <script src="${pageContext.request.contextPath}/public/js/jquery.form.min.js" ></script> 
+<script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
+<script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 	var staffNum = 0;
 	$(function() {
@@ -88,15 +173,15 @@
 	            return true; 
 	        },
 			success: function(data){
-				alert(data);
+				swal("成功！", data, "success");
 	        },
 	        error: function() {
-	        	alert('error');
+	        	swal("错误！", "发送错误", "error");
 	        },
 	        resetForm: true        // 成功提交后，重置所有的表单元素的值
 		});
 		$("#addStaff").click(function() {
-			$("#staffInfo").append("<input type='number' name='staffId' id='staffId"+staffNum+"' onChange='changeStaff("+staffNum+")'><span id='staffName"+staffNum+"'></span><br />");
+			$("#staffInfo").append("<div style='margin-bottom:20px'><div class='col-sm-6'><input class='form-control' type='number' name='staffId' id='staffId"+staffNum+"' onChange='changeStaff("+staffNum+")'></div><span id='staffName"+staffNum+"'></span></div>");
 		});
 		$("#apartChangeBtn").click(function() {
 			var apartId = $("#apartId").val();
@@ -107,10 +192,27 @@
 				data: $("#apartForm").serializeArray(),
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
-					alert(data);
+					swal("成功！", data, "success");
+					$('#apartModal').modal('hide');
 				},
 				error: function() {
-		        	alert('error');
+					swal("错误！", "发送错误", "error");
+		        }
+			});
+		});
+		$("#apartAddBtn").click(function() {
+			$.ajax({
+				type: "POST",
+				datatype: "text",
+				url: "apartment/create",
+				data: $("#apartAddForm").serializeArray(),
+				contentType: "application/x-www-form-urlencoded",
+				success: function(data) {
+					swal("成功！", data, "success");
+					$('#apartAddModal').modal('hide');
+				},
+				error: function() {
+					swal("错误！", "发送错误", "error");
 		        }
 			});
 		});
@@ -125,12 +227,12 @@
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
 				if(data == "") {
-					alert("未找到该职工");
+					swal("错误！", "未找到该职工!", "error");
 				}
 				$("#staffName"+i).text(data);
 			},
 			error: function() {
-	        	alert('error');
+				swal("错误！", "发送错误", "error");
 	        }
 		});
 	}
@@ -145,8 +247,26 @@
 			var index = staffs[i].indexOf(':');
 			var staffId = staffs[i].slice(0, index);
 			var staffName = staffs[i].slice(index+1, staffs[i].length);
-			$("#staffInfo").append("<input type='number' name='staffId' id='staffId"+i+"' onChange='changeStaff("+i+")' value="+staffId+"><span id='staffName"+i+"'>"+staffName+"</span><button type='button' onClick='deleteStaff("+apartId+","+staffId+")'>删除</button><br />");
+			$("#staffInfo").append("<div style='margin-bottom:20px'><div class='col-sm-6'><input class='form-control' type='number' name='staffId' id='staffId"+i+"' onChange='changeStaff("+i+")' value="+staffId+"></div><span id='staffName"+i+"'>"+staffName+"</span>&nbsp;&nbsp;<button class='btn btn-default' type='button' onClick='deleteStaff("+apartId+","+staffId+")'>删除</button></div>");
 		}
+	}
+	function deleteApart(apartId) {
+		$.ajax({
+			type: "POST",
+			datatype: "json",
+			url: "apartment/"+apartId+"/delete",
+			contentType: "application/x-www-form-urlencoded",
+			success: function(data) {
+				if(data =='删除成功!') {
+					swal("成功！", data, "success");
+				} else {
+					swal("失败！", data, "error");
+				}
+			},
+			error: function() {
+				swal("错误！", "发送错误", "error");
+	        }
+		});
 	}
 	function deleteStaff(apartId, staffId) {
 		$.ajax({
@@ -156,10 +276,11 @@
 			data: {apartId: apartId, staffId: staffId},
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
-				alert(data);
+				swal("成功！", data, "success");
+				$('#apartModal').modal('hide');
 			},
 			error: function() {
-	        	alert('error');
+				swal("错误！", "发送错误", "error");
 	        }
 		});
 	}
@@ -170,6 +291,19 @@
 		var prePath = strFullPath.substring(0, pos);
 		var postPath = strPath.substring(0, strPath.substr(1).indexOf('/') + 1);
 		return (prePath + postPath);
+	}
+	function importFileFun(fileID, fileNameID) {
+		var fileName = $(fileID).val();
+		if(fileName==undefined || fileName=="")
+			$(fileNameID).val("未选择文件");
+		else
+			$(fileNameID).val(fileName);
+	}
+	function validate(formID) {
+		if (formID.filename.value == "") {
+			swal("失败", "请选择要上传的文件", "error");
+			return false;
+		}
 	}
 </script> 
 </html>

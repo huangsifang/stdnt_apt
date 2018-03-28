@@ -18,11 +18,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hsf.stdntapt.entity.Apartment;
 import com.hsf.stdntapt.entity.Bed;
+import com.hsf.stdntapt.entity.DormScore;
 import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
+import com.hsf.stdntapt.entity.HoliRecord;
+import com.hsf.stdntapt.entity.Repair;
 import com.hsf.stdntapt.entity.Staff;
 import com.hsf.stdntapt.entity.Student;
 import com.hsf.stdntapt.service.ApartmentService;
+import com.hsf.stdntapt.service.DormService;
+import com.hsf.stdntapt.service.HolidayService;
+import com.hsf.stdntapt.service.RepairService;
 import com.hsf.stdntapt.service.StudentService;
 import com.hsf.stdntapt.service.UserService;
 
@@ -38,6 +44,15 @@ public class ApartmentController {
 
 	@Resource
 	UserService userService;
+
+	@Resource
+	RepairService repairService;
+
+	@Resource
+	HolidayService holidayService;
+
+	@Resource
+	DormService dormService;
 
 	@RequiresPermissions("apartment:view")
 	@RequestMapping(method = RequestMethod.GET)
@@ -61,34 +76,38 @@ public class ApartmentController {
 	}
 
 	@RequiresPermissions("apartment:create")
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public String showCreateForm(Model model) {
-		model.addAttribute("apartment", new Apartment());
-		model.addAttribute("op", "新增");
-		return "apartment/edit";
-	}
-
-	@RequiresPermissions("apartment:create")
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(Apartment apartment, RedirectAttributes redirectAttributes) {
-		apartmentService.createApartment(apartment);
-		for (int i = 0; i < apartment.getFloorNum(); i++) {
-			Floor floor = new Floor(apartment.getApartId(), i + 1);
-			apartmentService.createFloor(floor);
+	@RequestMapping(value = "/create", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String create(@RequestParam(value = "apartId") int apartId,
+			@RequestParam(value = "apartName") String apartName, @RequestParam(value = "floorNum") int floorNum,
+			@RequestParam(value = "aFloorDormNum") int aFloorDormNum,
+			@RequestParam(value = "aDormBedNum") int aDormBedNum,
+			@RequestParam(value = "aStdYearFee") BigDecimal aStdYearFee) {
+		String msg = "";
+		try {
+			Apartment apartment = new Apartment(apartId, apartName, floorNum);
+			apartmentService.createApartment(apartment);
+			for (int j = 0; j < apartment.getFloorNum(); j++) {
+				Floor floor = new Floor(apartment.getApartId(), j + 1);
+				apartmentService.createFloor(floor);
+				for (int k = 0; k < aFloorDormNum; k++) {
+					Dormitory dorm = new Dormitory(k + 1, floor.getId());
+					dorm.setFee(aStdYearFee);
+					dorm.setLeaderId(1);
+					apartmentService.createDorm(dorm);
+					for (int z = 0; z < aDormBedNum; z++) {
+						Bed bed = new Bed(z + 1, dorm.getId());
+						bed.setStdId(1);
+						apartmentService.createBed(bed);
+					}
+				}
+			}
+			msg = "新增成功!";
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "新增失败！";
 		}
-		redirectAttributes.addFlashAttribute("msg", "新增成功");
-		return "redirect:/apartment";
-	}
-
-	@RequiresPermissions("apartment:update")
-	@RequestMapping(value = "/{id}/update", method = RequestMethod.GET)
-	public String showUpdateForm(@PathVariable("id") int id, Model model) {
-		Apartment apart = apartmentService.findOne(id);
-		List<Staff> staffs = apartmentService.findApartStaffs(id);
-		apart.setStaffs(staffs);
-		model.addAttribute("apartment", apart);
-		model.addAttribute("op", "修改");
-		return "apartment/edit";
+		return msg;
 	}
 
 	@RequiresPermissions("apartment:update")
@@ -115,11 +134,65 @@ public class ApartmentController {
 	}
 
 	@RequiresPermissions("apartment:delete")
-	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST)
-	public String delete(@PathVariable("id") int id, RedirectAttributes redirectAttributes) {
-		apartmentService.deleteApartment(id);
-		redirectAttributes.addFlashAttribute("msg", "删除成功");
-		return "redirect:/apartment";
+	@RequestMapping(value = "/{apartId}/delete", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String delete(@PathVariable("apartId") int apartId) {
+		String msg = "";
+		boolean flag = false;
+		try {
+			List<Staff> staffList = apartmentService.findApartStaffs(apartId);
+			if (!staffList.isEmpty()) {
+				msg = "该公寓下存在关联管理员，请先删除联系!";
+				return msg;
+			}
+			List<DormScore> scoreList = dormService.findApartDormScore(apartId);
+			if (!scoreList.isEmpty()) {
+				msg = "该公寓下存在关联寝室得分，请先删除联系!";
+				return msg;
+			}
+			List<HoliRecord> holidayList = holidayService.findApartAllHoliRecords(apartId);
+			if (!holidayList.isEmpty()) {
+				msg = "该公寓下存在关联假期记录，请先删除联系!";
+				return msg;
+			}
+			List<Floor> floorList = apartmentService.findFloorAll(apartId);
+			for (Floor floor : floorList) {
+				List<Dormitory> dormList = apartmentService.findFloorDormAll(floor.getId());
+				for (Dormitory dorm : dormList) {
+					List<Repair> repairList = repairService.findDormRepairs(dorm.getId());
+					if (!repairList.isEmpty()) {
+						msg = "该公寓下存在关联维修，请先删除联系!";
+						flag = true;
+						break;
+					}
+					List<Bed> bedList = apartmentService.findBedsFromDorm(dorm.getId());
+					for (Bed bed : bedList) {
+						if (bed.getStdId() != 1) {
+							msg = "该公寓下存在关联学生，请先删除联系!";
+							flag = true;
+							break;
+						}
+						apartmentService.deleteBed(bed.getBedId());
+					}
+					if (flag) {
+						break;
+					}
+					apartmentService.deleteDorm(dorm.getId());
+				}
+				if (flag) {
+					break;
+				}
+				apartmentService.deleteFloor(floor.getId());
+			}
+			if (!flag) {
+				apartmentService.deleteApartment(apartId);
+				msg = "删除成功!";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "修改失败！";
+		}
+		return msg;
 	}
 
 	@RequiresPermissions("apartment:view")
@@ -132,11 +205,30 @@ public class ApartmentController {
 			floor.setDormList(dormList);
 		}
 		model.addAttribute("floorList", floorList);
+		model.addAttribute("floorNum", floorList.size());
+		model.addAttribute("apartId", id);
 		return "apartment/floor/list";
 	}
 
+	@RequiresPermissions("apartment:view")
+	@RequestMapping(value = "/{apartId}/floor/create", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String createFloor(@PathVariable("apartId") int apartId, @RequestParam(value = "floorNum") int floorNum) {
+		String msg = "";
+		try {
+			Floor floor = new Floor(apartId, floorNum + 1);
+			apartmentService.createFloor(floor);
+			msg = "新增成功!";
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "新增失败！";
+		}
+		return msg;
+	}
+
 	@RequiresPermissions("apartment:create")
-	@RequestMapping(value = "{apartId}/{floorId}/dorm/create", method = RequestMethod.POST)
+	@RequestMapping(value = "{apartId}/{floorId}/dorm/create", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
 	public String dormCreate(@PathVariable("apartId") int apartId, @PathVariable("floorId") int floorId,
 			@RequestParam(value = "dormNum") int dormNum, @RequestParam(value = "currentDormNum") int currentDormNum,
 			@RequestParam(value = "aDormBedNum") int aDormBedNum, @RequestParam(value = "dormFee") BigDecimal dormFee,
@@ -171,8 +263,7 @@ public class ApartmentController {
 				apartmentService.createBed(bed);
 			}
 		}
-		redirectAttributes.addFlashAttribute("msg", msg);
-		return "redirect:/apartment/" + apartId + "/floor";
+		return msg;
 	}
 
 	@RequiresPermissions("apartment:view")
