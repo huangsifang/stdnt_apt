@@ -165,6 +165,11 @@ public class ApartmentImpl implements ApartmentService {
 	}
 
 	@Override
+	public int updateDormLeader(int dormId, int stdId) {
+		return apartmentDao.updateDormLeader(dormId, stdId);
+	}
+
+	@Override
 	public int getDormBedNum(int dormId) {
 		return apartmentDao.getDormBedNum(dormId);
 	}

@@ -161,8 +161,7 @@
     </tbody>
 </table>
 </body>
-<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
-<script src="${pageContext.request.contextPath}/public/js/jquery.form.min.js" ></script> 
+<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script> 
 <script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
 <script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>

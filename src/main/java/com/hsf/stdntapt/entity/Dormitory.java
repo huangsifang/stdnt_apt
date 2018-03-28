@@ -6,6 +6,7 @@ public class Dormitory {
 	private int id;
 	private int dormNo;
 	private int floorId;
+	private int floorNo;
 	private BigDecimal fee;
 	private int leaderId;
 	private String leaderName;
@@ -41,6 +42,14 @@ public class Dormitory {
 
 	public void setFloorId(int floorId) {
 		this.floorId = floorId;
+	}
+
+	public int getFloorNo() {
+		return floorNo;
+	}
+
+	public void setFloorNo(int floorNo) {
+		this.floorNo = floorNo;
 	}
 
 	public BigDecimal getFee() {

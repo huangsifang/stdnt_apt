@@ -4,46 +4,172 @@
 <html>
 <head>
     <title></title>
+    <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
 </head>
 <body>
 
-欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a>
+<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 
-<c:if test="${not empty msg}">
-    <div>${msg}</div>
-</c:if>
-
-<form id="dormForm" action="" method="post">
-	<input type="number" name="dormId" value="${dorm.id}" hidden/><br/>
-	宿舍号：<input type="number" name="dormNo" value="${dorm.dormNo}" disabled/><br/>
-	楼层：<input type="number" name="floorId" value="${dorm.floorId}" disabled/><br/>
-	费用/人：<input type="number" name="fee" value="${dorm.fee}"/><br/>
-	寝室长：<input type="number" name="leaderId" value="${dorm.leaderId}" id="leaderId"/>
-	<span id="leaderName">${dorm.leaderName}</span><br/>
-	<button type="button" id="dormUpdateBtn">提交</button>
-</form>
-<c:forEach items="${bedList}" var="bed">
-	${bed.bedId}号床，
-	学号：${bed.stdId}，
-	姓名：${bed.stdName}
-	<button type="button" onClick="changeBedStd(${bed.bedId}, ${bed.dormId}, ${bed.stdId}, '${bed.stdName}')">修改</button><br />
-</c:forEach>
-
-<form id="dormStdForm" action="" method="post">
-	<input type="number" name="bedId" id="bedId" hidden/><br />
-	<input type="number" name="dormId" value="${dorm.id}" id="dormId" hidden/>
-	学号：<input type="number" name="stdId" id="stdId"/><br />
-	姓名：<span id="stdName"></span><br />
-	<button type="button" id="dormStdChangeBtn">确定</button>
-</form>
+<!-- 修改寝室费用模态框（Modal） -->
+<div class="modal fade" id="dormFeeModal" tabindex="-1" role="dialog" aria-labelledby="dormFeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+	        <form id="dormForm" method="post">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h4 class="modal-title" id="dormFeeModalLabel">宿舍费用修改</h4>
+	            </div>
+	            <div class="modal-body">
+	            	<div class="form-horizontal" role="form">
+	            		<input type="number" name="dormId" value="${dorm.id}" hidden/>
+	            		<div class="form-group">
+							<label for="dormNo" class="col-sm-4 control-label">宿舍号：</label>
+							<div class="col-sm-8">
+								<input class="form-control" type="number" name="dormNo" value="${dorm.dormNo}" disabled/>
+					    	</div>
+						</div>
+						<div class="form-group">
+							<label for="floorId" class="col-sm-4 control-label">楼层：</label>
+							<div class="col-sm-8">
+								<input class="form-control" type="number" name="floorNo" value="${dorm.floorNo}" disabled/>
+					    	</div>
+						</div>
+						<div class="form-group">
+							<label for="fee" class="col-sm-4 control-label">费用/人：</label>
+							<div class="col-sm-8">
+								<input class="form-control" type="number" name="fee" value="${dorm.fee}"/>
+					    	</div>
+						</div>
+					</div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	                <button type="button" class="btn btn-primary" id="dormUpdateBtn">提交更改</button>
+	            </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!-- 修改床位学生模态框（Modal） -->
+<div class="modal fade" id="bedStdModal" tabindex="-1" role="dialog" aria-labelledby="bedStdModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+	        <form id="dormStdForm" method="post">
+	            <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h4 class="modal-title" id="bedStdModalLabel">床位学生修改</h4>
+	            </div>
+	            <div class="modal-body">
+	            	<div class="form-horizontal" role="form">
+	            		<input type="number" name="bedId" id="bedId" hidden/>
+						<input type="number" name="dormId" value="${dorm.id}" id="dormId" hidden/>
+	            		<div class="form-group">
+							<label for="stdId" class="col-sm-4 control-label">学号：</label>
+							<div class="col-sm-8">
+								<input class="form-control" type="number" name="stdId" id="stdId"/>
+					    	</div>
+						</div>
+						<div class="form-group">
+							<label for="floorId" class="col-sm-4 control-label">姓名：</label>
+							<div class="col-sm-8">
+								<span id="stdName"></span>
+					    	</div>
+						</div>
+					</div>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+	                <button type="button" class="btn btn-primary" id="dormStdChangeBtn">提交更改</button>
+	            </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+	
+<button class="btn btn-default" data-toggle="modal" data-target="#dormFeeModal">修改寝室费用</button>
+<div class="row" style="padding: 20px">
+	<c:forEach items="${bedList}" var="bed">
+		<div class="col-sm-3">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="form-group row">
+                      <label class="col-sm-4 control-label">床号：</label>
+                      <div class="col-sm-8">
+                         <span>${bed.bedId}</span>
+                      </div>
+                   </div>
+                   <div class="form-group row">
+                      <label class="col-sm-4 control-label">学号：</label>
+                      <div class="col-sm-8">
+                         <span>${bed.stdId}</span>
+                      </div>
+                   </div>
+                   <div class="form-group row">
+                      <label class="col-sm-4 control-label">姓名：</label>
+                      <div class="col-sm-8">
+                         <span>${bed.stdName}</span>
+                      </div>
+                   </div>
+                   <div class="form-group row">
+                      <div class="col-sm-8 col-sm-offset-4">
+                         <button class="btn btn-default" type="button" data-toggle="modal" data-target="#bedStdModal" onClick="changeBedStd(${bed.bedId}, ${bed.dormId}, ${bed.stdId}, '${bed.stdName}')">修改</button>
+                         <c:if test="${bed.stdId != dorm.leaderId && bed.stdId != 1}">
+                         	<button class="btn btn-default" onClick="updateDormLeader(${bed.dormId}, ${bed.stdId}, '${bed.stdName}')">设为寝室长</button>
+                      	 </c:if>
+                      </div>
+                   </div>
+				</div>
+			</div>
+		</div>
+	</c:forEach>
+</div>
 </body>
-<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script> 
+<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
+<script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
+<script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 	function changeBedStd(bedId, dormId, stdId, stdName) {
 		$("#bedId").val(bedId);
 		$("#dormId").val(dormId);
 		$("#stdId").val(stdId);
 		$("#stdName").text(stdName);
+	}
+	
+	function updateDormLeader(dormId, stdId, stdName) {
+		swal({ 
+			title: "确定将该学生设为寝室长吗", 
+			text: stdName, 
+			type: "info", 
+			showCancelButton: true, 
+			closeOnConfirm: false
+		},
+		function(){ 
+			$.ajax({
+				type: "POST",
+				datatype: "json",
+				url: "leader/update",
+				data: {"dormId":dormId, "stdId":stdId},
+				contentType: "application/x-www-form-urlencoded",
+				success: function(data) {
+					if(data == 'success') {
+						swal({ 
+							title: "成功！", 
+							text: "修改成功", 
+							type: "success"
+						},
+						function(){
+							window.location.reload();
+						});
+					} else if(data == 'error') {
+						swal("失败！", "修改失败", "error");
+					}
+				},
+				error: function() {
+					swal("失败！", "发生错误", "error");
+		        }
+			});
+		});
 	}
 	
 	$(function() {
@@ -55,10 +181,22 @@
 				data: $("#dormForm").serializeArray(),
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
-					alert(data);
+					if(data == 'success') {
+						swal({ 
+							title: "成功！", 
+							text: "修改成功", 
+							type: "success"
+						},
+						function(){
+							window.location.reload();
+						});
+					} else if(data == 'error') {
+						swal("失败！", "修改失败", "error");
+						$('#dormFeeModal').modal('hide');
+					}
 				},
 				error: function() {
-		        	alert('error');
+					swal("失败！", "发生错误", "error");
 		        }
 			});
 		});
@@ -70,10 +208,22 @@
 				data: $("#dormStdForm").serializeArray(),
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
-					alert(data);
+					if(data == 'success') {
+						swal({ 
+							title: "成功！", 
+							text: "修改成功", 
+							type: "success"
+						},
+						function(){
+							window.location.reload();
+						});
+					} else if(data == 'error') {
+						swal("失败！", "修改失败", "error");
+						$('#dormStdModal').modal('hide');
+					}
 				},
 				error: function() {
-		        	alert('error');
+					swal("失败！", "发生错误", "error");
 		        }
 			});
 		});
@@ -89,7 +239,7 @@
 					$("#leaderName").text(data);
 				},
 				error: function() {
-		        	alert('error');
+					swal("失败！", "发生错误", "error");
 		        }
 			});
 		});
@@ -105,7 +255,7 @@
 					$("#stdName").text(data);
 				},
 				error: function() {
-		        	alert('error');
+					swal("失败！", "发生错误", "error");
 		        }
 			});
 		});

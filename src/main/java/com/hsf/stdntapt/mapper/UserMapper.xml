@@ -18,10 +18,9 @@
     </insert>
     <update id="updateUser" parameterType="User" useGeneratedKeys="true" keyProperty="user.id">
     	UPDATE user SET 
-    		username = #{user.username}, 
-    		password = #{user.password}, 
-    		salt = #{user.salt}, 
-    		role_ids = #{user.roleIdsStr}, 
+    		<if test="user.password != null">password = #{user.password}, </if>
+    		<if test="user.salt != null">salt = #{user.salt}, </if>
+    		<if test="user.roleIdsStr != null">role_ids = #{user.roleIdsStr}, </if>
     		locked = #{user.locked} 
     		where id = #{user.id}
     </update>

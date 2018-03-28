@@ -30,16 +30,9 @@
 	        <form id="dormBedNumForm" method="post">
 	            <div class="modal-header">
 	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	                <h4 class="modal-title" id="floorModalLabel">公寓修改</h4>
+	                <h4 class="modal-title" id="floorModalLabel">楼层宿舍修改</h4>
 	            </div>
 	            <div class="modal-body">
-	            	<!-- <form id="dormBedNumForm" method="post">
-						宿舍数量：<input id="dormNum" type="number" name="dormNum"/><br />
-						<input id="currentDormNum" type="number" name="currentDormNum" hidden/>
-						床位数量/宿舍：<input type="number" name="aDormBedNum" value="4"/><br />
-						费用/床：<input type="number" name="dormFee" value="1200"/><br />
-						<button type="submit">提交</button>
-					</form> -->
 	            	<div class="form-horizontal" role="form">
 	            		<div class="form-group">
 							<label for="dormNum" class="col-sm-4 control-label">宿舍数量：</label>
@@ -92,9 +85,11 @@
                 </td>
                 <td style="font-size:1em">
                 	<c:forEach items="${floor.dormList}" var="dorm">
-                		<span class="dormBrand">
-                			<a href="${pageContext.request.contextPath}/apartment/dorm/${dorm.id}">${dorm.dormNo}</a>
-                		</span>
+                		<a href="${pageContext.request.contextPath}/apartment/dorm/${dorm.id}">
+	                		<span class="dormBrand">
+	                			${dorm.dormNo}
+	                		</span>
+                		</a>
                 	</c:forEach>
                 </td>
             </tr>
@@ -130,8 +125,14 @@ function addFloor(apartId, floorNum) {
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
 				if(data == "新增成功!") {
-					window.location.reload();
-					swal("成功！", data, "success");
+					swal({ 
+						title: "成功！", 
+						text: data, 
+						type: "success"
+					},
+					function(){
+						window.location.reload();
+					});
 				} else if(data == "新增失败!") {
 					swal("失败！", data, "error");
 				}

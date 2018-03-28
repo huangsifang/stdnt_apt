@@ -7,6 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hsf.stdntapt.entity.User;
@@ -26,25 +28,27 @@ public class UserController {
 	@RequiresPermissions("user:view")
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(Model model) {
+		setCommonData(model);
 		model.addAttribute("userList", userService.findAll());
 		return "user/list";
 	}
 
 	@RequiresPermissions("user:create")
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public String showCreateForm(Model model) {
-		setCommonData(model);
-		model.addAttribute("user", new User());
-		model.addAttribute("op", "新增");
-		return "user/edit";
-	}
-
-	@RequiresPermissions("user:create")
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public String create(User user, RedirectAttributes redirectAttributes) {
-		userService.createUser(user);
-		redirectAttributes.addFlashAttribute("msg", "新增成功");
-		return "redirect:/user";
+	@RequestMapping(value = "/create", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String create(@RequestParam(value = "username") String username,
+			@RequestParam(value = "password") String password, @RequestParam(value = "roleIds") String roleIds) {
+		String msg = "";
+		try {
+			User user = new User(username, password);
+			user.setRoleIdsStr(roleIds);
+			userService.createUser(user);
+			msg = "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "error";
+		}
+		return msg;
 	}
 
 	@RequiresPermissions("user:update")
@@ -57,11 +61,21 @@ public class UserController {
 	}
 
 	@RequiresPermissions("user:update")
-	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST)
-	public String update(User user, RedirectAttributes redirectAttributes) {
-		userService.updateUser(user);
-		redirectAttributes.addFlashAttribute("msg", "修改成功");
-		return "redirect:/user";
+	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String update(@PathVariable("id") Long id, @RequestParam(value = "roleIds") String roleIds) {
+		String msg = "";
+		try {
+			User user = new User();
+			user.setId(id);
+			user.setRoleIdsStr(roleIds);
+			userService.updateUser(user);
+			msg = "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "error";
+		}
+		return msg;
 	}
 
 	@RequiresPermissions("user:delete")

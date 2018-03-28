@@ -123,8 +123,7 @@
     </select>
     <update id="updateDorm" parameterType="Dormitory" useGeneratedKeys="true" keyProperty="dorm.id">
     	UPDATE dormitory SET 
-    		fee = #{dorm.fee}, 
-    		leader_id = #{dorm.leaderId}
+    		fee = #{dorm.fee}
     		where id = #{dorm.id}
     </update>
     <select id="findBedsFromDorm" resultType="Bed">
@@ -149,6 +148,11 @@
     		std_id = #{bed.stdId}
     		where bed_id = #{bed.bedId} 
     		and dorm_id = #{bed.dormId}
+    </update>
+    <update id="updateDormLeader" parameterType="int" useGeneratedKeys="true" keyProperty="id">
+    	UPDATE dormitory SET 
+    		leader_id = #{stdId}
+    		where id = #{dormId}
     </update>
     <select id="getDormBedNum" resultType="int">
     	select count(*) from bed where dorm_id=#{dormId} and deleted=0

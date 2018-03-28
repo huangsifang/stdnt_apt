@@ -246,6 +246,8 @@ public class ApartmentController {
 				Dormitory dorm = apartmentService.findByDormNoFloorId(i + 1, floorId);
 				if (dorm != null) {
 					dormId = dorm.getId();
+					dorm.setFee(dormFee);
+					apartmentService.updateDorm(dorm);
 				} else {
 					msg = "新增失败";
 					break;
@@ -270,8 +272,10 @@ public class ApartmentController {
 	@RequestMapping(value = "dorm/{dormId}", method = RequestMethod.GET)
 	public String dormDetail(@PathVariable("dormId") int dormId, Model model) {
 		Dormitory dorm = apartmentService.findOneDorm(dormId);
-		Student leader = studentService.findOneStd(dorm.getLeaderId());
-		dorm.setLeaderName(leader.getStdName());
+		Floor floor = apartmentService.findOneFloor(dorm.getFloorId());
+		dorm.setFloorNo(floor.getFloorNo());
+		// Student leader = studentService.findOneStd(dorm.getLeaderId());
+		// dorm.setLeaderName(leader.getStdName());
 		model.addAttribute("dorm", dorm);
 		List<Bed> bedList = apartmentService.findBedsFromDorm(dormId);
 		for (Bed bed : bedList) {
@@ -289,19 +293,18 @@ public class ApartmentController {
 	@RequiresPermissions("apartment:update")
 	@RequestMapping(value = "/dorm/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
-	public String updateDorm(@RequestParam("dormId") int dormId, @RequestParam("fee") BigDecimal fee,
-			@RequestParam("leaderId") int leaderId) {
+	public String updateDorm(@RequestParam("dormId") int dormId, @RequestParam("fee") BigDecimal fee) {
 		String msg = "";
 		try {
 			Dormitory dorm = new Dormitory();
 			dorm.setId(dormId);
 			dorm.setFee(fee);
-			dorm.setLeaderId(leaderId);
+			// dorm.setLeaderId(leaderId);
 			apartmentService.updateDorm(dorm);
-			msg = "修改成功!";
+			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = "修改失败！";
+			msg = "error";
 		}
 		return msg;
 	}
@@ -331,10 +334,25 @@ public class ApartmentController {
 			Bed bed = new Bed(bedId, dormId);
 			bed.setStdId(stdId);
 			apartmentService.updateDormStd(bed);
-			msg = "修改成功!";
+			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = "修改失败！";
+			msg = "error";
+		}
+		return msg;
+	}
+
+	@RequiresPermissions("apartment:update")
+	@RequestMapping(value = "/dorm/leader/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String updateDormLeader(@RequestParam("dormId") int dormId, @RequestParam("stdId") int stdId) {
+		String msg = "";
+		try {
+			apartmentService.updateDormLeader(dormId, stdId);
+			msg = "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "error";
 		}
 		return msg;
 	}

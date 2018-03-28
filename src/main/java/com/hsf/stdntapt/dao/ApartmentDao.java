@@ -70,6 +70,8 @@ public interface ApartmentDao {
 
 	public int updateDormStd(@Param("bed") Bed bed);
 
+	public int updateDormLeader(@Param("dormId") int dormId, @Param("stdId") int stdId);
+
 	public int getDormBedNum(@Param("dormId") int dormId);
 
 	public int findStdApartId(@Param("stdId") int stdId);

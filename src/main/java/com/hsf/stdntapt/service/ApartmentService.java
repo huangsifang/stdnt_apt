@@ -67,6 +67,8 @@ public interface ApartmentService {
 
 	public int updateDormStd(Bed bed);
 
+	public int updateDormLeader(int dormId, int stdId);
+
 	public int getDormBedNum(int dormId);
 
 	public int findStdApartId(int stdId);
