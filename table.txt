@@ -6,6 +6,7 @@ create table user (
   salt varchar(100),
   role_ids varchar(100),
   locked bool default false,
+  deleted bit not null default 0,
   constraint pk_user primary key(id)
 ) charset=utf8 ENGINE=InnoDB;
 create unique index idx_user_username on user(username);

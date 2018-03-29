@@ -1,5 +1,7 @@
 package com.hsf.stdntapt.controller;
 
+import java.util.List;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,10 +11,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.hsf.stdntapt.entity.Consellor;
+import com.hsf.stdntapt.entity.Repairman;
+import com.hsf.stdntapt.entity.Staff;
+import com.hsf.stdntapt.entity.Student;
 import com.hsf.stdntapt.entity.User;
+import com.hsf.stdntapt.service.ClassService;
+import com.hsf.stdntapt.service.ConsellorService;
+import com.hsf.stdntapt.service.RepairService;
 import com.hsf.stdntapt.service.RoleService;
+import com.hsf.stdntapt.service.StaffService;
+import com.hsf.stdntapt.service.StudentService;
 import com.hsf.stdntapt.service.UserService;
 
 @Controller
@@ -25,11 +35,28 @@ public class UserController {
 	@Autowired
 	private RoleService roleService;
 
+	@Autowired
+	private StaffService staffService;
+
+	@Autowired
+	private ConsellorService consellorService;
+
+	@Autowired
+	private StudentService studentService;
+
+	@Autowired
+	private RepairService repairService;
+
+	@Autowired
+	private ClassService classService;
+
 	@RequiresPermissions("user:view")
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(Model model) {
 		setCommonData(model);
+		List<Class> classList = classService.findSpeciAllClass(2);
 		model.addAttribute("userList", userService.findAll());
+		model.addAttribute("classList", classList);
 		return "user/list";
 	}
 
@@ -37,39 +64,140 @@ public class UserController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
 	public String create(@RequestParam(value = "username") String username,
-			@RequestParam(value = "password") String password, @RequestParam(value = "roleIds") String roleIds) {
+			@RequestParam(value = "password") String password, @RequestParam(value = "roleIds") String roleIds,
+			@RequestParam(value = "name") String name, @RequestParam(value = "sex") String sex,
+			@RequestParam(value = "tel") String tel, @RequestParam(value = "hiredate") String hiredate,
+			@RequestParam(value = "isParty") String isParty, @RequestParam(value = "classId") int classId) {
 		String msg = "";
+		boolean isPartyBoolean = false;
+		if (!isParty.isEmpty()) {
+			isPartyBoolean = true;
+		}
 		try {
 			User user = new User(username, password);
 			user.setRoleIdsStr(roleIds);
 			userService.createUser(user);
+
+			int usernameInt = Integer.parseInt(username);
+			int sexInt = 1;
+			if (sex.equals("female")) {
+				sexInt = 2;
+			}
+			String leavedate = null;
+			List<Long> roleIdsList = user.getRoleIds();
+			for (Long roleId : roleIdsList) {
+				if (roleId == 2) {
+					staffService.insertStaffList(usernameInt, name, sexInt, tel, hiredate, leavedate);
+				} else if (roleId == 3) {
+					consellorService.insertConsellorList(usernameInt, name, sexInt, tel);
+				} else if (roleId == 4) {
+					studentService.insertStudentList(usernameInt, name, sexInt, tel, hiredate, isPartyBoolean, classId);
+				} else if (roleId == 5) {
+					repairService.insertRepairmanList(usernameInt, name, sexInt, tel);
+				}
+			}
 			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
 			msg = "error";
 		}
 		return msg;
-	}
-
-	@RequiresPermissions("user:update")
-	@RequestMapping(value = "/{id}/update", method = RequestMethod.GET)
-	public String showUpdateForm(@PathVariable("id") Long id, Model model) {
-		setCommonData(model);
-		model.addAttribute("user", userService.findOne(id));
-		model.addAttribute("op", "修改");
-		return "user/edit";
 	}
 
 	@RequiresPermissions("user:update")
 	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
-	public String update(@PathVariable("id") Long id, @RequestParam(value = "roleIds") String roleIds) {
+	public String update(@PathVariable("id") Long id, @RequestParam(value = "username") String username,
+			@RequestParam(value = "password") String password, @RequestParam(value = "roleIds") String roleIds,
+			@RequestParam(value = "name") String name, @RequestParam(value = "sex") String sex,
+			@RequestParam(value = "tel") String tel, @RequestParam(value = "hiredate") String hiredate,
+			@RequestParam(value = "isParty") String isParty, @RequestParam(value = "classId") int classId) {
 		String msg = "";
+		boolean isPartyBoolean = false;
+		if (!isParty.isEmpty()) {
+			isPartyBoolean = true;
+		}
 		try {
+			int usernameInt = Integer.parseInt(username);
+			int sexInt = 1;
+			if (sex.equals("female")) {
+				sexInt = 2;
+			}
+			String leavedate = null;
+
+			User currentUser = userService.findOne(id);
+			List<Long> currentRoleIdsList = currentUser.getRoleIds();
+			for (int i = 0; i < currentRoleIdsList.size(); i++) {
+				Long roleId = currentRoleIdsList.get(i);
+				if (!roleIds.contains(String.valueOf(roleId))) {
+					if (roleId == 2) {
+						staffService.deleteOne(usernameInt);
+					} else if (roleId == 3) {
+						consellorService.deleteOne(usernameInt);
+					} else if (roleId == 4) {
+						studentService.deleteOne(usernameInt);
+					} else if (roleId == 5) {
+						repairService.deleteOneRepairman(usernameInt);
+					}
+				}
+			}
+
 			User user = new User();
 			user.setId(id);
 			user.setRoleIdsStr(roleIds);
 			userService.updateUser(user);
+
+			List<Long> roleIdsList = user.getRoleIds();
+			for (Long roleId : roleIdsList) {
+				if (roleId == 2) {
+					Staff staff = staffService.findOneStaff(usernameInt);
+					if (staff == null) {
+						staffService.insertStaffList(usernameInt, name, sexInt, tel, hiredate, leavedate);
+					} else {
+						Staff newStaff = new Staff(usernameInt, name);
+						newStaff.setStaffSex(sexInt);
+						newStaff.setStaffTel(tel);
+						newStaff.setHiredate(hiredate);
+						staffService.updateStaff(newStaff);
+					}
+				} else if (roleId == 3) {
+					Consellor consellor = consellorService.findOneConsellor(usernameInt);
+					if (consellor == null) {
+						consellorService.insertConsellorList(usernameInt, name, sexInt, tel);
+					} else {
+						Consellor newConsellor = new Consellor(usernameInt, name);
+						newConsellor.setConsellSex(sexInt);
+						newConsellor.setConsellTel(tel);
+						consellorService.updateConsellor(newConsellor);
+					}
+				} else if (roleId == 4) {
+					Student student = studentService.findOneStd(usernameInt);
+					if (student == null) {
+						studentService.insertStudentList(usernameInt, name, sexInt, tel, hiredate, isPartyBoolean,
+								classId);
+					} else {
+						Student newStudent = new Student(usernameInt, name);
+						newStudent.setStdSex(sexInt);
+						newStudent.setStdTel(tel);
+						newStudent.setEnterTime(hiredate);
+						newStudent.setParty(isPartyBoolean);
+						newStudent.setClassId(classId);
+						studentService.updateStudent(newStudent);
+					}
+				} else if (roleId == 5) {
+					Repairman repairman = repairService.findRepairman(usernameInt);
+					if (repairman == null) {
+						repairService.insertRepairmanList(usernameInt, name, sexInt, tel);
+					} else {
+						// Repairman newRepairman = new Repairman(usernameInt,
+						// name);
+						// newRepairman.setRepairmanSex(sexInt);
+						// newRepairman.setRepairmanTel(tel);
+						// newRepairman.setTypeIds(typeIds);
+						// repairService.updateRepairman(newRepairman);
+					}
+				}
+			}
 			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -79,37 +207,43 @@ public class UserController {
 	}
 
 	@RequiresPermissions("user:delete")
-	@RequestMapping(value = "/{id}/delete", method = RequestMethod.GET)
-	public String showDeleteForm(@PathVariable("id") Long id, Model model) {
-		setCommonData(model);
-		model.addAttribute("user", userService.findOne(id));
-		model.addAttribute("op", "删除");
-		return "user/edit";
-	}
-
-	@RequiresPermissions("user:delete")
-	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST)
-	public String delete(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-		userService.deleteUser(id);
-		redirectAttributes.addFlashAttribute("msg", "删除成功");
-		return "redirect:/user";
+	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String delete(@PathVariable("id") Long id, @RequestParam(value = "username") int username,
+			@RequestParam(value = "roleIdsStr") String roleIdsStr) {
+		String msg = "";
+		try {
+			userService.deleteUser(id);
+			if (roleIdsStr.contains("2")) {
+				staffService.deleteOne(username);
+			} else if (roleIdsStr.contains("3")) {
+				consellorService.deleteOne(username);
+			} else if (roleIdsStr.contains("4")) {
+				studentService.deleteOne(username);
+			} else if (roleIdsStr.contains("5")) {
+				repairService.deleteOneRepairman(username);
+			}
+			msg = "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "error";
+		}
+		return msg;
 	}
 
 	@RequiresPermissions("user:update")
-	@RequestMapping(value = "/{id}/changePassword", method = RequestMethod.GET)
-	public String showChangePasswordForm(@PathVariable("id") Long id, Model model) {
-		model.addAttribute("user", userService.findOne(id));
-		model.addAttribute("op", "修改密码");
-		return "user/changePassword";
-	}
-
-	@RequiresPermissions("user:update")
-	@RequestMapping(value = "/{id}/changePassword", method = RequestMethod.POST)
-	public String changePassword(@PathVariable("id") Long id, String newPassword,
-			RedirectAttributes redirectAttributes) {
-		userService.changePassword(id, newPassword);
-		redirectAttributes.addFlashAttribute("msg", "修改密码成功");
-		return "redirect:/user";
+	@RequestMapping(value = "/{id}/changePassword", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String changePassword(@PathVariable("id") Long id, @RequestParam("newPassword") String newPassword) {
+		String msg = "";
+		try {
+			userService.changePassword(id, newPassword);
+			msg = "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "error";
+		}
+		return msg;
 	}
 
 	private void setCommonData(Model model) {

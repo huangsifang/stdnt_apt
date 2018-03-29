@@ -1,6 +1,5 @@
 package com.hsf.stdntapt.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -96,11 +95,6 @@ public class InfoImpl implements InfoService {
 	}
 
 	@Override
-	public void insertConsellorList(int consellId, String consellName, int consellSex, String consellTel) {
-		consellorDao.insertConsellorList(consellId, consellName, consellSex, consellTel);
-	}
-
-	@Override
 	public List<Consellor> getConsellorInfo(String name, MultipartFile file) {
 		ReadExcel ReadExcel = new ReadExcel();
 		List<Consellor> excelInfo = ReadExcel.getConsellorExcelInfo(name, file);
@@ -139,22 +133,10 @@ public class InfoImpl implements InfoService {
 	}
 
 	@Override
-	public void insertStudentList(int stdId, String stdName, int stdSex, String stdTel, Date enterTime, boolean isParty,
-			int classId) {
-		studentDao.insertStudentList(stdId, stdName, stdSex, stdTel, enterTime, isParty, classId);
-	}
-
-	@Override
 	public List<Staff> getStaffInfo(String name, MultipartFile file) {
 		ReadExcel ReadExcel = new ReadExcel();
 		List<Staff> excelInfo = ReadExcel.getStaffExcelInfo(name, file);
 		return excelInfo;
-	}
-
-	@Override
-	public void insertStaffList(int staffId, String staffName, int staffSex, String staffTel, Date hiredate,
-			Date leavedate) {
-		staffDao.insertStaffList(staffId, staffName, staffSex, staffTel, hiredate, leavedate);
 	}
 
 	@Override

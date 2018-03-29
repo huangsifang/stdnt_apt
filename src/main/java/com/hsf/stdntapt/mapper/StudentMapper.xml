@@ -28,4 +28,20 @@
     <select id="findStdName" parameterType="int" resultType="String">
 		select std_name as stdName from student where std_id=#{stdId}
     </select>
+    
+    <delete id="deleteOne" parameterType="int">
+    	delete from student where std_id = #{stdId}
+    </delete>
+    
+    <update id="updateStudent" parameterType="Student" useGeneratedKeys="true" keyProperty="student.stdId">
+    	UPDATE student SET 
+    		std_id = #{student.stdId}, 
+    		std_name = #{student.stdName},
+    		std_sex = #{student.stdSex}, 
+    		std_tel = #{student.stdTel}, 
+    		enter_time = #{student.enterTime}, 
+    		is_party = #{student.isParty()}, 
+    		class_id = #{student.classId} 
+    		where std_id = #{student.stdId}
+    </update>
 </mapper>

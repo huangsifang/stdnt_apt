@@ -22,4 +22,19 @@
     <select id="findOneStaff" parameterType="int" resultType="Staff">
 		select staff_id as staffId, staff_name as staffName, staff_sex as staffSex, staff_tel as staffTel, hiredate, leavedate from staff where staff_id=#{staffId}
     </select>
+    
+    <delete id="deleteOne" parameterType="int">
+    	delete from staff where staff_id = #{staffId}
+    </delete>
+    
+    <update id="updateStaff" parameterType="Staff" useGeneratedKeys="true" keyProperty="staff.staffId">
+    	UPDATE staff SET 
+    		staff_id = #{staff.staffId}, 
+    		staff_name = #{staff.staffName},
+    		staff_sex = #{staff.staffSex}, 
+    		staff_tel = #{staff.staffTel}, 
+    		hiredate = #{staff.hiredate}, 
+    		leavedate = #{staff.leavedate} 
+    		where staff_id = #{staff.staffId}
+    </update>
 </mapper>

@@ -30,6 +30,10 @@
         where repairman_id=#{repairmanId} and deleted=0
     </select>
     
+    <delete id="deleteOneRepairman" parameterType="int">
+    	delete from repairman where repairman_id = #{repairmanId}
+    </delete>
+    
     <select id="getApartRepairs" parameterType="int" resultType="Repair">
         select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark, deleted from repair 
         where dorm_id in(

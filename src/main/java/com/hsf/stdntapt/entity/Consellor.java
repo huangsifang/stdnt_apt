@@ -6,6 +6,14 @@ public class Consellor {
 	private int consellSex;
 	private String consellTel;
 
+	public Consellor() {
+	}
+
+	public Consellor(int consellId, String consellName) {
+		this.consellId = consellId;
+		this.consellName = consellName;
+	}
+
 	public int getConsellId() {
 		return consellId;
 	}

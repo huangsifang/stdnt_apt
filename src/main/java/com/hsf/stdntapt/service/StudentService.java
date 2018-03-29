@@ -6,4 +6,11 @@ public interface StudentService {
 	Student findOneStd(int stdId);
 
 	public String findStdName(int stdId);
+
+	public void insertStudentList(int stdId, String stdName, int stdSex, String stdTel, String enterTime,
+			boolean isParty, int classId);
+
+	public int deleteOne(int stdId);
+
+	public int updateStudent(Student student);
 }

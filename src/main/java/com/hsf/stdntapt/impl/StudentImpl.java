@@ -22,4 +22,20 @@ public class StudentImpl implements StudentService {
 	public String findStdName(int stdId) {
 		return studentDao.findStdName(stdId);
 	}
+
+	@Override
+	public void insertStudentList(int stdId, String stdName, int stdSex, String stdTel, String enterTime,
+			boolean isParty, int classId) {
+		studentDao.insertStudentList(stdId, stdName, stdSex, stdTel, enterTime, isParty, classId);
+	}
+
+	@Override
+	public int deleteOne(int stdId) {
+		return studentDao.deleteOne(stdId);
+	}
+
+	@Override
+	public int updateStudent(Student student) {
+		return studentDao.updateStudent(student);
+	}
 }

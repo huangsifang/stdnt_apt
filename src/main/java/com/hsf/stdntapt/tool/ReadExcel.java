@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -745,9 +744,8 @@ public class ReadExcel {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
 						students.setStdTel(cell.getStringCellValue());
 					} else if (c == 4) {
-						if (HSSFDateUtil.isCellDateFormatted(cell)) {
-							students.setEnterTime(cell.getDateCellValue());
-						}
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						students.setEnterTime(cell.getStringCellValue());
 					} else if (c == 5) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
 						students.setParty(Boolean.parseBoolean(cell.getStringCellValue()));
@@ -856,13 +854,11 @@ public class ReadExcel {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
 						staffs.setStaffTel(cell.getStringCellValue());
 					} else if (c == 4) {
-						if (HSSFDateUtil.isCellDateFormatted(cell)) {
-							staffs.setHiredate(cell.getDateCellValue());
-						}
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						staffs.setHiredate(cell.getStringCellValue());
 					} else if (c == 5) {
-						if (HSSFDateUtil.isCellDateFormatted(cell)) {
-							staffs.setLeavedate(cell.getDateCellValue());
-						}
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						staffs.setLeavedate(cell.getStringCellValue());
 					}
 				}
 			}

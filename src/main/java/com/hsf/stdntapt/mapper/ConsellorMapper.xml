@@ -14,4 +14,21 @@
 	        #{consellTel}
 		)
     </insert>
+    
+    <delete id="deleteOne" parameterType="int">
+    	delete from consellor where consell_id = #{consellId}
+    </delete>
+    
+    <select id="findOneConsellor" parameterType="int" resultType="Consellor">
+		select consell_id as consellId, consell_name as consellName, consell_sex as consellSex, consell_tel as consellTel from consellor where consell_id=#{consellId}
+    </select>
+    
+    <update id="updateConsellor" parameterType="Consellor" useGeneratedKeys="true" keyProperty="consellor.consellId">
+    	UPDATE consellor SET 
+    		consell_id = #{consellor.consellId}, 
+    		consell_name = #{consellor.consellName},
+    		consell_sex = #{consellor.consellSex}, 
+    		consell_tel = #{consellor.consellTel}
+    		where consell_id = #{consellor.consellId}
+    </update>
 </mapper>

@@ -7,6 +7,14 @@ public class Repairman {
 	private String repairmanTel;
 	private String typeIds;
 
+	public Repairman() {
+	}
+
+	public Repairman(int repairmanId, String repairmanName) {
+		this.repairmanId = repairmanId;
+		this.repairmanName = repairmanName;
+	}
+
 	public int getRepairmanId() {
 		return repairmanId;
 	}

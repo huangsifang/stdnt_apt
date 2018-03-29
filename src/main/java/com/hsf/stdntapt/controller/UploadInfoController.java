@@ -27,8 +27,11 @@ import com.hsf.stdntapt.entity.Student;
 import com.hsf.stdntapt.entity.StudentBed;
 import com.hsf.stdntapt.entity.User;
 import com.hsf.stdntapt.service.ApartmentService;
+import com.hsf.stdntapt.service.ConsellorService;
 import com.hsf.stdntapt.service.InfoService;
 import com.hsf.stdntapt.service.RepairService;
+import com.hsf.stdntapt.service.StaffService;
+import com.hsf.stdntapt.service.StudentService;
 import com.hsf.stdntapt.service.UserService;
 
 @Controller
@@ -46,6 +49,15 @@ public class UploadInfoController {
 
 	@Resource
 	RepairService repairService;
+
+	@Resource
+	StaffService staffService;
+
+	@Resource
+	StudentService studentService;
+
+	@Resource
+	ConsellorService consellorService;
 
 	@RequiresRoles("admin")
 	@RequestMapping(value = "/uploadInfo")
@@ -87,7 +99,7 @@ public class UploadInfoController {
 			} else if (type.equals("consellor")) {
 				List<Consellor> consellList = infoService.getConsellorInfo(name, file);
 				for (int i = 0; i < consellList.size(); i++) {
-					infoService.insertConsellorList(consellList.get(i).getConsellId(),
+					consellorService.insertConsellorList(consellList.get(i).getConsellId(),
 							consellList.get(i).getConsellName(), consellList.get(i).getConsellSex(),
 							consellList.get(i).getConsellTel());
 					User user = new User(consellList.get(i).getConsellId() + "", "123456");
@@ -105,7 +117,7 @@ public class UploadInfoController {
 			} else if (type.equals("student")) {
 				List<Student> studentList = infoService.getStudentInfo(name, file);
 				for (int i = 0; i < studentList.size(); i++) {
-					infoService.insertStudentList(studentList.get(i).getStdId(), studentList.get(i).getStdName(),
+					studentService.insertStudentList(studentList.get(i).getStdId(), studentList.get(i).getStdName(),
 							studentList.get(i).getStdSex(), studentList.get(i).getStdTel(),
 							studentList.get(i).getEnterTime(), studentList.get(i).isParty(),
 							studentList.get(i).getClassId());
@@ -128,7 +140,7 @@ public class UploadInfoController {
 			} else if (type.equals("staff")) {
 				List<Staff> staffList = infoService.getStaffInfo(name, file);
 				for (int i = 0; i < staffList.size(); i++) {
-					infoService.insertStaffList(staffList.get(i).getStaffId(), staffList.get(i).getStaffName(),
+					staffService.insertStaffList(staffList.get(i).getStaffId(), staffList.get(i).getStaffName(),
 							staffList.get(i).getStaffSex(), staffList.get(i).getStaffTel(),
 							staffList.get(i).getHiredate(), staffList.get(i).getLeavedate());
 					User user = new User(staffList.get(i).getStaffId() + "", "123456");

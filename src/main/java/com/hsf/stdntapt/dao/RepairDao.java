@@ -10,12 +10,15 @@ import com.hsf.stdntapt.entity.RepairType;
 import com.hsf.stdntapt.entity.Repairman;
 
 public interface RepairDao {
+
 	public void insertRepairmanList(@Param("repairmanId") int repairmanId, @Param("repairmanName") String repairmanName,
 			@Param("repairmanSex") int repairmanSex, @Param("repairmanTel") String repairmanTel);
 
 	public int insertRepairmanTypeRelation(@Param("repairmanId") int repairmanId, @Param("typeId") int typeId);
 
 	public Repairman findRepairman(@Param("repairmanId") int repairmanId);
+
+	public int deleteOneRepairman(@Param("repairmanId") int repairmanId);
 
 	public List<Repair> getApartRepairs(@Param("apartId") int apartId);
 

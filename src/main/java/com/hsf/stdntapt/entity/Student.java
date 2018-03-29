@@ -1,15 +1,21 @@
 package com.hsf.stdntapt.entity;
 
-import java.util.Date;
-
 public class Student {
 	private int stdId;
 	private String stdName;
 	private int stdSex;
 	private String stdTel;
-	private Date enterTime;
+	private String enterTime;
 	private boolean isParty;
 	private int classId;
+
+	public Student() {
+	}
+
+	public Student(int stdId, String stdName) {
+		this.stdId = stdId;
+		this.stdName = stdName;
+	}
 
 	public int getStdId() {
 		return stdId;
@@ -43,11 +49,11 @@ public class Student {
 		this.stdTel = stdTel;
 	}
 
-	public Date getEnterTime() {
+	public String getEnterTime() {
 		return enterTime;
 	}
 
-	public void setEnterTime(Date enterTime) {
+	public void setEnterTime(String enterTime) {
 		this.enterTime = enterTime;
 	}
 

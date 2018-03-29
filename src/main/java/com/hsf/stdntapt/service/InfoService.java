@@ -1,6 +1,5 @@
 package com.hsf.stdntapt.service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -43,13 +42,5 @@ public interface InfoService {
 
 	public void insertSpecialityList(int speciId, String speciName, int collegeId, int speYearsId);
 
-	public void insertConsellorList(int consellId, String consellName, int consellSex, String consellTel);
-
 	public void insertClassList(int classId, String className, int speciId, int consellId);
-
-	public void insertStudentList(int stdId, String stdName, int stdSex, String stdTel, Date enterTime, boolean isParty,
-			int classId);
-
-	public void insertStaffList(int staffId, String staffName, int staffSex, String staffTel, Date hiredate,
-			Date leavedate);
 }

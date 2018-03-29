@@ -43,6 +43,14 @@ public class RepairController {
 	@Resource
 	StudentService studentService;
 
+	@RequiresPermissions("user:view")
+	@RequestMapping(value = "/repairman/{repairmanId}", method = RequestMethod.GET)
+	@ResponseBody
+	public Repairman repairman(@PathVariable(value = "repairmanId") int repairmanId) {
+		Repairman repairman = repairService.findRepairman(repairmanId);
+		return repairman;
+	}
+
 	@RequestMapping(method = RequestMethod.GET)
 	public String repairList(final ModelMap model) {
 		String username = SecurityUtils.getSubject().getPrincipal().toString();

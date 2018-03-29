@@ -22,18 +22,18 @@
     		<if test="user.salt != null">salt = #{user.salt}, </if>
     		<if test="user.roleIdsStr != null">role_ids = #{user.roleIdsStr}, </if>
     		locked = #{user.locked} 
-    		where id = #{user.id}
+    		where id = #{user.id} and deleted=0
     </update>
     <delete id="deleteUser" parameterType="long">
 		delete from user where id=#{userId}
 	</delete>
 	<select id="findOne" parameterType="long" resultType="user">
-		select id, username, password, salt, role_ids as roleIdsStr, locked from user where id=#{userId}
+		select id, username, password, salt, role_ids as roleIdsStr, locked from user where id=#{userId} and deleted=0
     </select>
     <select id="findByUsername" parameterType="string" resultType="user">
-		select id, username, password, salt, role_ids as roleIdsStr, locked from user where username=#{username}
+		select id, username, password, salt, role_ids as roleIdsStr, locked from user where username=#{username} and deleted=0
     </select>
     <select id="findAll" resultType="user">
-    	select id, username, password, salt, role_ids as roleIdsStr, locked from user
+    	select id, username, password, salt, role_ids as roleIdsStr, locked from user where deleted=0
     </select>
 </mapper>
