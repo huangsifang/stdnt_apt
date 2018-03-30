@@ -26,6 +26,10 @@ public interface UserDao {
 
 	List<User> findAll();
 
+	List<User> findOneRoleAllPage(@Param("start") int start, @Param("size") int size, @Param("roleId") int roleId);
+
+	List<User> findOneRoleAll(@Param("roleId") int roleId);
+
 	User findByUsername(@Param("username") String username);
 
 }

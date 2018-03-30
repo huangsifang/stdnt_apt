@@ -154,7 +154,7 @@ public class UploadInfoController {
 					repairService.insertRepairmanList(repairmanList.get(i).getRepairmanId(),
 							repairmanList.get(i).getRepairmanName(), repairmanList.get(i).getRepairmanSex(),
 							repairmanList.get(i).getRepairmanTel());
-					String typeIds = repairmanList.get(i).getTypeIds();
+					String typeIds = repairmanList.get(i).getTypeIdsStr();
 					String[] typeIdsArray = typeIds.split(",");
 					for (String typeId : typeIdsArray) {
 						if (StringUtils.isEmpty(typeId)) {

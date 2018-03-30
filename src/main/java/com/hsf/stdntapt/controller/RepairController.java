@@ -48,6 +48,8 @@ public class RepairController {
 	@ResponseBody
 	public Repairman repairman(@PathVariable(value = "repairmanId") int repairmanId) {
 		Repairman repairman = repairService.findRepairman(repairmanId);
+		List<String> typeIds = repairService.findRepairmanTypes(repairmanId);
+		repairman.setTypeIds(typeIds);
 		return repairman;
 	}
 

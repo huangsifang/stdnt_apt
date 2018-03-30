@@ -39,6 +39,21 @@ public class RepairImpl implements RepairService {
 	}
 
 	@Override
+	public void updateRepairman(Repairman repairman) {
+		repairDao.updateRepairman(repairman);
+	}
+
+	@Override
+	public int deleteRepairmanAllType(int repairmanId) {
+		return repairDao.deleteRepairmanAllType(repairmanId);
+	}
+
+	@Override
+	public void deleteRepairmanType(int repairmanId, int typeId) {
+		repairDao.deleteRepairmanType(repairmanId, typeId);
+	}
+
+	@Override
 	public List<Repair> getApartRepairs(int apartId) {
 		return repairDao.getApartRepairs(apartId);
 	}

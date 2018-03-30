@@ -8,6 +8,7 @@ public class Student {
 	private String enterTime;
 	private boolean isParty;
 	private int classId;
+	private int speciId;
 
 	public Student() {
 	}
@@ -71,6 +72,14 @@ public class Student {
 
 	public void setClassId(int classId) {
 		this.classId = classId;
+	}
+
+	public int getSpeciId() {
+		return speciId;
+	}
+
+	public void setSpeciId(int speciId) {
+		this.speciId = speciId;
 	}
 
 }

@@ -9,4 +9,6 @@ public interface ClassDao {
 			@Param("speciId") int speciId, @Param("consellId") int consellId);
 
 	public List<Class> findSpeciAllClass(@Param("speciId") int speciId);
+
+	public int findClassSpeciId(@Param("classId") int classId);
 }

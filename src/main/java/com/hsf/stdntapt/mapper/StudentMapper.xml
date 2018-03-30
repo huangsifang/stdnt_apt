@@ -40,7 +40,7 @@
     		std_sex = #{student.stdSex}, 
     		std_tel = #{student.stdTel}, 
     		enter_time = #{student.enterTime}, 
-    		is_party = #{student.isParty()}, 
+    		is_party = #{student.isParty}, 
     		class_id = #{student.classId} 
     		where std_id = #{student.stdId}
     </update>

@@ -302,7 +302,6 @@ create table repairman_type_relation(
 	repairman_id int(11) unsigned not null,
 	type_id int(4) unsigned not null,
 	deleted bit not null default 0,
-	foreign key(repairman_id) references repairman(repairman_id),
 	foreign key(type_id) references repair_type(type_id)
 );
 

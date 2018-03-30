@@ -910,7 +910,7 @@ public class ReadExcel {
 						repairmans.setRepairmanTel(cell.getStringCellValue());
 					} else if (c == 4) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
-						repairmans.setTypeIds(cell.getStringCellValue());
+						repairmans.setTypeIdsStr(cell.getStringCellValue());
 					}
 				}
 			}

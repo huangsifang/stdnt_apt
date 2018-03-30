@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <html>
 <head>
     <title></title>
@@ -14,9 +15,11 @@
 <div style="margin:20px 50px">
 	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 	
-	<c:if test="${not empty msg}">
-	    <div>${msg}</div>
-	</c:if>
+	<ul class="nav nav-tabs" id="roleUl">
+		<c:forEach items="${roleList}" var="role">
+			<li><a href="${pageContext.request.contextPath}/user/role/${role.id}">${role.description}</a></li>
+	    </c:forEach>
+	</ul>
 	
 	<!-- 新增修改用户模态框（Modal） -->
 	<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
@@ -93,12 +96,32 @@
 								  	</div>
 						    	</div>
 							</div>
+							<div class="form-group" id="speciIdForm">
+								<label for="classId" class="col-sm-3 control-label">专业：</label>
+								<div class="col-sm-8">
+									<select class="form-control" name="speciId" id="speciId">
+										<c:forEach items="${speciList}" var="speci">
+								    		<option value="${speci.speciId}">${speci.speciName}</option>
+								    	</c:forEach>
+								    </select>
+						    	</div>
+							</div>
 							<div class="form-group" id="classIdForm">
 								<label for="classId" class="col-sm-3 control-label">班级：</label>
 								<div class="col-sm-8">
 									<select class="form-control" name="classId" id="classId">
 										<c:forEach items="${classList}" var="speciClass">
 								    		<option value="${speciClass.classId}">${speciClass.className}</option>
+								    	</c:forEach>
+								    </select>
+						    	</div>
+							</div>
+							<div class="form-group" id="repairTypeForm">
+								<label for="typeId" class="col-sm-3 control-label">维修类型：</label>
+								<div class="col-sm-8">
+									<select multiple class="form-control" name="typeIds" id="typeIds">
+										<c:forEach items="${allTypeList}" var="type">
+								    		<option value="${type.typeId}">${type.typeName}</option>
 								    	</c:forEach>
 								    </select>
 						    	</div>
@@ -177,6 +200,13 @@
 	        </c:forEach>
 	    </tbody>
 	</table>
+	<ul class="pagination" id="userPage">
+	    <li><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${start-10}">&laquo;</a></li>
+	    <c:forEach begin="0" end="${userCount}" var="item" step="10">
+	    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
+	    </c:forEach>
+	    <li><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${start+10}">&raquo;</a></li>
+	</ul>
 </div>
 </body>
 <script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script> 
@@ -186,14 +216,27 @@
 <script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 	$(function() {
+		var nowRoleId = Number('${roleId}')-1;
+		$("#roleUl li").eq(nowRoleId).addClass("active");
 		$("#userInfo").hide();
+		var start = Number('${start}');
+		var pageNum = start/10+1;
+		$("#userPage li").eq(pageNum).addClass("active");
+		if(start <= 0) {
+			$("#userPage li").eq(0).find("a").attr("href","#");
+			$("#userPage li").eq(0).addClass("disabled");
+		}
+		if(start+10 >= Number('${userCount}')){
+			$("#userPage li").eq(-1).find("a").attr("href","#");
+			$("#userPage li").eq(-1).addClass("disabled");
+		}
 		$("#userBtn").click(function() {
 			var url = "";
 			if($("#operationType").val() == 'add') {
-				url = "user/create";
+				url = getRootPath() + "/user/create";
 			} else {
 				var userId = $("#userId").val();
-				url = "user/"+userId+"/update";
+				url = getRootPath() + "/user/"+userId+"/update";
 			}
 			$.ajax({
 				type: "POST",
@@ -220,7 +263,7 @@
 			$.ajax({
 				type: "POST",
 				datatype: "json",
-				url: "user/"+userId+"/changePassword",
+				url: getRootPath() + "/user/"+userId+"/changePassword",
 				data: $("#chnagePasswordForm").serializeArray(),
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
@@ -243,20 +286,43 @@
 				$("#userInfo").hide();
 			} else {
 				$("#userInfo").show();
+				$("#hiredateForm").hide();
+				$("#isPartyForm").hide();
+				$("#speciIdForm").hide();
+				$("#classIdForm").hide();
+				$("#repairTypeForm").hide();
 				if(roleIds.indexOf("2") != -1) {
 					$("#hiredateForm").show();
-					$("#isPartyForm").hide();
-					$("#classIdForm").hide();
-				} else if(roleIds.indexOf("4") != -1) {
+				}
+				if(roleIds.indexOf("4") != -1) {
 					$("#hiredateForm").show();
 					$("#isPartyForm").show();
+					$("#speciIdForm").show();
 					$("#classIdForm").show();
-				} else {
-					$("#hiredateForm").hide();
-					$("#isPartyForm").hide();
-					$("#classIdForm").hide();
+				}
+				if(roleIds.indexOf("5") != -1) {
+					$("#repairTypeForm").show();
 				}
 			}
+		});
+		
+		$("#speciId").change(function(){
+			var speciId = $("#speciId").val();
+			$.ajax({
+				type: "GET",
+				datatype: "json",
+				url: getRootPath() + "/class/"+speciId,
+				contentType: "application/x-www-form-urlencoded",
+				success: function(data) {
+					$("#classId").text('');
+					for(var i=0; i<data.length; i++) {
+						$("#classId").append("<option value="+data[i].classId+">"+data[i].className+"</option>");
+					}
+				},
+				error: function() {
+					swal("错误！", "发送错误", "error");
+		        }
+			});
 		});
 	});
 	$("#isParty").change(function() {
@@ -272,6 +338,12 @@
 		$("#roleIds option").attr("selected",false);
 		$('#usernameForm').show(); 
 		$("#passwordForm").show();
+		$("#userInfo").hide();
+		$("#hiredateForm").hide();
+		$("#isPartyForm").hide();
+		$("#speciIdForm").hide();
+		$("#classIdForm").hide();
+		$("#repairTypeForm").hide();
 	}
 	function updateUser(id, username, roleIds) {
 		$("#operationType").val("update");
@@ -279,6 +351,7 @@
 		$("#username").val(username);
 		$('#usernameForm').hide();
 		$("#passwordForm").hide();
+		$("#repairTypeForm").hide();
 		$("#roleIds option").attr("selected",false);
 		roleIds.forEach(function(item, index, array) {
 			$("#roleIds").find("option[value='"+item+"']").attr("selected",true);
@@ -287,6 +360,7 @@
 			$("#userInfo").show();
 			$("#hiredateForm").hide();
 			$("#isPartyForm").hide();
+			$("#speciIdForm").hide();
 			$("#classIdForm").hide();
 		} else {
 			$("#userInfo").hide();
@@ -296,7 +370,7 @@
 			$.ajax({
 				type: "GET",
 				datatype: "json",
-				url: "staff/"+username,
+				url: getRootPath() + "/staff/"+username,
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
 					$("#name").val(data.staffName);
@@ -317,7 +391,7 @@
 			$.ajax({
 				type: "GET",
 				datatype: "json",
-				url: "consellor/"+username,
+				url: getRootPath() + "/consellor/"+username,
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
 					$("#name").val(data.consellName);
@@ -336,11 +410,12 @@
 		if(roleIds.indexOf(4) != -1) {
 			$("#hiredateForm").show();
 			$("#isPartyForm").show();
+			$("#speciIdForm").show();
 			$("#classIdForm").show();
 			$.ajax({
 				type: "GET",
 				datatype: "json",
-				url: "student/"+username,
+				url: getRootPath() + "/student/"+username,
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
 					$("#name").val(data.stdName);
@@ -358,7 +433,24 @@
 						$("#isParty").removeAttr('checked');
 						$("#isPartyHidden").val("false");
 					}
-					$("#classId").val(data.classId);
+					$("#speciId").val(data.speciId);
+					var classId = data.classId;
+					$.ajax({
+						type: "GET",
+						datatype: "json",
+						url: getRootPath() + "/class/"+data.speciId,
+						contentType: "application/x-www-form-urlencoded",
+						success: function(data) {
+							$("#classId").text('');
+							for(var i=0; i<data.length; i++) {
+								$("#classId").append("<option value="+data[i].classId+">"+data[i].className+"</option>");
+							}
+							$("#classId").find("option[value='"+classId+"']").attr("selected",true);
+						},
+						error: function() {
+							swal("错误！", "发送错误", "error");
+				        }
+					});
 				},
 				error: function() {
 					swal("错误！", "发送错误", "error");
@@ -366,10 +458,11 @@
 			});
 		}
 		if(roleIds.indexOf(5) != -1) {
+			$("#repairTypeForm").show();
 			$.ajax({
 				type: "GET",
 				datatype: "json",
-				url: "repair/repairman/"+username,
+				url: getRootPath() + "/repair/repairman/"+username,
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
 					$("#name").val(data.repairmanName);
@@ -379,6 +472,10 @@
 					}
 					$(":radio[name='sex'][value='" + sex + "']").prop("checked", "checked");
 					$("#tel").val(data.repairmanTel);
+					$("#typeIds option").attr("selected",false);
+					data.typeIds.forEach(function(item, index, array) {
+						$("#typeIds").find("option[value='"+item+"']").attr("selected",true);
+					});
 				},
 				error: function() {
 					swal("错误！", "发送错误", "error");
@@ -401,7 +498,7 @@
 			$.ajax({
 				type: "POST",
 				datatype: "json",
-				url: "user/"+userId+"/delete",
+				url: getRootPath() + "/user/"+userId+"/delete",
 				data: {"username":username,"roleIdsStr":roleIdsStr},
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
@@ -431,5 +528,13 @@
 	}).on("changeDate",function(ev){
 		
 	});
+	function getRootPath() {//获得根目录
+		var strFullPath = window.document.location.href;
+		var strPath = window.document.location.pathname;
+		var pos = strFullPath.indexOf(strPath);
+		var prePath = strFullPath.substring(0, pos);
+		var postPath = strPath.substring(0, strPath.substr(1).indexOf('/') + 1);
+		return (prePath + postPath);
+	}
 </script>
 </html>

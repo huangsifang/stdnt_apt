@@ -17,6 +17,12 @@ public interface RepairService {
 
 	public int deleteOneRepairman(int repairmanId);
 
+	public void updateRepairman(Repairman repairman);
+
+	public int deleteRepairmanAllType(int repairmanId);
+
+	public void deleteRepairmanType(int repairmanId, int typeId);
+
 	public List<Repair> getApartRepairs(int apartId);
 
 	public List<Repair> getRepairsByType(int typeId);

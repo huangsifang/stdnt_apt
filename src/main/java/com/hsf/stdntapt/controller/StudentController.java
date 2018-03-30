@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hsf.stdntapt.entity.Student;
+import com.hsf.stdntapt.service.ClassService;
 import com.hsf.stdntapt.service.StudentService;
 
 @Controller
@@ -18,6 +19,9 @@ import com.hsf.stdntapt.service.StudentService;
 public class StudentController {
 	@Resource
 	StudentService studentService;
+
+	@Resource
+	ClassService classService;
 
 	@RequiresPermissions("user:view")
 	@RequestMapping(value = "/stdName", method = RequestMethod.GET, produces = "text/html;charset=UTF-8;")
@@ -32,6 +36,9 @@ public class StudentController {
 	@ResponseBody
 	public Student staff(@PathVariable(value = "stdId") int stdId) {
 		Student student = studentService.findOneStd(stdId);
+		int classId = student.getClassId();
+		int speciId = classService.findClassSpeciId(classId);
+		student.setSpeciId(speciId);
 		return student;
 	}
 }

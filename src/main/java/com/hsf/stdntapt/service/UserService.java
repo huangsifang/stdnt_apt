@@ -38,6 +38,10 @@ public interface UserService {
 
 	List<User> findAll();
 
+	List<User> findOneRoleAllPage(int start, int size, int roleId);
+
+	List<User> findOneRoleAll(int roleId);
+
 	/**
 	 * 根据用户名查找用户
 	 *

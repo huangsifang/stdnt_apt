@@ -20,6 +20,12 @@ public interface RepairDao {
 
 	public int deleteOneRepairman(@Param("repairmanId") int repairmanId);
 
+	public void updateRepairman(@Param("repairman") Repairman repairman);
+
+	public int deleteRepairmanAllType(@Param("repairmanId") int repairmanId);
+
+	public void deleteRepairmanType(@Param("repairmanId") int repairmanId, @Param("typeId") int typeId);
+
 	public List<Repair> getApartRepairs(@Param("apartId") int apartId);
 
 	public List<Repair> getRepairsByType(@Param("typeId") int typeId);

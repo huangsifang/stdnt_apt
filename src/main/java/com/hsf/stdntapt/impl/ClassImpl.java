@@ -18,4 +18,9 @@ public class ClassImpl implements ClassService {
 	public List<Class> findSpeciAllClass(int speciId) {
 		return classDao.findSpeciAllClass(speciId);
 	}
+
+	@Override
+	public int findClassSpeciId(int classId) {
+		return classDao.findClassSpeciId(classId);
+	}
 }

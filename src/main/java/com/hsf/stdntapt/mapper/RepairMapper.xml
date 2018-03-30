@@ -34,6 +34,27 @@
     	delete from repairman where repairman_id = #{repairmanId}
     </delete>
     
+    <update id="updateRepairman" parameterType="Repairman">
+        update repairman 
+        set repairman_id=#{repairman.repairmanId}, 
+        repairman_name=#{repairman.repairmanName}, 
+        repairman_sex=#{repairman.repairmanSex}, 
+        repairman_tel=#{repairman.repairmanTel} 
+        where repairman_id=#{repairman.repairmanId} and deleted=0
+    </update>
+    
+    <update id="deleteRepairmanAllType" parameterType="int">
+        update repairman_type_relation 
+        set deleted=1 
+        where repairman_id=#{repairmanId} and deleted=0
+    </update>
+    
+    <update id="deleteRepairmanType" parameterType="int">
+        update repairman_type_relation 
+        set deleted=1 
+        where repairman_id=#{repairmanId} and type_id=#{typeId} and deleted=0
+    </update>
+    
     <select id="getApartRepairs" parameterType="int" resultType="Repair">
         select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark, deleted from repair 
         where dorm_id in(

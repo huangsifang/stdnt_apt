@@ -78,6 +78,16 @@ public class UserServiceImpl implements UserService {
 		return userDao.findAll();
 	}
 
+	@Override
+	public List<User> findOneRoleAllPage(int start, int size, int roleId) {
+		return userDao.findOneRoleAllPage(start, size, roleId);
+	}
+
+	@Override
+	public List<User> findOneRoleAll(int roleId) {
+		return userDao.findOneRoleAll(roleId);
+	}
+
 	/**
 	 * 根据用户名查找用户
 	 *

@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hsf.stdntapt.entity.Consellor;
+import com.hsf.stdntapt.entity.RepairType;
 import com.hsf.stdntapt.entity.Repairman;
+import com.hsf.stdntapt.entity.Role;
+import com.hsf.stdntapt.entity.Speciality;
 import com.hsf.stdntapt.entity.Staff;
 import com.hsf.stdntapt.entity.Student;
 import com.hsf.stdntapt.entity.User;
@@ -21,6 +24,7 @@ import com.hsf.stdntapt.service.ClassService;
 import com.hsf.stdntapt.service.ConsellorService;
 import com.hsf.stdntapt.service.RepairService;
 import com.hsf.stdntapt.service.RoleService;
+import com.hsf.stdntapt.service.SpeciService;
 import com.hsf.stdntapt.service.StaffService;
 import com.hsf.stdntapt.service.StudentService;
 import com.hsf.stdntapt.service.UserService;
@@ -50,13 +54,47 @@ public class UserController {
 	@Autowired
 	private ClassService classService;
 
+	@Autowired
+	private SpeciService speciService;
+
 	@RequiresPermissions("user:view")
 	@RequestMapping(method = RequestMethod.GET)
-	public String list(Model model) {
+	public String list(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+			@RequestParam(value = "size", required = false, defaultValue = "10") int size, Model model) {
 		setCommonData(model);
-		List<Class> classList = classService.findSpeciAllClass(2);
-		model.addAttribute("userList", userService.findAll());
+		List<Speciality> speciList = speciService.findSpeciAll();
+		List<Class> classList = classService.findSpeciAllClass(1);
+		List<RepairType> allTypeList = repairService.findAllRepairType();
+		List<Role> roleList = roleService.findAll();
+		model.addAttribute("userList", userService.findOneRoleAllPage(start, size, 1));
+		model.addAttribute("roleList", roleList);
+		model.addAttribute("speciList", speciList);
 		model.addAttribute("classList", classList);
+		model.addAttribute("allTypeList", allTypeList);
+		model.addAttribute("roleId", 1);
+		model.addAttribute("start", start);
+		model.addAttribute("userCount", userService.findOneRoleAll(1).size());
+		return "user/list";
+	}
+
+	@RequiresPermissions("user:view")
+	@RequestMapping(value = "/role/{roleId}", method = RequestMethod.GET)
+	public String userRolelist(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+			@RequestParam(value = "size", required = false, defaultValue = "10") int size,
+			@PathVariable("roleId") int roleId, Model model) {
+		setCommonData(model);
+		List<Speciality> speciList = speciService.findSpeciAll();
+		List<Class> classList = classService.findSpeciAllClass(1);
+		List<RepairType> allTypeList = repairService.findAllRepairType();
+		List<Role> roleList = roleService.findAll();
+		model.addAttribute("userList", userService.findOneRoleAllPage(start, size, roleId));
+		model.addAttribute("roleList", roleList);
+		model.addAttribute("speciList", speciList);
+		model.addAttribute("classList", classList);
+		model.addAttribute("allTypeList", allTypeList);
+		model.addAttribute("roleId", roleId);
+		model.addAttribute("start", start);
+		model.addAttribute("userCount", userService.findOneRoleAll(roleId).size());
 		return "user/list";
 	}
 
@@ -67,7 +105,8 @@ public class UserController {
 			@RequestParam(value = "password") String password, @RequestParam(value = "roleIds") String roleIds,
 			@RequestParam(value = "name") String name, @RequestParam(value = "sex") String sex,
 			@RequestParam(value = "tel") String tel, @RequestParam(value = "hiredate") String hiredate,
-			@RequestParam(value = "isParty") String isParty, @RequestParam(value = "classId") int classId) {
+			@RequestParam(value = "isParty") String isParty, @RequestParam(value = "classId") int classId,
+			@RequestParam(value = "typeIds", required = false) int[] typeIds) {
 		String msg = "";
 		boolean isPartyBoolean = false;
 		if (!isParty.isEmpty()) {
@@ -94,6 +133,9 @@ public class UserController {
 					studentService.insertStudentList(usernameInt, name, sexInt, tel, hiredate, isPartyBoolean, classId);
 				} else if (roleId == 5) {
 					repairService.insertRepairmanList(usernameInt, name, sexInt, tel);
+					for (int typeId : typeIds) {
+						repairService.insertRepairmanTypeRelation(usernameInt, typeId);
+					}
 				}
 			}
 			msg = "success";
@@ -111,11 +153,14 @@ public class UserController {
 			@RequestParam(value = "password") String password, @RequestParam(value = "roleIds") String roleIds,
 			@RequestParam(value = "name") String name, @RequestParam(value = "sex") String sex,
 			@RequestParam(value = "tel") String tel, @RequestParam(value = "hiredate") String hiredate,
-			@RequestParam(value = "isParty") String isParty, @RequestParam(value = "classId") int classId) {
+			@RequestParam(value = "isParty") String isParty, @RequestParam(value = "classId") int classId,
+			@RequestParam(value = "typeIds", required = false) List<String> typeIds) {
 		String msg = "";
 		boolean isPartyBoolean = false;
-		if (!isParty.isEmpty()) {
+		if (isParty.equals("true")) {
 			isPartyBoolean = true;
+		} else {
+			isPartyBoolean = false;
 		}
 		try {
 			int usernameInt = Integer.parseInt(username);
@@ -138,6 +183,7 @@ public class UserController {
 						studentService.deleteOne(usernameInt);
 					} else if (roleId == 5) {
 						repairService.deleteOneRepairman(usernameInt);
+						repairService.deleteRepairmanAllType(usernameInt);
 					}
 				}
 			}
@@ -188,13 +234,25 @@ public class UserController {
 					Repairman repairman = repairService.findRepairman(usernameInt);
 					if (repairman == null) {
 						repairService.insertRepairmanList(usernameInt, name, sexInt, tel);
+						for (String typeId : typeIds) {
+							repairService.insertRepairmanTypeRelation(usernameInt, Integer.parseInt(typeId));
+						}
 					} else {
-						// Repairman newRepairman = new Repairman(usernameInt,
-						// name);
-						// newRepairman.setRepairmanSex(sexInt);
-						// newRepairman.setRepairmanTel(tel);
-						// newRepairman.setTypeIds(typeIds);
-						// repairService.updateRepairman(newRepairman);
+						Repairman newRepairman = new Repairman(usernameInt, name);
+						newRepairman.setRepairmanSex(sexInt);
+						newRepairman.setRepairmanTel(tel);
+						repairService.updateRepairman(newRepairman);
+						List<String> currentTypes = repairService.findRepairmanTypes(usernameInt);
+						for (String currentType : currentTypes) {
+							if (!typeIds.contains(currentType)) {
+								repairService.deleteRepairmanType(usernameInt, Integer.parseInt(currentType));
+							}
+						}
+						for (String typeId : typeIds) {
+							if (!currentTypes.contains(typeId)) {
+								repairService.insertRepairmanTypeRelation(usernameInt, Integer.parseInt(typeId));
+							}
+						}
 					}
 				}
 			}
@@ -222,6 +280,7 @@ public class UserController {
 				studentService.deleteOne(username);
 			} else if (roleIdsStr.contains("5")) {
 				repairService.deleteOneRepairman(username);
+				repairService.deleteRepairmanAllType(username);
 			}
 			msg = "success";
 		} catch (Exception e) {

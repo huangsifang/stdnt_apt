@@ -1,11 +1,17 @@
 package com.hsf.stdntapt.entity;
 
+import java.util.List;
+
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
 public class Repairman {
 	private int repairmanId;
 	private String repairmanName;
 	private int repairmanSex;
 	private String repairmanTel;
-	private String typeIds;
+	private String typeIdsStr;
+	private List<String> typeIds;
 
 	public Repairman() {
 	}
@@ -47,12 +53,38 @@ public class Repairman {
 		this.repairmanTel = repairmanTel;
 	}
 
-	public String getTypeIds() {
+	public String getTypeIdsStr() {
+		return typeIdsStr;
+	}
+
+	public void setTypeIdsStr(String typeIdsStr) {
+		this.typeIdsStr = typeIdsStr;
+		if (StringUtils.isEmpty(typeIdsStr)) {
+			return;
+		}
+		String[] roleIds = typeIdsStr.split(",");
+		for (String roleId : roleIds) {
+			if (StringUtils.isEmpty(roleId)) {
+				continue;
+			}
+			getTypeIds().add(roleId);
+		}
+	}
+
+	public List<String> getTypeIds() {
 		return typeIds;
 	}
 
-	public void setTypeIds(String typeIds) {
+	public void setTypeIds(List<String> typeIds) {
 		this.typeIds = typeIds;
+		if (!CollectionUtils.isEmpty(typeIds)) {
+			StringBuilder s = new StringBuilder();
+			for (String typeId : typeIds) {
+				s.append(typeId);
+				s.append(",");
+			}
+			this.typeIdsStr = s.toString();
+		}
 	}
 
 }
