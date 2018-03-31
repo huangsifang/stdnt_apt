@@ -25,7 +25,11 @@ public interface RepairService {
 
 	public List<Repair> getApartRepairs(int apartId);
 
+	public List<Repair> getApartRepairsByPage(int start, int size, int apartId);
+
 	public List<Repair> getRepairsByType(int typeId);
+
+	public List<Repair> getRepairsByTypeByPage(int start, int size, int typeId);
 
 	public Repair findOneRepair(long repairId);
 
@@ -46,6 +50,8 @@ public interface RepairService {
 	public List<String> findRepairmanTypes(int repairmanId);
 
 	public List<RepairRecord> findMyRepairRecordList(int repairmanId);
+
+	public List<RepairRecord> findMyRepairRecordListByPage(int start, int size, int repairmanId);
 
 	public RepairRecord findOneRepairRecordFromRepairId(long repairId);
 

@@ -66,9 +66,26 @@
         )
     </select>
     
+    <select id="getApartRepairsByPage" parameterType="int" resultType="Repair">
+        select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark, deleted from repair 
+        where dorm_id in(
+	        select id from dormitory
+	        where floor_id in(
+	        	select id from floor
+	        	where apart_id=#{apartId} and deleted=0
+	        )and deleted=0
+        ) order by apply_time desc limit #{start},#{size}
+    </select>
+    
     <select id="getRepairsByType" parameterType="int" resultType="Repair">
         select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark from repair 
         where repair_type=#{typeId} and deleted=0
+    </select>
+    
+    <select id="getRepairsByTypeByPage" parameterType="int" resultType="Repair">
+        select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark from repair 
+        where repair_type=#{typeId} and deleted=0 
+        order by apply_time desc limit #{start},#{size}
     </select>
     
      <select id="findOneRepair" parameterType="long" resultType="Repair">
@@ -140,6 +157,12 @@
     <select id="findMyRepairRecordList" parameterType="int" resultType="RepairRecord">
         select repair_id as repairId, repairman_id as repairmanId, accept_time as accepttime, repair_time as repairTime, state from repair_record 
         where repairman_id=#{repairmanId} and deleted=0
+    </select>
+    
+    <select id="findMyRepairRecordListByPage" parameterType="int" resultType="RepairRecord">
+        select repair_id as repairId, repairman_id as repairmanId, accept_time as accepttime, repair_time as repairTime, state from repair_record 
+        where repairman_id=#{repairmanId} and deleted=0 
+        order by accept_time desc limit #{start},#{size}
     </select>
     
     <select id="findOneRepairRecordFromRepairId" parameterType="long" resultType="RepairRecord">

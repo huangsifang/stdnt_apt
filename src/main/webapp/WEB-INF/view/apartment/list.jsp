@@ -11,8 +11,6 @@
 </head>
 <body>
 
-<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
-
 <!-- 修改公寓模态框（Modal） -->
 <div class="modal fade" id="apartModal" tabindex="-1" role="dialog" aria-labelledby="apartModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -108,58 +106,61 @@
     </div><!-- /.modal -->
 </div>
 
-<shiro:hasPermission name="apartment:create">
-	<div class="pull-left" style="padding:20px">
-		<button class="btn btn-default" type="button" data-toggle="modal" data-target="#apartAddModal">公寓新增</button>
-	</div>
-    <form action="${pageContext.request.contextPath}/uploadInfo/uploadInfoFromType.do" method="post" name="formApart" id="formApart" onsubmit="return validate(formApart)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
-	     导入公寓信息： 
-		<a href="javascript:;" class="file">选择文件
-		    <input type="file" name="filename" id="importApartFile" accept="xlsx" onchange="importFileFun(importApartFile, apartFileName)"/>
-		</a>
-		<input class="fileName" id="apartFileName" value="未选择文件" disabled/>
-		<input type="hidden" name="filetype" value="apartment"/>
-		<input type="submit" name="Submit" value="确定" class="btn btn-primary importFileBtn"/> 
-		<input type="reset" name="Submit2" value="重置" class="btn btn-default importFileBtn"/>
-	</form>
-</shiro:hasPermission>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>公寓号</th>
-            <th>公寓名</th>
-            <th>楼层数</th>
-            <th>宿舍数</th>
-            <th>管理员</th>
-            <th>操作</th>
-        </tr>
-    </thead>
-    <tbody>
-        <c:forEach items="${apartList}" var="apart">
-            <tr>
-                <td>${apart.apartId}</td>
-                <td>${apart.apartName}</td>
-                <td><a href="apartment/${apart.apartId}/floor">${apart.floorNum}</a></td>
-                <td>${apart.dormNum}</td>
-                <td>
-                	<c:forEach items="${apart.staffs}" var="staff">
-                		${staff.staffId}:${staff.staffName}<br />
-                	</c:forEach>
-                </td>
-                <td>
-                    <shiro:hasPermission name="apartment:update">
-                    	<button class="btn btn-default" type="button" data-toggle="modal" data-target="#apartModal" onClick="updateApart(${apart.apartId},'${apart.apartName}','${apart.staffsStr}')">修改</button>
-                    </shiro:hasPermission>
-
-                    <shiro:hasPermission name="apartment:delete">
-                    	<button class="btn btn-danger" onClick="deleteApart(${apart.apartId})">删除</button>
-                    </shiro:hasPermission>
-                </td>
-            </tr>
-        </c:forEach>
-    </tbody>
-</table>
+<div style="margin:20px 50px">
+	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
+	<shiro:hasPermission name="apartment:create">
+		<div class="pull-left" style="padding:20px">
+			<button class="btn btn-default" type="button" data-toggle="modal" data-target="#apartAddModal">公寓新增</button>
+		</div>
+	    <form action="${pageContext.request.contextPath}/uploadInfo/uploadInfoFromType.do" method="post" name="formApart" id="formApart" onsubmit="return validate(formApart)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
+		     导入公寓信息： 
+			<a href="javascript:;" class="file">选择文件
+			    <input type="file" name="filename" id="importApartFile" accept="xlsx" onchange="importFileFun(importApartFile, apartFileName)"/>
+			</a>
+			<input class="fileName" id="apartFileName" value="未选择文件" disabled/>
+			<input type="hidden" name="filetype" value="apartment"/>
+			<input type="submit" name="Submit" value="确定" class="btn btn-primary importFileBtn"/> 
+			<input type="reset" name="Submit2" value="重置" class="btn btn-default importFileBtn"/>
+		</form>
+	</shiro:hasPermission>
+	
+	<table class="table">
+	    <thead>
+	        <tr>
+	            <th>公寓号</th>
+	            <th>公寓名</th>
+	            <th>楼层数</th>
+	            <th>宿舍数</th>
+	            <th>管理员</th>
+	            <th>操作</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+	        <c:forEach items="${apartList}" var="apart">
+	            <tr>
+	                <td>${apart.apartId}</td>
+	                <td>${apart.apartName}</td>
+	                <td><a href="apartment/${apart.apartId}/floor">${apart.floorNum}</a></td>
+	                <td>${apart.dormNum}</td>
+	                <td>
+	                	<c:forEach items="${apart.staffs}" var="staff">
+	                		${staff.staffId}:${staff.staffName}<br />
+	                	</c:forEach>
+	                </td>
+	                <td>
+	                    <shiro:hasPermission name="apartment:update">
+	                    	<button class="btn btn-default" type="button" data-toggle="modal" data-target="#apartModal" onClick="updateApart(${apart.apartId},'${apart.apartName}','${apart.staffsStr}')">修改</button>
+	                    </shiro:hasPermission>
+	
+	                    <shiro:hasPermission name="apartment:delete">
+	                    	<button class="btn btn-danger" onClick="deleteApart(${apart.apartId})">删除</button>
+	                    </shiro:hasPermission>
+	                </td>
+	            </tr>
+	        </c:forEach>
+	    </tbody>
+	</table>
+</div>
 </body>
 <script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script> 
 <script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
@@ -172,10 +173,16 @@
 	            return true; 
 	        },
 			success: function(data){
-				swal("成功！", data, "success");
+				if(data == 'errorEmpty') {
+					swal("失败！", "请确认文件内容没有空缺", "error");
+				} else if(data == 'error') {
+					swal("失败！", "导入失败......", "error");
+				} else {
+					swal("成功！", data, "success");
+				}
 	        },
 	        error: function() {
-	        	swal("错误！", "发送错误", "error");
+	        	swal("错误！", "发生错误", "error");
 	        },
 	        resetForm: true        // 成功提交后，重置所有的表单元素的值
 		});
@@ -191,11 +198,15 @@
 				data: $("#apartForm").serializeArray(),
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
-					swal("成功！", data, "success");
-					$('#apartModal').modal('hide');
+					if(data == 'success') {
+						swal("成功！", "修改成功", "success");
+						$('#apartModal').modal('hide');
+					} else {
+						swal("成功！", "修改失败", "error");
+					}
 				},
 				error: function() {
-					swal("错误！", "发送错误", "error");
+					swal("错误！", "发生错误", "error");
 		        }
 			});
 		});
@@ -207,11 +218,15 @@
 				data: $("#apartAddForm").serializeArray(),
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
-					swal("成功！", data, "success");
-					$('#apartAddModal').modal('hide');
+					if(data == 'success') {
+						swal("成功！", "新增成功", "success");
+						$('#apartAddModal').modal('hide');
+					} else {
+						swal("失败！", "新增失败", "error");
+					}
 				},
 				error: function() {
-					swal("错误！", "发送错误", "error");
+					swal("错误！", "发生错误", "error");
 		        }
 			});
 		});
@@ -231,7 +246,7 @@
 				$("#staffName"+i).text(data);
 			},
 			error: function() {
-				swal("错误！", "发送错误", "error");
+				swal("错误！", "发生错误", "error");
 	        }
 		});
 	}
@@ -256,14 +271,24 @@
 			url: "apartment/"+apartId+"/delete",
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
-				if(data =='删除成功!') {
-					swal("成功！", data, "success");
-				} else {
-					swal("失败！", data, "error");
+				if(data == 'errorStaff') {
+					swal("失败！", "该公寓下存在关联管理员，请先删除联系!", "warning");
+				} else if(data == 'errorScore') {
+					swal("失败！", "该公寓下存在关联寝室得分，请先删除联系!", "warning");
+				} else if(data == 'errorHoliday') {
+					swal("失败！", "该公寓下存在关联假期记录，请先删除联系!", "warning");
+				} else if(data == 'errorRepair') {
+					swal("失败！", "该公寓下存在关联维修，请先删除联系!", "warning");
+				} else if(data == 'errorBed') {
+					swal("失败！", "该公寓下存在关联学生，请先删除联系!", "warning");
+				} else if(data =='success') {
+					swal("成功！", "删除成功", "success");
+				} else if(data == 'error') {
+					swal("失败！", "删除失败", "error");
 				}
 			},
 			error: function() {
-				swal("错误！", "发送错误", "error");
+				swal("错误！", "发生错误", "error");
 	        }
 		});
 	}
@@ -275,11 +300,15 @@
 			data: {apartId: apartId, staffId: staffId},
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
-				swal("成功！", data, "success");
-				$('#apartModal').modal('hide');
+				if(data == 'success') {
+					swal("成功！", "删除成功", "success");
+					$('#apartModal').modal('hide');
+				} else {
+					swal("失败！", "删除失败", "error");
+				}
 			},
 			error: function() {
-				swal("错误！", "发送错误", "error");
+				swal("错误！", "发生错误", "error");
 	        }
 		});
 	}

@@ -194,10 +194,10 @@ public class UploadInfoController {
 			}
 		} catch (NullPointerException e) {
 			e.printStackTrace();
-			msg = "请确认文件内容没有空缺";
+			msg = "errorEmpty";
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = "导入失败......";
+			msg = "error";
 		}
 		return msg;
 	}

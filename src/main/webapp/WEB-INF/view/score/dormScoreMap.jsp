@@ -1,20 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>寝室得分</title>
 </head>
 <body>
 
-	欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a>
-
-    <!--定义页面图表容器-->
-    <!-- 必须制定容器的大小（height、width） -->
-    <div id="main" style="height: 400px; border: 1px solid #ccc; padding: 10px;"></div>
-
+	<div style="margin:20px 50px">
+		<div style="margin-bottom:20px">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
+	
+	    <!--定义页面图表容器-->
+	    <!-- 必须制定容器的大小（height、width） -->
+	    <div id="main" style="height: 400px; border: 1px solid #ccc; padding: 10px;"></div>
+	</div>
 	<script src="<c:url value='/public/js/jquery-3.3.1.min.js'/>"></script>
 	<script src="<c:url value='/public/js/echarts.common.min.js'/>"></script>
     <script>

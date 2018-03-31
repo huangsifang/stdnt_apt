@@ -73,7 +73,7 @@ public class UserController {
 		model.addAttribute("allTypeList", allTypeList);
 		model.addAttribute("roleId", 1);
 		model.addAttribute("start", start);
-		model.addAttribute("userCount", userService.findOneRoleAll(1).size());
+		model.addAttribute("allCount", userService.findOneRoleAll(1).size());
 		return "user/list";
 	}
 
@@ -94,7 +94,7 @@ public class UserController {
 		model.addAttribute("allTypeList", allTypeList);
 		model.addAttribute("roleId", roleId);
 		model.addAttribute("start", start);
-		model.addAttribute("userCount", userService.findOneRoleAll(roleId).size());
+		model.addAttribute("allCount", userService.findOneRoleAll(roleId).size());
 		return "user/list";
 	}
 

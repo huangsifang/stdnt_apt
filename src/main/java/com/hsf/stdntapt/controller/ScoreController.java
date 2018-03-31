@@ -54,32 +54,42 @@ public class ScoreController {
 			} else {
 				apartList = apartmentService.findStaffAparts(Integer.parseInt(username));
 			}
-			final List<DormScore> newScoreList = dormService.getNewScores();
-			for (DormScore score : newScoreList) {
-				Floor floor = apartmentService.findFloorFromDormId(score.getDormId());
-				int floorId = 0;
-				int floorNo = 0;
-				int scoreApartId = 0;
-				if (floor != null) {
-					floorId = floor.getId();
-					floorNo = floor.getFloorNo();
-				} else {
-					model.addAttribute("msg", "没有找到对应的楼层！");
+			if (!apartList.isEmpty()) {
+				int apartId = apartList.get(0).getApartId();
+				final List<DormScore> newScoreList = dormService.getApartNewScores(apartId);
+				for (DormScore score : newScoreList) {
+					Floor floor = apartmentService.findFloorFromDormId(score.getDormId());
+					int floorId = 0;
+					int floorNo = 0;
+					int scoreApartId = 0;
+					if (floor != null) {
+						floorId = floor.getId();
+						floorNo = floor.getFloorNo();
+					} else {
+						model.addAttribute("msg", "没有找到对应的楼层！");
+					}
+					Apartment apart = apartmentService.findApartFromFloorId(floorId);
+					if (apart != null) {
+						scoreApartId = apart.getApartId();
+					} else {
+						model.addAttribute("msg", "没有找到对应的公寓！");
+					}
+					Dormitory dorm = apartmentService.findOneDorm(score.getDormId());
+					if (dorm != null) {
+						score.setFloorDormNo(floorNo * 100 + dorm.getDormNo());
+					}
+					score.setApartId(scoreApartId);
 				}
-				Apartment apart = apartmentService.findApartFromFloorId(floorId);
-				if (apart != null) {
-					scoreApartId = apart.getApartId();
-				} else {
-					model.addAttribute("msg", "没有找到对应的公寓！");
-				}
-				Dormitory dorm = apartmentService.findOneDorm(score.getDormId());
-				if (dorm != null) {
-					score.setFloorDormNo(floorNo * 100 + dorm.getDormNo());
-				}
-				score.setApartId(scoreApartId);
+				List<DormScore> apartDormScore = dormService.findApartDormScore(apartId);
+				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				List<DormScore> apartDormOneDayScore = dormService.findApartDormOneDayScore(apartId,
+						df.format(System.currentTimeMillis()) + "%");
+				model.addAttribute("apartDormScore", apartDormScore);
+				model.addAttribute("apartDormOneDayScore", apartDormOneDayScore);
+				model.addAttribute("apartId", apartId);
+				model.addAttribute("newScoreList", newScoreList);
 			}
 			model.addAttribute("apartList", apartList);
-			model.addAttribute("newScoreList", newScoreList);
 			return "score/list";
 		}
 	}
@@ -104,12 +114,18 @@ public class ScoreController {
 				dormId = dorm.getId();
 			}
 			String username = SecurityUtils.getSubject().getPrincipal().toString();
-			DormScore dormScore = new DormScore(dormId, score, Integer.parseInt(username));
+			int staffId;
+			if (username.equals("admin")) {
+				staffId = 0;
+			} else {
+				staffId = Integer.parseInt(username);
+			}
+			DormScore dormScore = new DormScore(dormId, score, staffId);
 			dormService.createDormScore(dormScore);
-			msg = "修改成功!";
+			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = "修改失败！";
+			msg = "error";
 		}
 		return msg;
 	}

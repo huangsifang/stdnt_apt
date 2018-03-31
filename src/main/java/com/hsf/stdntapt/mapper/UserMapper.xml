@@ -39,7 +39,7 @@
     <select id="findOneRoleAllPage" resultType="user">
     	select id, username, password, salt, role_ids as roleIdsStr, locked from user 
     	where role_ids like CONCAT('%',#{roleId},'%' ) and deleted=0 
-    	order by id limit #{start},#{size}
+    	order by id desc limit #{start},#{size}
     </select>
     <select id="findOneRoleAll" resultType="user">
     	select id, username, password, salt, role_ids as roleIdsStr, locked from user 

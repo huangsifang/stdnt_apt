@@ -23,6 +23,9 @@ public interface HolidayDao {
 
 	public List<HoliRecord> findApartAllRecords(@Param("holiId") int holiId, @Param("apartId") int apartId);
 
+	public List<HoliRecord> findApartAllRecordsByPage(@Param("start") int start, @Param("size") int size,
+			@Param("holiId") int holiId, @Param("apartId") int apartId);
+
 	public List<HoliRecord> findApartAllHoliRecords(@Param("apartId") int apartId);
 
 	public List<HoliRecord> findApartAllHomeRecords();

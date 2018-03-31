@@ -25,181 +25,183 @@
 </head>
 <body>
             
-欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a>
+<div style="margin:20px 50px">
+	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 
-<div class="row">
-	<div class="col-md-offset-1 col-md-4">
-		<div class="panel panel-default">
-		    <div class="panel-heading">
-		        <h3 class="panel-title">
-		        	维修信息
-		        </h3>
-		    </div>
-		    <div class="panel-body">
-				<fieldset>
-                   <div class="form-group row">
-                      <label class="col-sm-4 control-label">公寓名：</label>
-                      <div class="col-sm-8">
-                         <span>${repair.apartName}</span>
-                      </div>
-                   </div>
-				</fieldset>
-				<fieldset>
-                   <div class="form-group row">
-                      <label class="col-sm-4 control-label">寝室号：</label>
-                      <div class="col-sm-8">
-                         <span>${repair.dormNo}</span>
-                      </div>
-                   </div>
-				</fieldset>
-				<fieldset>
-                   <div class="form-group row">
-                      <label class="col-sm-4 control-label">维修类型：</label>
-                      <div class="col-sm-8">
-                         <span>${repair.repairTypeName}</span>
-                      </div>
-                   </div>
-				</fieldset>
-				<fieldset>
-                   <div class="form-group row">
-                      <label class="col-sm-4 control-label">申请者：</label>
-                      <div class="col-sm-8">
-                         <span>${repair.applicantName}</span>
-                      </div>
-                   </div>
-				</fieldset>
-				<fieldset>
-                   <div class="form-group row">
-                      <label class="col-sm-4 control-label">申请者手机号：</label>
-                      <div class="col-sm-8">
-                         <span>${repair.applicantTel}</span>
-                      </div>
-                   </div>
-				</fieldset>
-				<fieldset>
-                   <div class="form-group row">
-                      <label class="col-sm-4 control-label">备注：</label>
-                      <div class="col-sm-8">
-                         <span>${repair.remark}</span>
-                      </div>
-                   </div>
-				</fieldset>
-				<fieldset>
-                   	<div class="form-group row">
-                      	<label class="col-sm-4 control-label">状态：</label>
-                      	<div class="col-sm-8">
-							<c:if test="${repair.state == 0}">
-			                		<span>未接单</span>
-			                		<shiro:hasPermission name="repair:delete"> 
-										<button onClick="deleteRepair(${repair.id})">取消订单</button>
-									</shiro:hasPermission>
-			                </c:if>
-			                <c:if test="${repair.state == 1}">
-			                	<span>已接单</span>
-			                </c:if>
-			                <c:if test="${repair.state == 2}">
-			                	<span>已结束</span>
-			                </c:if>
-                      	</div>
-                   	</div>
-				</fieldset>
-		    </div>
-  		</div>
-    </div>
-    <c:if test="${not empty repairman}">
-	    <div class="col-md-3">
+	<div class="row">
+		<div class="col-md-offset-1 col-md-4">
 			<div class="panel panel-default">
 			    <div class="panel-heading">
 			        <h3 class="panel-title">
-			        	维修人员信息
+			        	维修信息
 			        </h3>
 			    </div>
 			    <div class="panel-body">
-			    	<fieldset>
+					<fieldset>
 	                   <div class="form-group row">
-	                      <label class="col-sm-4 control-label">工号：</label>
+	                      <label class="col-sm-4 control-label">公寓名：</label>
 	                      <div class="col-sm-8">
-	                         <span>${repairman.repairmanId}</span>
+	                         <span>${repair.apartName}</span>
 	                      </div>
 	                   </div>
 					</fieldset>
 					<fieldset>
 	                   <div class="form-group row">
-	                      <label class="col-sm-4 control-label">姓名：</label>
+	                      <label class="col-sm-4 control-label">寝室号：</label>
 	                      <div class="col-sm-8">
-	                         <span>${repairman.repairmanName}</span>
+	                         <span>${repair.dormNo}</span>
 	                      </div>
 	                   </div>
 					</fieldset>
 					<fieldset>
 	                   <div class="form-group row">
-	                      <label class="col-sm-4 control-label">性别：</label>
+	                      <label class="col-sm-4 control-label">维修类型：</label>
 	                      <div class="col-sm-8">
-	                         <span>${repairman.repairmanSex}</span>
+	                         <span>${repair.repairTypeName}</span>
 	                      </div>
 	                   </div>
 					</fieldset>
 					<fieldset>
 	                   <div class="form-group row">
-	                      <label class="col-sm-4 control-label">电话：</label>
+	                      <label class="col-sm-4 control-label">申请者：</label>
 	                      <div class="col-sm-8">
-	                         <span>${repairman.repairmanTel}</span>
+	                         <span>${repair.applicantName}</span>
 	                      </div>
 	                   </div>
+					</fieldset>
+					<fieldset>
+	                   <div class="form-group row">
+	                      <label class="col-sm-4 control-label">申请者手机号：</label>
+	                      <div class="col-sm-8">
+	                         <span>${repair.applicantTel}</span>
+	                      </div>
+	                   </div>
+					</fieldset>
+					<fieldset>
+	                   <div class="form-group row">
+	                      <label class="col-sm-4 control-label">备注：</label>
+	                      <div class="col-sm-8">
+	                         <span>${repair.remark}</span>
+	                      </div>
+	                   </div>
+					</fieldset>
+					<fieldset>
+	                   	<div class="form-group row">
+	                      	<label class="col-sm-4 control-label">状态：</label>
+	                      	<div class="col-sm-8">
+								<c:if test="${repair.state == 0}">
+				                		<span>未接单  </span>
+				                		<shiro:hasPermission name="repair:delete"> 
+											<button class="btn btn-danger" onClick="deleteRepair(${repair.id})">取消订单</button>
+										</shiro:hasPermission>
+				                </c:if>
+				                <c:if test="${repair.state == 1}">
+				                	<span>已接单</span>
+				                </c:if>
+				                <c:if test="${repair.state == 2}">
+				                	<span>已结束</span>
+				                </c:if>
+	                      	</div>
+	                   	</div>
 					</fieldset>
 			    </div>
+	  		</div>
+	    </div>
+	    <c:if test="${not empty repairman}">
+		    <div class="col-md-3">
+				<div class="panel panel-default">
+				    <div class="panel-heading">
+				        <h3 class="panel-title">
+				        	维修人员信息
+				        </h3>
+				    </div>
+				    <div class="panel-body">
+				    	<fieldset>
+		                   <div class="form-group row">
+		                      <label class="col-sm-4 control-label">工号：</label>
+		                      <div class="col-sm-8">
+		                         <span>${repairman.repairmanId}</span>
+		                      </div>
+		                   </div>
+						</fieldset>
+						<fieldset>
+		                   <div class="form-group row">
+		                      <label class="col-sm-4 control-label">姓名：</label>
+		                      <div class="col-sm-8">
+		                         <span>${repairman.repairmanName}</span>
+		                      </div>
+		                   </div>
+						</fieldset>
+						<fieldset>
+		                   <div class="form-group row">
+		                      <label class="col-sm-4 control-label">性别：</label>
+		                      <div class="col-sm-8">
+		                         <span>${repairman.repairmanSex}</span>
+		                      </div>
+		                   </div>
+						</fieldset>
+						<fieldset>
+		                   <div class="form-group row">
+		                      <label class="col-sm-4 control-label">电话：</label>
+		                      <div class="col-sm-8">
+		                         <span>${repairman.repairmanTel}</span>
+		                      </div>
+		                   </div>
+						</fieldset>
+				    </div>
+				</div>
 			</div>
-		</div>
-	</c:if>
-    <div class="col-md-3">
-	  	<div class="row">
-	    	<div class="col-md-12">
-	      		<div class="VivaTimeline">
-	        		<dl>
-	          			<dt>申请时间</dt>
-	          			<dd class="clearfix">
-		          			<div class="circ"></div>
-	              			<div class="time"><fmt:formatDate value="${repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></div>
-		              		<div style="height:70px"></div>
-	          			</dd>
-	          			<c:forEach items="${recordHistory}" var="history">
-	          				<c:if test="${not empty history.acceptTime}">
+		</c:if>
+	    <div class="col-md-3">
+		  	<div class="row">
+		    	<div class="col-md-12">
+		      		<div class="VivaTimeline">
+		        		<dl>
+		          			<dt>申请时间</dt>
+		          			<dd class="clearfix">
+			          			<div class="circ"></div>
+		              			<div class="time"><fmt:formatDate value="${repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></div>
+			              		<div style="height:70px"></div>
+		          			</dd>
+		          			<c:forEach items="${recordHistory}" var="history">
+		          				<c:if test="${not empty history.acceptTime}">
+				          			<dt>接单时间</dt>
+			         	 			<dd class="clearfix">
+				          				<div class="circ"></div>
+				              			<div class="time"><fmt:formatDate value="${history.acceptTime}" pattern="yyyy-MM-dd HH:mm" /></div>
+				              			<div style="height:70px"></div>
+			          				</dd>
+			          			</c:if>
+			          			<dt>取消订单</dt>
+			          			<shiro:hasPermission name="repair:*"> 
+				          			<dd class="clearfix">
+				          				<div class="circ"></div>
+				              			<div class="time">操作人：${history.repairman.repairmanName}</div>
+				              			<div style="height:70px"></div>
+			          				</dd>
+		          				</shiro:hasPermission>
+		          			</c:forEach>
+		          			<c:if test="${not empty record.acceptTime}">
 			          			<dt>接单时间</dt>
 		         	 			<dd class="clearfix">
 			          				<div class="circ"></div>
-			              			<div class="time"><fmt:formatDate value="${history.acceptTime}" pattern="yyyy-MM-dd HH:mm" /></div>
+			              			<div class="time"><fmt:formatDate value="${record.acceptTime}" pattern="yyyy-MM-dd HH:mm" /></div>
 			              			<div style="height:70px"></div>
 		          				</dd>
 		          			</c:if>
-		          			<dt>取消订单</dt>
-		          			<shiro:hasPermission name="repair:*"> 
-			          			<dd class="clearfix">
-			          				<div class="circ"></div>
-			              			<div class="time">操作人：${history.repairman.repairmanName}</div>
-			              			<div style="height:70px"></div>
-		          				</dd>
-	          				</shiro:hasPermission>
-	          			</c:forEach>
-	          			<c:if test="${not empty record.acceptTime}">
-		          			<dt>接单时间</dt>
-	         	 			<dd class="clearfix">
-		          				<div class="circ"></div>
-		              			<div class="time"><fmt:formatDate value="${record.acceptTime}" pattern="yyyy-MM-dd HH:mm" /></div>
-		              			<div style="height:70px"></div>
-	          				</dd>
-	          			</c:if>
-			          	<c:if test="${not empty record.repairTime}">
-				          	<dt>维修时间</dt>
-				          	<dd class="clearfix">
-				          		<div class="circ"></div>
-				              		<div class="time"><fmt:formatDate value="${record.repairTime}" pattern="yyyy-MM-dd HH:mm" /></div>
-				              	<div style="height:70px"></div>
-				          	</dd>
-			          	</c:if>
-	        		</dl>
-	      		</div>
-	    	</div>
-	  	</div>
+				          	<c:if test="${not empty record.repairTime}">
+					          	<dt>维修时间</dt>
+					          	<dd class="clearfix">
+					          		<div class="circ"></div>
+					              		<div class="time"><fmt:formatDate value="${record.repairTime}" pattern="yyyy-MM-dd HH:mm" /></div>
+					              	<div style="height:70px"></div>
+					          	</dd>
+				          	</c:if>
+		        		</dl>
+		      		</div>
+		    	</div>
+		  	</div>
+		</div>
 	</div>
 </div>
 </body>

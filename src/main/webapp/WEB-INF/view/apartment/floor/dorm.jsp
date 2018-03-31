@@ -9,8 +9,6 @@
 </head>
 <body>
 
-<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
-
 <!-- 修改寝室费用模态框（Modal） -->
 <div class="modal fade" id="dormFeeModal" tabindex="-1" role="dialog" aria-labelledby="dormFeeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -86,43 +84,46 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-	
-<button class="btn btn-default" data-toggle="modal" data-target="#dormFeeModal">修改寝室费用</button>
-<div class="row" style="padding: 20px">
-	<c:forEach items="${bedList}" var="bed">
-		<div class="col-sm-3">
-			<div class="panel panel-default">
-				<div class="panel-body">
-					<div class="form-group row">
-                      <label class="col-sm-4 control-label">床号：</label>
-                      <div class="col-sm-8">
-                         <span>${bed.bedId}</span>
-                      </div>
-                   </div>
-                   <div class="form-group row">
-                      <label class="col-sm-4 control-label">学号：</label>
-                      <div class="col-sm-8">
-                         <span>${bed.stdId}</span>
-                      </div>
-                   </div>
-                   <div class="form-group row">
-                      <label class="col-sm-4 control-label">姓名：</label>
-                      <div class="col-sm-8">
-                         <span>${bed.stdName}</span>
-                      </div>
-                   </div>
-                   <div class="form-group row">
-                      <div class="col-sm-8 col-sm-offset-4">
-                         <button class="btn btn-default" type="button" data-toggle="modal" data-target="#bedStdModal" onClick="changeBedStd(${bed.bedId}, ${bed.dormId}, ${bed.stdId}, '${bed.stdName}')">修改</button>
-                         <c:if test="${bed.stdId != dorm.leaderId && bed.stdId != 1}">
-                         	<button class="btn btn-default" onClick="updateDormLeader(${bed.dormId}, ${bed.stdId}, '${bed.stdName}')">设为寝室长</button>
-                      	 </c:if>
-                      </div>
-                   </div>
+
+<div style="margin:20px 50px">
+	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
+	<button class="btn btn-default" data-toggle="modal" data-target="#dormFeeModal">修改寝室费用</button>
+	<div class="row" style="padding: 20px">
+		<c:forEach items="${bedList}" var="bed">
+			<div class="col-sm-3">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="form-group row">
+	                      <label class="col-sm-4 control-label">床号：</label>
+	                      <div class="col-sm-8">
+	                         <span>${bed.bedId}</span>
+	                      </div>
+	                   </div>
+	                   <div class="form-group row">
+	                      <label class="col-sm-4 control-label">学号：</label>
+	                      <div class="col-sm-8">
+	                         <span>${bed.stdId}</span>
+	                      </div>
+	                   </div>
+	                   <div class="form-group row">
+	                      <label class="col-sm-4 control-label">姓名：</label>
+	                      <div class="col-sm-8">
+	                         <span>${bed.stdName}</span>
+	                      </div>
+	                   </div>
+	                   <div class="form-group row">
+	                      <div class="col-sm-8 col-sm-offset-4">
+	                         <button class="btn btn-default" type="button" data-toggle="modal" data-target="#bedStdModal" onClick="changeBedStd(${bed.bedId}, ${bed.dormId}, ${bed.stdId}, '${bed.stdName}')">修改</button>
+	                         <c:if test="${bed.stdId != dorm.leaderId && bed.stdId != 1}">
+	                         	<button class="btn btn-default" onClick="updateDormLeader(${bed.dormId}, ${bed.stdId}, '${bed.stdName}')">设为寝室长</button>
+	                      	 </c:if>
+	                      </div>
+	                   </div>
+					</div>
 				</div>
 			</div>
-		</div>
-	</c:forEach>
+		</c:forEach>
+	</div>
 </div>
 </body>
 <script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>

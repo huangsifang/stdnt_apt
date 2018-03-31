@@ -59,8 +59,18 @@ public class RepairImpl implements RepairService {
 	}
 
 	@Override
+	public List<Repair> getApartRepairsByPage(int start, int size, int apartId) {
+		return repairDao.getApartRepairsByPage(start, size, apartId);
+	}
+
+	@Override
 	public List<Repair> getRepairsByType(int typeId) {
 		return repairDao.getRepairsByType(typeId);
+	}
+
+	@Override
+	public List<Repair> getRepairsByTypeByPage(int start, int size, int typeId) {
+		return repairDao.getRepairsByTypeByPage(start, size, typeId);
 	}
 
 	@Override
@@ -111,6 +121,11 @@ public class RepairImpl implements RepairService {
 	@Override
 	public List<RepairRecord> findMyRepairRecordList(int repairmanId) {
 		return repairDao.findMyRepairRecordList(repairmanId);
+	}
+
+	@Override
+	public List<RepairRecord> findMyRepairRecordListByPage(int start, int size, int repairmanId) {
+		return repairDao.findMyRepairRecordListByPage(start, size, repairmanId);
 	}
 
 	@Override

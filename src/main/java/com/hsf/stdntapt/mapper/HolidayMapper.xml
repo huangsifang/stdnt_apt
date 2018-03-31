@@ -41,6 +41,12 @@
         from holi_record 
         where apart_id=#{apartId} and holi_id=#{holiId} and deleted=0
     </select>
+    <select id="findApartAllRecordsByPage" parameterType="int" resultType="HoliRecord">
+        select holi_id as holiId, std_id as stdId, apart_id as apartId, start_time as startTime, end_time as endTime, in_home as inHome, is_out as isOut, address 
+        from holi_record 
+        where apart_id=#{apartId} and holi_id=#{holiId} and deleted=0 
+        order by id desc limit #{start},#{size}
+    </select>
     <select id="findApartAllHoliRecords" parameterType="int" resultType="HoliRecord">
         select holi_id as holiId, std_id as stdId, apart_id as apartId, start_time as startTime, end_time as endTime, in_home as inHome, is_out as isOut, address 
         from holi_record 

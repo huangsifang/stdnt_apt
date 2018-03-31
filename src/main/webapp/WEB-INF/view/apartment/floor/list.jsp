@@ -17,11 +17,6 @@
 	</style>
 </head>
 <body>
-<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
-
-<c:if test="${not empty msg}">
-	<script>alert("${msg}")</script>
-</c:if>
 
 <!-- 修改楼层寝室模态框（Modal） -->
 <div class="modal fade" id="floorModal" tabindex="-1" role="dialog" aria-labelledby="floorModalLabel" aria-hidden="true">
@@ -64,38 +59,42 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-<div class="pull-left">
-	<button class="btn btn-default" onClick="addFloor(${apartId},${floorNum})">新增一层楼</button>
+
+<div style="margin:20px 50px">
+	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
+	<div class="pull-left">
+		<button class="btn btn-default" onClick="addFloor(${apartId},${floorNum})">新增一层楼</button>
+	</div>
+	<table class="table">
+	    <thead>
+	        <tr>
+	            <th>楼层号</th>
+	            <th>宿舍数量</th>
+	            <th>宿舍</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+	        <c:forEach items="${floorList}" var="floor">
+	            <tr>
+	                <td>${floor.floorNo}</td>
+	                <td>
+	                	<span>${floor.dormNum}</span>
+	                	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#floorModal" onClick="showNumForm(${floor.id},${floor.dormNum})">修改</button>
+	                </td>
+	                <td style="font-size:1em">
+	                	<c:forEach items="${floor.dormList}" var="dorm">
+	                		<a href="${pageContext.request.contextPath}/apartment/dorm/${dorm.id}">
+		                		<span class="dormBrand">
+		                			${dorm.dormNo}
+		                		</span>
+	                		</a>
+	                	</c:forEach>
+	                </td>
+	            </tr>
+	        </c:forEach>
+	    </tbody>
+	</table>
 </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>楼层号</th>
-            <th>宿舍数量</th>
-            <th>宿舍</th>
-        </tr>
-    </thead>
-    <tbody>
-        <c:forEach items="${floorList}" var="floor">
-            <tr>
-                <td>${floor.floorNo}</td>
-                <td>
-                	<span>${floor.dormNum}</span>
-                	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#floorModal" onClick="showNumForm(${floor.id},${floor.dormNum})">修改</button>
-                </td>
-                <td style="font-size:1em">
-                	<c:forEach items="${floor.dormList}" var="dorm">
-                		<a href="${pageContext.request.contextPath}/apartment/dorm/${dorm.id}">
-	                		<span class="dormBrand">
-	                			${dorm.dormNo}
-	                		</span>
-                		</a>
-                	</c:forEach>
-                </td>
-            </tr>
-        </c:forEach>
-    </tbody>
-</table>
 </body>
 <script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script> 
 <script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
@@ -124,17 +123,17 @@ function addFloor(apartId, floorNum) {
 			url: getRootPath() + "/apartment/"+apartId+"/floor/create",
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
-				if(data == "新增成功!") {
+				if(data == "success") {
 					swal({ 
 						title: "成功！", 
-						text: data, 
+						text: "新增成功", 
 						type: "success"
 					},
 					function(){
 						window.location.reload();
 					});
-				} else if(data == "新增失败!") {
-					swal("失败！", data, "error");
+				} else if(data == "error") {
+					swal("失败！", "新增失败", "error");
 				}
 			},
 			error: function() {
@@ -152,20 +151,20 @@ function updateFloorDorm(apartId) {
 		url: getRootPath() + "/apartment/"+apartId+"/"+floorId+"/dorm/create",
 		contentType: "application/x-www-form-urlencoded",
 		success: function(data) {
-			if(data == "新增成功") {
+			if(data == "success") {
 				swal({ 
 					title: "成功！", 
-					text: data, 
+					text: "新增成功", 
 					type: "success"
 				},
 				function(){
 					window.location.reload();
 				});
-			} else if(data == "新增失败") {
-				swal("失败！", data, "error");
+			} else if(data == "error") {
+				swal("失败！", "新增失败", "error");
 				$('#floorModal').modal('hide');
-			} else if(data == "没有任何新增宿舍或床位") {
-				swal("失败！", data, "warning");
+			} else if(data == "errorEmpty") {
+				swal("失败！", "没有任何新增宿舍或床位", "warning");
 				$('#floorModal').modal('hide');
 			}
 		},

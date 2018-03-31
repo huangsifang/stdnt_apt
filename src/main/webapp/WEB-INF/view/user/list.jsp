@@ -27,7 +27,7 @@
 	        <div class="modal-content">
 	            <div class="modal-header">
 	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	                <h4 class="modal-title" id="userModalLabel">用户新增</h4>
+	                <h4 class="modal-title" id="userModalLabel">新增用户</h4>
 	            </div>
 	            <div class="modal-body">
 	            	<form id="userForm" method="post" class="form-horizontal" role="form">
@@ -200,9 +200,9 @@
 	        </c:forEach>
 	    </tbody>
 	</table>
-	<ul class="pagination" id="userPage">
+	<ul class="pagination tablePage">
 	    <li><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${start-10}">&laquo;</a></li>
-	    <c:forEach begin="0" end="${userCount}" var="item" step="10">
+	    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
 	    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
 	    </c:forEach>
 	    <li><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${start+10}">&raquo;</a></li>
@@ -216,20 +216,21 @@
 <script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 	$(function() {
+		var start = Number('${start}');
+		var pageNum = start/10+1;
+		$(".tablePage li").eq(pageNum).addClass("active");
+		if(start <= 0) {
+			$(".tablePage li").eq(0).find("a").attr("href","#");
+			$(".tablePage li").eq(0).addClass("disabled");
+		}
+		if(start+10 >= Number('${allCount}')){
+			$(".tablePage li").eq(-1).find("a").attr("href","#");
+			$(".tablePage li").eq(-1).addClass("disabled");
+		}
+		
 		var nowRoleId = Number('${roleId}')-1;
 		$("#roleUl li").eq(nowRoleId).addClass("active");
 		$("#userInfo").hide();
-		var start = Number('${start}');
-		var pageNum = start/10+1;
-		$("#userPage li").eq(pageNum).addClass("active");
-		if(start <= 0) {
-			$("#userPage li").eq(0).find("a").attr("href","#");
-			$("#userPage li").eq(0).addClass("disabled");
-		}
-		if(start+10 >= Number('${userCount}')){
-			$("#userPage li").eq(-1).find("a").attr("href","#");
-			$("#userPage li").eq(-1).addClass("disabled");
-		}
 		$("#userBtn").click(function() {
 			var url = "";
 			if($("#operationType").val() == 'add') {
@@ -253,7 +254,7 @@
 					}
 				},
 				error: function() {
-					swal("错误！", "发送错误", "error");
+					swal("错误！", "发生错误", "error");
 		        }
 			});
 		});
@@ -275,7 +276,7 @@
 					}
 				},
 				error: function() {
-					swal("错误！", "发送错误", "error");
+					swal("错误！", "发生错误", "error");
 		        }
 			});
 		});
@@ -320,7 +321,7 @@
 					}
 				},
 				error: function() {
-					swal("错误！", "发送错误", "error");
+					swal("错误！", "发生错误", "error");
 		        }
 			});
 		});
@@ -333,6 +334,7 @@
 		}
 	});
 	function addUser() {
+		$("#userModalLabel").text("新增用户");
 		$("#operationType").val("add");
 		$("#username").val('');
 		$("#roleIds option").attr("selected",false);
@@ -346,6 +348,7 @@
 		$("#repairTypeForm").hide();
 	}
 	function updateUser(id, username, roleIds) {
+		$("#userModalLabel").text("修改用户");
 		$("#operationType").val("update");
 		$("#userId").val(id);
 		$("#username").val(username);
@@ -383,7 +386,7 @@
 					$("#enterDate").val(data.hiredate.substring(0,10));
 				},
 				error: function() {
-					swal("错误！", "发送错误", "error");
+					swal("错误！", "发生错误", "error");
 		        }
 			});
 		}
@@ -403,7 +406,7 @@
 					$("#tel").val(data.consellTel);
 				},
 				error: function() {
-					swal("错误！", "发送错误", "error");
+					swal("错误！", "发生错误", "error");
 		        }
 			});
 		}
@@ -448,12 +451,12 @@
 							$("#classId").find("option[value='"+classId+"']").attr("selected",true);
 						},
 						error: function() {
-							swal("错误！", "发送错误", "error");
+							swal("错误！", "发生错误", "error");
 				        }
 					});
 				},
 				error: function() {
-					swal("错误！", "发送错误", "error");
+					swal("错误！", "发生错误", "error");
 		        }
 			});
 		}
@@ -478,7 +481,7 @@
 					});
 				},
 				error: function() {
-					swal("错误！", "发送错误", "error");
+					swal("错误！", "发生错误", "error");
 		        }
 			});
 		}
@@ -509,7 +512,7 @@
 					}
 				},
 				error: function() {
-					swal("错误！", "发送错误", "error");
+					swal("错误！", "发生错误", "error");
 		        }
 			});
 		});

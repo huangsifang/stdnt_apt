@@ -8,10 +8,9 @@
     <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
 </head>
 <body>
-
-欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a>
 
 <!-- 完成维修模态框（Modal） -->
 <div class="modal fade" id="repairRecordModal" tabindex="-1" role="dialog" aria-labelledby="repairRecordModalLabel" aria-hidden="true">
@@ -40,54 +39,66 @@
     </div><!-- /.modal -->
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-        	<th>公寓名</th>
-            <th>寝室号</th>
-            <th>维修类型</th>
-            <th>申请者</th>
-            <th>申请手机号</th>
-            <th>申请时间</th>
-            <th>备注</th>
-            <th>接单时间</th>
-            <th>维修时间</th>
-            <th>状态</th>
-        </tr>
-    </thead>
-    <tbody>
-    	<c:if test="${empty myRepairRecordList}">
-			您还没有接受任何维修！
-		</c:if>
-        <c:forEach items="${myRepairRecordList}" var="record">
-            <tr>
-            	<td>${record.repair.apartName}</td>
-                <td>${record.repair.dormNo}</td>
-                <td>${record.repair.repairTypeName}</td>
-                <td>${record.repair.applicantName}</td>
-                <td>${record.repair.applicantTel}</td>
-                <td><fmt:formatDate value="${record.repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></td>
-                <td>${record.repair.remark}</td>
-                <td><fmt:formatDate value="${record.acceptTime}" pattern="yyyy-MM-dd HH:mm" /></td>
-                <td>
-                	<c:if test="${not empty record.repairTime}">
-                		<fmt:formatDate value="${record.repairTime}" pattern="yyyy-MM-dd HH:mm" />
-                	</c:if>
-                </td>
-                <c:if test="${record.state == 1}">
-                	<td>
-	                	已接单  
-	                	<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#repairRecordModal" type="button" onClick="finishOrder(${record.repairId})">确认已维修</button>
-	                	<button onClick="deleteRepairRecord(${record.repairId})">取消订单</button>
-                	</td>
-                </c:if>
-                <c:if test="${record.state == 2}">
-                	<td>已结束</td>
-                </c:if>
-            </tr>
-        </c:forEach>
-    </tbody>
-</table>
+<div style="margin:20px 50px">
+	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
+	<table class="table">
+	    <thead>
+	        <tr>
+	        	<th>公寓名</th>
+	            <th>寝室号</th>
+	            <th>维修类型</th>
+	            <th>申请者</th>
+	            <th>申请手机号</th>
+	            <th>申请时间</th>
+	            <th>备注</th>
+	            <th>接单时间</th>
+	            <th>维修时间</th>
+	            <th>状态</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+	    	<c:if test="${empty myRepairRecordList}">
+	    		<tr>
+	    			<td colspan="10" style="text-align:center">您还没有接受任何维修！</td>
+	    		</tr>
+			</c:if>
+	        <c:forEach items="${myRepairRecordList}" var="record">
+	            <tr>
+	            	<td>${record.repair.apartName}</td>
+	                <td>${record.repair.dormNo}</td>
+	                <td>${record.repair.repairTypeName}</td>
+	                <td>${record.repair.applicantName}</td>
+	                <td>${record.repair.applicantTel}</td>
+	                <td><fmt:formatDate value="${record.repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></td>
+	                <td>${record.repair.remark}</td>
+	                <td><fmt:formatDate value="${record.acceptTime}" pattern="yyyy-MM-dd HH:mm" /></td>
+	                <td>
+	                	<c:if test="${not empty record.repairTime}">
+	                		<fmt:formatDate value="${record.repairTime}" pattern="yyyy-MM-dd HH:mm" />
+	                	</c:if>
+	                </td>
+	                <c:if test="${record.state == 1}">
+	                	<td>
+		                	已接单  
+		                	<button class="btn btn-primary" data-toggle="modal" data-target="#repairRecordModal" type="button" onClick="finishOrder(${record.repairId})">确认已维修</button>
+		                	<button class="btn btn-danger" onClick="deleteRepairRecord(${record.repairId})">取消订单</button>
+	                	</td>
+	                </c:if>
+	                <c:if test="${record.state == 2}">
+	                	<td>已结束</td>
+	                </c:if>
+	            </tr>
+	        </c:forEach>
+	    </tbody>
+	</table>
+	<ul class="pagination tablePage">
+	    <li><a href="${pageContext.request.contextPath}/repair/myRepair?start=${start-10}">&laquo;</a></li>
+	    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
+	    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/repair/myRepair?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
+	    </c:forEach>
+	    <li><a href="${pageContext.request.contextPath}/repair/myRepair?start=${start+10}">&raquo;</a></li>
+	</ul>
+</div>
 </body>
 <script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
 <script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
@@ -99,6 +110,18 @@ function finishOrder(repairId) {
 	$("#repairId").val(repairId);
 }
 $(function() {
+	var start = Number('${start}');
+	var pageNum = start/10+1;
+	$(".tablePage li").eq(pageNum).addClass("active");
+	if(start <= 0) {
+		$(".tablePage li").eq(0).find("a").attr("href","#");
+		$(".tablePage li").eq(0).addClass("disabled");
+	}
+	if(start+10 >= Number('${allCount}')){
+		$(".tablePage li").eq(-1).find("a").attr("href","#");
+		$(".tablePage li").eq(-1).addClass("disabled");
+	}
+	
 	$("#repairRecordBtn").click(function() {
 		$.ajax({
 			type: "POST",

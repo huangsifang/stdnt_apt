@@ -102,10 +102,10 @@ public class ApartmentController {
 					}
 				}
 			}
-			msg = "新增成功!";
+			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = "新增失败！";
+			msg = "error";
 		}
 		return msg;
 	}
@@ -125,10 +125,10 @@ public class ApartmentController {
 					apartmentService.createApartStaff(apartId, id);
 				}
 			}
-			msg = "修改成功!";
+			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = "修改失败！";
+			msg = "error";
 		}
 		return msg;
 	}
@@ -142,17 +142,17 @@ public class ApartmentController {
 		try {
 			List<Staff> staffList = apartmentService.findApartStaffs(apartId);
 			if (!staffList.isEmpty()) {
-				msg = "该公寓下存在关联管理员，请先删除联系!";
+				msg = "errorStaff";
 				return msg;
 			}
 			List<DormScore> scoreList = dormService.findApartDormScore(apartId);
 			if (!scoreList.isEmpty()) {
-				msg = "该公寓下存在关联寝室得分，请先删除联系!";
+				msg = "errorScore";
 				return msg;
 			}
 			List<HoliRecord> holidayList = holidayService.findApartAllHoliRecords(apartId);
 			if (!holidayList.isEmpty()) {
-				msg = "该公寓下存在关联假期记录，请先删除联系!";
+				msg = "errorHoliday";
 				return msg;
 			}
 			List<Floor> floorList = apartmentService.findFloorAll(apartId);
@@ -161,14 +161,14 @@ public class ApartmentController {
 				for (Dormitory dorm : dormList) {
 					List<Repair> repairList = repairService.findDormRepairs(dorm.getId());
 					if (!repairList.isEmpty()) {
-						msg = "该公寓下存在关联维修，请先删除联系!";
+						msg = "errorRepair";
 						flag = true;
 						break;
 					}
 					List<Bed> bedList = apartmentService.findBedsFromDorm(dorm.getId());
 					for (Bed bed : bedList) {
 						if (bed.getStdId() != 1) {
-							msg = "该公寓下存在关联学生，请先删除联系!";
+							msg = "errorBed";
 							flag = true;
 							break;
 						}
@@ -186,11 +186,11 @@ public class ApartmentController {
 			}
 			if (!flag) {
 				apartmentService.deleteApartment(apartId);
-				msg = "删除成功!";
+				msg = "success";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = "修改失败！";
+			msg = "error";
 		}
 		return msg;
 	}
@@ -218,10 +218,10 @@ public class ApartmentController {
 		try {
 			Floor floor = new Floor(apartId, floorNum + 1);
 			apartmentService.createFloor(floor);
-			msg = "新增成功!";
+			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = "新增失败！";
+			msg = "error";
 		}
 		return msg;
 	}
@@ -234,36 +234,41 @@ public class ApartmentController {
 			@RequestParam(value = "aDormBedNum") int aDormBedNum, @RequestParam(value = "dormFee") BigDecimal dormFee,
 			RedirectAttributes redirectAttributes) {
 		int dormId = 0;
-		String msg = "新增成功";
-		for (int i = 0; i < dormNum; i++) {
-			if (i >= currentDormNum) { // 新增宿舍
-				Dormitory dorm = new Dormitory(i + 1, floorId);
-				dorm.setFee(dormFee);
-				dorm.setLeaderId(1);
-				apartmentService.createDorm(dorm);
-				dormId = dorm.getId();
-			} else { // 获取已有的宿舍Id
-				Dormitory dorm = apartmentService.findByDormNoFloorId(i + 1, floorId);
-				if (dorm != null) {
-					dormId = dorm.getId();
+		String msg = "";
+		try {
+			for (int i = 0; i < dormNum; i++) {
+				if (i >= currentDormNum) { // 新增宿舍
+					Dormitory dorm = new Dormitory(i + 1, floorId);
 					dorm.setFee(dormFee);
-					apartmentService.updateDorm(dorm);
-				} else {
-					msg = "新增失败";
+					dorm.setLeaderId(1);
+					apartmentService.createDorm(dorm);
+					dormId = dorm.getId();
+				} else { // 获取已有的宿舍Id
+					Dormitory dorm = apartmentService.findByDormNoFloorId(i + 1, floorId);
+					if (dorm != null) {
+						dormId = dorm.getId();
+						dorm.setFee(dormFee);
+						apartmentService.updateDorm(dorm);
+					} else {
+						msg = "success";
+						break;
+					}
+				}
+				/* 新增床位 */
+				int dormBedNum = apartmentService.getDormBedNum(dormId);
+				if (dormNum <= currentDormNum && aDormBedNum <= dormBedNum) {
+					msg = "errorEmpty";
 					break;
 				}
+				for (int j = dormBedNum; j < aDormBedNum; j++) {
+					Bed bed = new Bed(j + 1, dormId);
+					bed.setStdId(1);
+					apartmentService.createBed(bed);
+				}
 			}
-			/* 新增床位 */
-			int dormBedNum = apartmentService.getDormBedNum(dormId);
-			if (dormNum <= currentDormNum && aDormBedNum <= dormBedNum) {
-				msg = "没有任何新增宿舍或床位";
-				break;
-			}
-			for (int j = dormBedNum; j < aDormBedNum; j++) {
-				Bed bed = new Bed(j + 1, dormId);
-				bed.setStdId(1);
-				apartmentService.createBed(bed);
-			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "error";
 		}
 		return msg;
 	}
@@ -316,10 +321,10 @@ public class ApartmentController {
 		String msg = "";
 		try {
 			apartmentService.deleteApartStaff(apartId, staffId);
-			msg = "删除成功!";
+			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = "删除失败！";
+			msg = "error";
 		}
 		return msg;
 	}

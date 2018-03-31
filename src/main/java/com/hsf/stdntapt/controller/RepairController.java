@@ -54,7 +54,8 @@ public class RepairController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String repairList(final ModelMap model) {
+	public String repairList(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+			@RequestParam(value = "size", required = false, defaultValue = "10") int size, final ModelMap model) {
 		String username = SecurityUtils.getSubject().getPrincipal().toString();
 		Set<String> permissions = userService.findPermissions(username);
 		List<RepairType> allType = repairService.findAllRepairType();
@@ -66,7 +67,7 @@ public class RepairController {
 		}
 		if (apartList != null && permissions.contains("repair:*")) {
 			int apartId = apartList.get(0).getApartId();
-			final List<Repair> repairList = repairService.getApartRepairs(apartId);
+			final List<Repair> repairList = repairService.getApartRepairsByPage(start, size, apartId);
 			for (Repair repair : repairList) {
 				int dormId = repair.getDormId();
 				Dormitory dorm = apartmentService.findOneDorm(dormId);
@@ -88,8 +89,12 @@ public class RepairController {
 					}
 				}
 			}
+			int nowApartId = apartList.get(0).getApartId();
 			model.addAttribute("repairList", repairList);
 			model.addAttribute("apartList", apartList);
+			model.addAttribute("apartId", nowApartId);
+			model.addAttribute("start", start);
+			model.addAttribute("allCount", repairService.getApartRepairs(nowApartId).size());
 			return "repair/apartRepairList";
 		} else if (permissions.contains("repair:create")) {
 			Dormitory dorm = apartmentService.findStdDorm(Integer.parseInt(username));
@@ -113,7 +118,8 @@ public class RepairController {
 			model.addAttribute("allType", allType);
 			return "repair/dormRepairList";
 		} else if (permissions.contains("repairRecord:create")) {
-			final List<Repair> repairByTypeList = repairService.getRepairsByType(allType.get(0).getTypeId());
+			int typeId = allType.get(0).getTypeId();
+			final List<Repair> repairByTypeList = repairService.getRepairsByTypeByPage(start, size, typeId);
 			for (Repair repair : repairByTypeList) {
 				int dormId = repair.getDormId();
 				Dormitory dorm = apartmentService.findOneDorm(dormId);
@@ -135,6 +141,9 @@ public class RepairController {
 			}
 			model.addAttribute("allType", allType);
 			model.addAttribute("repairByTypeList", repairByTypeList);
+			model.addAttribute("typeId", typeId);
+			model.addAttribute("start", start);
+			model.addAttribute("allCount", repairService.getRepairsByType(typeId).size());
 			return "repair/typeRepairList";
 		}
 		return "unauthorized";
@@ -142,7 +151,9 @@ public class RepairController {
 
 	@RequiresPermissions("repair:view")
 	@RequestMapping(value = "/apart/{apartId}", method = RequestMethod.GET)
-	public String apartRepairList(@PathVariable("apartId") int apartId, final ModelMap model) {
+	public String apartRepairList(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+			@RequestParam(value = "size", required = false, defaultValue = "10") int size,
+			@PathVariable("apartId") int apartId, final ModelMap model) {
 		String username = SecurityUtils.getSubject().getPrincipal().toString();
 		List<Apartment> apartList = null;
 		if (username.equals("admin")) {
@@ -150,7 +161,7 @@ public class RepairController {
 		} else {
 			apartList = apartmentService.findStaffAparts(Integer.parseInt(username));
 		}
-		final List<Repair> repairList = repairService.getApartRepairs(apartId);
+		final List<Repair> repairList = repairService.getApartRepairsByPage(start, size, apartId);
 		for (Repair repair : repairList) {
 			int dormId = repair.getDormId();
 			Dormitory dorm = apartmentService.findOneDorm(dormId);
@@ -174,14 +185,19 @@ public class RepairController {
 		}
 		model.addAttribute("apartList", apartList);
 		model.addAttribute("repairList", repairList);
+		model.addAttribute("apartId", apartId);
+		model.addAttribute("start", start);
+		model.addAttribute("allCount", repairService.getApartRepairs(apartId).size());
 		return "repair/apartRepairList";
 	}
 
 	@RequiresPermissions("repairRecord:create")
 	@RequestMapping(value = "/type/{typeId}", method = RequestMethod.GET)
-	public String repairByTypeList(@PathVariable("typeId") int typeId, final ModelMap model) {
+	public String repairByTypeList(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+			@RequestParam(value = "size", required = false, defaultValue = "10") int size,
+			@PathVariable("typeId") int typeId, final ModelMap model) {
 		List<RepairType> allType = repairService.findAllRepairType();
-		final List<Repair> repairByTypeList = repairService.getRepairsByType(typeId);
+		final List<Repair> repairByTypeList = repairService.getRepairsByTypeByPage(start, size, typeId);
 		for (Repair repair : repairByTypeList) {
 			int dormId = repair.getDormId();
 			Dormitory dorm = apartmentService.findOneDorm(dormId);
@@ -203,6 +219,9 @@ public class RepairController {
 		}
 		model.addAttribute("repairByTypeList", repairByTypeList);
 		model.addAttribute("allType", allType);
+		model.addAttribute("typeId", typeId);
+		model.addAttribute("start", start);
+		model.addAttribute("allCount", repairService.getRepairsByType(typeId).size());
 		return "repair/typeRepairList";
 	}
 
@@ -220,10 +239,10 @@ public class RepairController {
 				repair.setRemark(remark);
 				repairService.createRepair(repair);
 			}
-			msg = "新增成功!";
+			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = "新增失败！";
+			msg = "error";
 		}
 		return msg;
 	}
@@ -278,20 +297,24 @@ public class RepairController {
 				RepairRecord record = new RepairRecord(repairId, repairmanId);
 				record.setState(1);
 				repairService.createRepairRecord(record);
-				msg = "接单成功!";
+				msg = "success";
+			} else {
+				msg = "errorNoPower";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = "接单失败！";
+			msg = "error";
 		}
 		return msg;
 	}
 
 	@RequiresPermissions("myRepair:view")
 	@RequestMapping(value = "/myRepair", method = RequestMethod.GET)
-	public String myRepairList(final ModelMap model) {
+	public String myRepairList(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+			@RequestParam(value = "size", required = false, defaultValue = "10") int size, final ModelMap model) {
 		String username = SecurityUtils.getSubject().getPrincipal().toString();
-		List<RepairRecord> myRepairRecordList = repairService.findMyRepairRecordList(Integer.parseInt(username));
+		int repairmanId = Integer.parseInt(username);
+		List<RepairRecord> myRepairRecordList = repairService.findMyRepairRecordListByPage(start, size, repairmanId);
 		for (RepairRecord record : myRepairRecordList) {
 			Repair repair = repairService.findOneRepair(record.getRepairId());
 			int dormId = repair.getDormId();
@@ -309,6 +332,8 @@ public class RepairController {
 			record.setRepair(repair);
 		}
 		model.addAttribute("myRepairRecordList", myRepairRecordList);
+		model.addAttribute("start", start);
+		model.addAttribute("allCount", repairService.findMyRepairRecordList(repairmanId).size());
 		return "repair/repairmanRecordList";
 	}
 

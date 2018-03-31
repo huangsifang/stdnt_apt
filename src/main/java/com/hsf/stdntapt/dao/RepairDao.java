@@ -28,7 +28,13 @@ public interface RepairDao {
 
 	public List<Repair> getApartRepairs(@Param("apartId") int apartId);
 
+	public List<Repair> getApartRepairsByPage(@Param("start") int start, @Param("size") int size,
+			@Param("apartId") int apartId);
+
 	public List<Repair> getRepairsByType(@Param("typeId") int typeId);
+
+	public List<Repair> getRepairsByTypeByPage(@Param("start") int start, @Param("size") int size,
+			@Param("typeId") int typeId);
 
 	public Repair findOneRepair(@Param("repairId") long repairId);
 
@@ -49,6 +55,9 @@ public interface RepairDao {
 	public List<String> findRepairmanTypes(@Param("repairmanId") int repairmanId);
 
 	public List<RepairRecord> findMyRepairRecordList(@Param("repairmanId") int repairmanId);
+
+	public List<RepairRecord> findMyRepairRecordListByPage(@Param("start") int start, @Param("size") int size,
+			@Param("repairmanId") int repairmanId);
 
 	public RepairRecord findOneRepairRecordFromRepairId(@Param("repairId") long repairId);
 

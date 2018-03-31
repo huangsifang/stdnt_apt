@@ -7,14 +7,14 @@
     <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
+    <style type="text/css">
+    a{color:#fff}
+    a:hover{text-decoration:none;color:#fff}
+    </style>
 </head>
 <body>
 
-欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a>
-
-<c:if test="${not empty msg}">
-	<script>alert("${msg}")</script>
-</c:if>
 
 <!-- 假期新增修改模态框（Modal） -->
 <div class="modal fade" id="holidayModal" tabindex="-1" role="dialog" aria-labelledby="holidayModalLabel" aria-hidden="true">
@@ -133,59 +133,61 @@
     </div><!-- /.modal -->
 </div>
 
-<shiro:hasPermission name="holiday:create">
-	<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#holidayModal" onClick="createHoliday()">新增</button>
-</shiro:hasPermission>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>假期号</th>
-            <th>假期名</th>
-            <th>开始时间</th>
-            <th>结束时间</th>
-            <th>操作</th>
-        </tr>
-    </thead>
-    <tbody>
-    	<c:if test="${empty holidayList}">
-			<tr>
-				<td colspan="5" style="text-align:center">还未添加任何假期！</td>
-			</tr>
-		</c:if>
-        <c:forEach items="${holidayList}" var="holiday">
-            <tr>
-                <td>${holiday.holiId}</td>
-                <td>${holiday.holiName}</td>
-                <td>${holiday.startTime}</td>
-                <td>${holiday.endTime}</td>
-                <td>
-                    <shiro:hasPermission name="holiday:update">
-                    	<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#holidayModal" type="button" onClick="updateHoliday(${holiday.holiId},'${holiday.holiName}','${holiday.startTime}','${holiday.endTime}')">修改</button>
-                    </shiro:hasPermission>
-
-                    <shiro:hasPermission name="holiday:delete">
-                    	<button class="btn btn-danger btn-md" type="button" onClick="deleteHoliday(${holiday.holiId})">删除</button>
-                    </shiro:hasPermission>
-                    
-                    <shiro:hasPermission name="record:create">
-                    	<c:if test="${!holiday.hasSign}">
-                    		<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#recordModal" type="button" onClick="holidayRecord(${holiday.holiId},'${holiday.startTime}','${holiday.endTime}')">登记</button>
-                    	</c:if>
-                    	<c:if test="${holiday.hasSign}">
-                    		<a href="holiday/${holiday.holiId}/std/record">查看</a>
-                    	</c:if>
-                    </shiro:hasPermission>
-                    
-                    <shiro:hasPermission name="record:view">
-                    	<a href="holiday/${holiday.holiId}/apart/record">查看</a>
-                    </shiro:hasPermission>
-                </td>
-            </tr>
-        </c:forEach>
-    </tbody>
-</table>
-
+<div style="margin:20px 50px">
+	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
+	<shiro:hasPermission name="holiday:create">
+		<button class="btn btn-default btn-md" data-toggle="modal" data-target="#holidayModal" onClick="createHoliday()">新增</button>
+	</shiro:hasPermission>
+	
+	<table class="table">
+	    <thead>
+	        <tr>
+	            <th>假期号</th>
+	            <th>假期名</th>
+	            <th>开始时间</th>
+	            <th>结束时间</th>
+	            <th>操作</th>
+	        </tr>
+	    </thead>
+	    <tbody>
+	    	<c:if test="${empty holidayList}">
+				<tr>
+					<td colspan="5" style="text-align:center">还未添加任何假期！</td>
+				</tr>
+			</c:if>
+	        <c:forEach items="${holidayList}" var="holiday">
+	            <tr>
+	                <td>${holiday.holiId}</td>
+	                <td>${holiday.holiName}</td>
+	                <td>${holiday.startTime}</td>
+	                <td>${holiday.endTime}</td>
+	                <td>
+	                    <shiro:hasPermission name="holiday:update">
+	                    	<button class="btn btn-default btn-md" data-toggle="modal" data-target="#holidayModal" type="button" onClick="updateHoliday(${holiday.holiId},'${holiday.holiName}','${holiday.startTime}','${holiday.endTime}')">修改</button>
+	                    </shiro:hasPermission>
+	
+	                    <shiro:hasPermission name="holiday:delete">
+	                    	<button class="btn btn-danger btn-md" type="button" onClick="deleteHoliday(${holiday.holiId})">删除</button>
+	                    </shiro:hasPermission>
+	                    
+	                    <shiro:hasPermission name="record:create">
+	                    	<c:if test="${!holiday.hasSign}">
+	                    		<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#recordModal" type="button" onClick="holidayRecord(${holiday.holiId},'${holiday.startTime}','${holiday.endTime}')">登记</button>
+	                    	</c:if>
+	                    	<c:if test="${holiday.hasSign}">
+	                    		<button class="btn btn-primary btn-md"><a href="holiday/${holiday.holiId}/std/record">查看</a></button>
+	                    	</c:if>
+	                    </shiro:hasPermission>
+	                    
+	                    <shiro:hasPermission name="record:view">
+	                    	<button class="btn btn-primary btn-md"><a href="holiday/${holiday.holiId}/apart/record">查看</a></button>
+	                    </shiro:hasPermission>
+	                </td>
+	            </tr>
+	        </c:forEach>
+	    </tbody>
+	</table>
+</div>
 </body>
 <script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
 <script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
@@ -227,14 +229,18 @@ function deleteHoliday(holiId) {
 				url: "holiday/" + holiId + "/delete",
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
-					swal("删除！", data, "success");
+					if(data == 'success') {
+						swal("成功！", "删除成功", "success");
+					} else if(data == 'error') {
+						swal("失败！", "删除失败", "error");
+					}
 				},
 				error: function() {
-		        	alert('error');
+					swal("失败！", "发生错误", "error");
 		        }
 			});
 		} else { 
-			swal("取消！", "删除被取消:)","error"); 
+			swal("取消！", "删除被取消:)","info"); 
 		}
 	});
 }
@@ -267,10 +273,15 @@ $(function() {
 			data: $("#holidayForm").serializeArray(),
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
-				$('#holidayModal').modal('hide');
+				if(data == 'success') {
+					swal("成功！", "修改成功", "success");
+					$('#holidayModal').modal('hide');
+				} else if(data == 'error') {
+					swal("失败！", "修改失败", "error");
+				}
 			},
 			error: function() {
-	        	alert('error');
+				swal("失败！", "发生错误", "error");
 	        }
 		});
 	});
@@ -283,10 +294,18 @@ $(function() {
 			data: $("#recordForm").serializeArray(),
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
-				$('#recordModal').modal('hide');
+				if(data == 'success') {
+					swal("成功！", "新增成功", "success");
+					$('#recordModal').modal('hide');
+				} else if(data == 'errorExist') {
+					swal("失败！", "您已登记过!", "warning");
+					$('#recordModal').modal('hide');
+				} else if(data == 'error') {
+					swal("失败！", "新增失败", "error");
+				}
 			},
 			error: function() {
-	        	alert('error');
+				swal("失败！", "发生错误", "error");
 	        }
 		});
 	});

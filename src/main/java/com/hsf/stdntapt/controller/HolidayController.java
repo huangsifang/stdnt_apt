@@ -98,10 +98,10 @@ public class HolidayController {
 			holiday.setStartTime(startTime);
 			holiday.setEndTime(endTime);
 			holidayService.updateHoliday(holiday);
-			msg = "修改成功!";
+			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = "修改失败！";
+			msg = "error";
 		}
 		return msg;
 	}
@@ -113,10 +113,10 @@ public class HolidayController {
 		String msg = "";
 		try {
 			holidayService.deleteHoliday(holiId);
-			msg = "删除成功!";
+			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = "删除失败！";
+			msg = "error";
 		}
 		return msg;
 	}
@@ -133,7 +133,7 @@ public class HolidayController {
 			int stdId = Integer.parseInt(username);
 			List<HoliRecord> currentRecord = holidayService.findHoliRecord(holiId, stdId);
 			if (!currentRecord.isEmpty()) {
-				msg = "您已登记过!";
+				msg = "errorExist";
 			} else {
 				HoliRecord record = new HoliRecord(holiId, stdId);
 				record.setApartId(apartId);
@@ -153,18 +153,20 @@ public class HolidayController {
 					record.setAddress(address);
 					holidayService.createHoliRecord(record);
 				}
-				msg = "新增成功!";
+				msg = "success";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = "新增失败！";
+			msg = "error";
 		}
 		return msg;
 	}
 
 	@RequiresPermissions("record:view")
 	@RequestMapping(value = "/{holiId}/apart/record", method = RequestMethod.GET)
-	public String recordList(@PathVariable("holiId") int holiId, final ModelMap model) {
+	public String recordList(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+			@RequestParam(value = "size", required = false, defaultValue = "10") int size,
+			@PathVariable("holiId") int holiId, final ModelMap model) {
 		String username = SecurityUtils.getSubject().getPrincipal().toString();
 		List<Apartment> apartList = null;
 		if (username.equals("admin")) {
@@ -173,8 +175,10 @@ public class HolidayController {
 			apartList = apartmentService.findStaffAparts(Integer.parseInt(username));
 		}
 		int apartId = apartList.get(0).getApartId();
-		final List<HoliRecord> recordList = holidayService.findApartAllRecords(holiId, apartId);
+		final List<HoliRecord> recordList = holidayService.findApartAllRecordsByPage(start, size, holiId, apartId);
 		for (HoliRecord record : recordList) {
+			String holiName = holidayService.findHoliName(holiId);
+			record.setHoliName(holiName);
 			String stdName = studentService.findStdName(record.getStdId());
 			if (stdName != null) {
 				record.setStdName(stdName);
@@ -202,13 +206,18 @@ public class HolidayController {
 		model.addAttribute("recordNum", recordList.size());
 		model.addAttribute("apartStdNum", apartStdNum);
 		model.addAttribute("apartList", apartList);
+		model.addAttribute("holiId", holiId);
+		model.addAttribute("apartId", 1);
+		model.addAttribute("start", start);
+		model.addAttribute("allCount", holidayService.findApartAllRecords(holiId, apartId).size());
 		return "holiday/record";
 	}
 
 	@RequiresPermissions("record:view")
 	@RequestMapping(value = "/{holiId}/apart/{apartId}/record", method = RequestMethod.GET)
-	public String apartRecordList(@PathVariable("holiId") int holiId, @PathVariable("apartId") int apartId,
-			final ModelMap model) {
+	public String apartRecordList(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
+			@RequestParam(value = "size", required = false, defaultValue = "10") int size,
+			@PathVariable("holiId") int holiId, @PathVariable("apartId") int apartId, final ModelMap model) {
 		String username = SecurityUtils.getSubject().getPrincipal().toString();
 		List<Apartment> apartList = null;
 		if (username.equals("admin")) {
@@ -216,8 +225,10 @@ public class HolidayController {
 		} else {
 			apartList = apartmentService.findStaffAparts(Integer.parseInt(username));
 		}
-		final List<HoliRecord> recordList = holidayService.findApartAllRecords(holiId, apartId);
+		final List<HoliRecord> recordList = holidayService.findApartAllRecordsByPage(start, size, holiId, apartId);
 		for (HoliRecord record : recordList) {
+			String holiName = holidayService.findHoliName(holiId);
+			record.setHoliName(holiName);
 			String stdName = studentService.findStdName(record.getStdId());
 			if (stdName != null) {
 				record.setStdName(stdName);
@@ -236,9 +247,12 @@ public class HolidayController {
 		}
 		int apartStdNum = apartmentService.findApartStdNum(apartId);
 		model.addAttribute("recordList", recordList);
-		model.addAttribute("recordNum", recordList.size());
 		model.addAttribute("apartStdNum", apartStdNum);
 		model.addAttribute("apartList", apartList);
+		model.addAttribute("holiId", holiId);
+		model.addAttribute("apartId", apartId);
+		model.addAttribute("start", start);
+		model.addAttribute("allCount", holidayService.findApartAllRecords(holiId, apartId).size());
 		return "holiday/record";
 	}
 
@@ -249,9 +263,10 @@ public class HolidayController {
 		String msg = "";
 		try {
 			holidayService.deleteHoliRecord(holiId, stdId);
-			msg = "删除成功！";
+			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
+			msg = "error";
 		}
 		return msg;
 	}
@@ -303,14 +318,15 @@ public class HolidayController {
 			int stdId = Integer.parseInt(username);
 			List<HoliBack> backList = holidayService.findStdHoliBack(holiId, stdId);
 			if (!backList.isEmpty()) {
-				msg = "您已签到过，无需重复签到！";
+				msg = "errorHasSign";
 			} else {
 				HoliBack back = new HoliBack(holiId, stdId);
 				holidayService.createHoliBack(back);
-				msg = "签到成功！";
+				msg = "success";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			msg = "error";
 		}
 		return msg;
 	}
