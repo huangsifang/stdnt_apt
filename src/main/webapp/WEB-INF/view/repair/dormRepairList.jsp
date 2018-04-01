@@ -19,6 +19,7 @@
     </style>
 </head>
 <body>
+<jsp:include page="../navbar.jsp"></jsp:include>
 
 <!-- 维修新增修改模态框（Modal） -->
 <div class="modal fade" id="repairModal" tabindex="-1" role="dialog" aria-labelledby="repairModalLabel" aria-hidden="true">
@@ -59,7 +60,6 @@
 </div>
 
 <div style="margin:20px 50px">
-	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 
 	<shiro:hasPermission name="repair:create">
 		<button class="btn btn-default btn-md" data-toggle="modal" data-target="#repairModal">报修</button>

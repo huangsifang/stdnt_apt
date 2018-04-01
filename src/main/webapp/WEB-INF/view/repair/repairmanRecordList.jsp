@@ -11,6 +11,7 @@
     <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
 </head>
 <body>
+<jsp:include page="../navbar.jsp"></jsp:include>
 
 <!-- 完成维修模态框（Modal） -->
 <div class="modal fade" id="repairRecordModal" tabindex="-1" role="dialog" aria-labelledby="repairRecordModalLabel" aria-hidden="true">
@@ -40,7 +41,6 @@
 </div>
 
 <div style="margin:20px 50px">
-	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 	<table class="table">
 	    <thead>
 	        <tr>
@@ -91,13 +91,15 @@
 	        </c:forEach>
 	    </tbody>
 	</table>
-	<ul class="pagination tablePage">
-	    <li><a href="${pageContext.request.contextPath}/repair/myRepair?start=${start-10}">&laquo;</a></li>
-	    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
-	    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/repair/myRepair?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
-	    </c:forEach>
-	    <li><a href="${pageContext.request.contextPath}/repair/myRepair?start=${start+10}">&raquo;</a></li>
-	</ul>
+	<c:if test="${allCount != 0}">
+		<ul class="pagination tablePage">
+		    <li><a href="${pageContext.request.contextPath}/myRepair?start=${start-10}">&laquo;</a></li>
+		    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
+		    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/myRepair?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
+		    </c:forEach>
+		    <li><a href="${pageContext.request.contextPath}/myRepair?start=${start+10}">&raquo;</a></li>
+		</ul>
+	</c:if>
 </div>
 </body>
 <script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
@@ -127,7 +129,7 @@ $(function() {
 			type: "POST",
 			datatype: "json",
 			data: $("#repairRecordForm").serializeArray(),
-			url: getRootPath() + "/repair/record/finish",
+			url: getRootPath() + "/myRepair/record/finish",
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
 				if(data != "处理失败!") {
@@ -156,7 +158,7 @@ function deleteRepairRecord(repairId) {
 		$.ajax({
 			type: "POST",
 			datatype: "json",
-			url: getRootPath() + "/repair/"+repairId+"/record/delete",
+			url: getRootPath() + "/myRepair/"+repairId+"/record/delete",
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
 				if(data == "") {

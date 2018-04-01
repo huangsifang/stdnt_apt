@@ -10,23 +10,23 @@
     <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
     <style>
     	fieldset {
-		  padding-bottom: 20px;
-		  border-bottom: 1px dashed #eee;
-		  margin-bottom: 20px;
+		  padding-bottom: 20px !important;
+		  border-bottom: 1px dashed #eee !important;
+		  margin-bottom: 20px !important;
 		}
 		fieldset.last-child,
 		fieldset:last-child {
-		  border-bottom: 0;
+		  border-bottom: 0 !important;
 		}
 		fieldset .form-group {
-		  margin-bottom: 0;
+		  margin-bottom: 0 !important;
 		}
     </style>
 </head>
 <body>
-            
+<jsp:include page="../navbar.jsp"></jsp:include>
+     
 <div style="margin:20px 50px">
-	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 
 	<div class="row">
 		<div class="col-md-offset-1 col-md-4">

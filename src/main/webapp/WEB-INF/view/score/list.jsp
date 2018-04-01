@@ -24,6 +24,7 @@
     </style>
 </head>
 <body>
+<jsp:include page="../navbar.jsp"></jsp:include>
 
 <!-- 新增得分模态框（Modal） -->
 <div class="modal fade" id="scoreModal" tabindex="-1" role="dialog" aria-labelledby="scoreModalLabel" aria-hidden="true">
@@ -69,12 +70,11 @@
 </div>
 
 <div style="margin:20px 50px">
-	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 	
 	<div class="row">
 		<shiro:hasPermission name="score:create">
 			<div class="pull-left" style="padding:20px">
-				<button class="btn btn-default" data-toggle="modal" data-target="#scoreModal">新增</button>
+				<button class="btn btn-default" data-toggle="modal" data-target="#scoreModal">打分</button>
 			</div>
 		</shiro:hasPermission>
 		

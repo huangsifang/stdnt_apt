@@ -8,6 +8,7 @@
     <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
 </head>
 <body>
+<jsp:include page="../../navbar.jsp"></jsp:include>
 
 <!-- 修改寝室费用模态框（Modal） -->
 <div class="modal fade" id="dormFeeModal" tabindex="-1" role="dialog" aria-labelledby="dormFeeModalLabel" aria-hidden="true">
@@ -86,9 +87,15 @@
 </div>
 
 <div style="margin:20px 50px">
-	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 	<button class="btn btn-default" data-toggle="modal" data-target="#dormFeeModal">修改寝室费用</button>
 	<div class="row" style="padding: 20px">
+		<c:if test="${empty bedList}">
+			<div class="panel panel-default">
+			    <div class="panel-body" style="text-align:center">
+			    	该寝室还未有任何学生
+			    </div>
+			</div>
+		</c:if>
 		<c:forEach items="${bedList}" var="bed">
 			<div class="col-sm-3">
 				<div class="panel panel-default">

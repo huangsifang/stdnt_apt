@@ -9,12 +9,12 @@
     <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
     <style type="text/css">
-    a{color:#fff}
-    a:hover{text-decoration:none;color:#fff}
+    #lookBtn a{color:#fff!important}
+    #lookBtn a:hover{text-decoration:none!important;color:#fff}
     </style>
 </head>
 <body>
-
+<jsp:include page="../navbar.jsp"></jsp:include>
 
 <!-- 假期新增修改模态框（Modal） -->
 <div class="modal fade" id="holidayModal" tabindex="-1" role="dialog" aria-labelledby="holidayModalLabel" aria-hidden="true">
@@ -42,13 +42,13 @@
 						<div class="form-group">
 							<label for="startTime" class="col-sm-3 control-label">开始时间：</label>
 							<div class="col-sm-8">
-								<input type="text" class="form-control" id="startTime" name="startTime" readonly>
+								<input type="text" class="form-control" id="startTime" name="startTime">
 					    	</div>
 						</div>
 						<div class="form-group">
 							<label for="endTime" class="col-sm-3 control-label">结束时间：</label>
 							<div class="col-sm-8">
-								<input type="text" class="form-control" id="endTime" name="endTime" readonly>
+								<input type="text" class="form-control" id="endTime" name="endTime">
 					    	</div>
 						</div>
 				    </form>
@@ -134,7 +134,6 @@
 </div>
 
 <div style="margin:20px 50px">
-	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 	<shiro:hasPermission name="holiday:create">
 		<button class="btn btn-default btn-md" data-toggle="modal" data-target="#holidayModal" onClick="createHoliday()">新增</button>
 	</shiro:hasPermission>
@@ -175,12 +174,12 @@
 	                    		<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#recordModal" type="button" onClick="holidayRecord(${holiday.holiId},'${holiday.startTime}','${holiday.endTime}')">登记</button>
 	                    	</c:if>
 	                    	<c:if test="${holiday.hasSign}">
-	                    		<button class="btn btn-primary btn-md"><a href="holiday/${holiday.holiId}/std/record">查看</a></button>
+	                    		<button class="btn btn-primary btn-md" id="lookBtn"><a href="holiday/${holiday.holiId}/std/record">查看</a></button>
 	                    	</c:if>
 	                    </shiro:hasPermission>
 	                    
 	                    <shiro:hasPermission name="record:view">
-	                    	<button class="btn btn-primary btn-md"><a href="holiday/${holiday.holiId}/apart/record">查看</a></button>
+	                    	<button class="btn btn-primary btn-md" id="lookBtn"><a href="holiday/${holiday.holiId}/apart/record">查看</a></button>
 	                    </shiro:hasPermission>
 	                </td>
 	            </tr>

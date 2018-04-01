@@ -1,13 +1,18 @@
 package com.hsf.stdntapt.controller;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,12 +35,13 @@ import com.hsf.stdntapt.service.ApartmentService;
 import com.hsf.stdntapt.service.ConsellorService;
 import com.hsf.stdntapt.service.InfoService;
 import com.hsf.stdntapt.service.RepairService;
+import com.hsf.stdntapt.service.ResourceService;
 import com.hsf.stdntapt.service.StaffService;
 import com.hsf.stdntapt.service.StudentService;
 import com.hsf.stdntapt.service.UserService;
 
 @Controller
-@RequestMapping("/uploadInfo")
+@RequestMapping("/upload")
 public class UploadInfoController {
 
 	@Resource
@@ -59,10 +65,18 @@ public class UploadInfoController {
 	@Resource
 	ConsellorService consellorService;
 
-	@RequiresRoles("admin")
-	@RequestMapping(value = "/uploadInfo")
-	public String uploadInfo() {
-		return "uploadInfo";
+	@Resource
+	ResourceService resourceService;
+
+	@RequiresPermissions("upload:create")
+	@RequestMapping(method = RequestMethod.GET)
+	public String list(Model model) {
+		String username = SecurityUtils.getSubject().getPrincipal().toString();
+		Set<String> permissions = userService.findPermissions(username);
+		List<com.hsf.stdntapt.entity.Resource> menus = resourceService.findMenus(permissions);
+		model.addAttribute("menus", menus);
+
+		return "upload/uploadInfo";
 	}
 
 	/** 接收上传的文件 */

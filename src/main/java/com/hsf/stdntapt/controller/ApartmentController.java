@@ -2,6 +2,7 @@ package com.hsf.stdntapt.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -29,6 +30,7 @@ import com.hsf.stdntapt.service.ApartmentService;
 import com.hsf.stdntapt.service.DormService;
 import com.hsf.stdntapt.service.HolidayService;
 import com.hsf.stdntapt.service.RepairService;
+import com.hsf.stdntapt.service.ResourceService;
 import com.hsf.stdntapt.service.StudentService;
 import com.hsf.stdntapt.service.UserService;
 
@@ -54,6 +56,9 @@ public class ApartmentController {
 	@Resource
 	DormService dormService;
 
+	@Resource
+	ResourceService resourceService;
+
 	@RequiresPermissions("apartment:view")
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(Model model) {
@@ -72,6 +77,10 @@ public class ApartmentController {
 			apart.setStaffs(staffs);
 		}
 		model.addAttribute("apartList", apartList);
+
+		Set<String> permissions = userService.findPermissions(username);
+		List<com.hsf.stdntapt.entity.Resource> menus = resourceService.findMenus(permissions);
+		model.addAttribute("menus", menus);
 		return "apartment/list";
 	}
 

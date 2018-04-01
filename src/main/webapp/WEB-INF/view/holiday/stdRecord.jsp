@@ -22,6 +22,8 @@
     </style>
 </head>
 <body>
+<jsp:include page="../navbar.jsp"></jsp:include>
+
 <div style="margin:20px 50px">
 	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 

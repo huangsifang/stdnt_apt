@@ -8,15 +8,21 @@
     <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
 	<style>
-		.dormBrand {
-			padding:10px;
-			border-radius:50%;
-			margin:10px;
-			background-color:#eee
+		.badge {
+			font-size: 1.5em;
+			margin: 10px;
+			background-color:#cdcdcd;
+		}
+		.badge:hover {
+			background-color:#777;
+		}
+		a:hover {
+			text-decoration: none;
 		}
 	</style>
 </head>
 <body>
+<jsp:include page="../../navbar.jsp"></jsp:include>
 
 <!-- 修改楼层寝室模态框（Modal） -->
 <div class="modal fade" id="floorModal" tabindex="-1" role="dialog" aria-labelledby="floorModalLabel" aria-hidden="true">
@@ -61,7 +67,6 @@
 </div>
 
 <div style="margin:20px 50px">
-	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 	<div class="pull-left">
 		<button class="btn btn-default" onClick="addFloor(${apartId},${floorNum})">新增一层楼</button>
 	</div>
@@ -84,7 +89,7 @@
 	                <td style="font-size:1em">
 	                	<c:forEach items="${floor.dormList}" var="dorm">
 	                		<a href="${pageContext.request.contextPath}/apartment/dorm/${dorm.id}">
-		                		<span class="dormBrand">
+		                		<span class="badge">
 		                			${dorm.dormNo}
 		                		</span>
 	                		</a>
@@ -96,7 +101,8 @@
 	</table>
 </div>
 </body>
-<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script> 
+<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
+<script src="${pageContext.request.contextPath}/public/js/jquery.form.min.js" ></script> 
 <script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
 <script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>

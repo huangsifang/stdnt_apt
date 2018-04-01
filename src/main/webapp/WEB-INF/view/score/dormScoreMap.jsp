@@ -9,9 +9,9 @@
 <title>寝室得分</title>
 </head>
 <body>
-
+	<jsp:include page="../navbar.jsp"></jsp:include>
+	
 	<div style="margin:20px 50px">
-		<div style="margin-bottom:20px">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 	
 	    <!--定义页面图表容器-->
 	    <!-- 必须制定容器的大小（height、width） -->

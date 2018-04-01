@@ -10,8 +10,9 @@
     <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
 </head>
 <body>
+<jsp:include page="../navbar.jsp"></jsp:include>
+
 <div style="margin:20px 50px">
-	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 	
 	<ul class="nav nav-tabs" id="apartUl">
 		<c:forEach items="${apartList}" var="apart">
@@ -71,13 +72,15 @@
 		<span>共${allCount}条记录，</span>
 		<span>公寓共${apartStdNum}学生</span>
 	</div>
-	<ul class="pagination tablePage">
-	    <li><a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?start=${start-10}">&laquo;</a></li>
-	    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
-	    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
-	    </c:forEach>
-	    <li><a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?start=${start+10}">&raquo;</a></li>
-	</ul>
+	<c:if test="${allCount != 0}">
+		<ul class="pagination tablePage">
+		    <li><a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?start=${start-10}">&laquo;</a></li>
+		    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
+		    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
+		    </c:forEach>
+		    <li><a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?start=${start+10}">&raquo;</a></li>
+		</ul>
+	</c:if>
 </div>
 
 </body>

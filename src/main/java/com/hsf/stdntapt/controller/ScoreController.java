@@ -2,6 +2,7 @@ package com.hsf.stdntapt.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -21,6 +22,7 @@ import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
 import com.hsf.stdntapt.service.ApartmentService;
 import com.hsf.stdntapt.service.DormService;
+import com.hsf.stdntapt.service.ResourceService;
 import com.hsf.stdntapt.service.UserService;
 
 @Controller
@@ -34,6 +36,9 @@ public class ScoreController {
 
 	@Resource
 	UserService userService;
+
+	@Resource
+	ResourceService resourceService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String scoreList(final ModelMap model) {
@@ -90,6 +95,10 @@ public class ScoreController {
 				model.addAttribute("newScoreList", newScoreList);
 			}
 			model.addAttribute("apartList", apartList);
+
+			Set<String> permissions = userService.findPermissions(username);
+			List<com.hsf.stdntapt.entity.Resource> menus = resourceService.findMenus(permissions);
+			model.addAttribute("menus", menus);
 			return "score/list";
 		}
 	}
@@ -173,6 +182,10 @@ public class ScoreController {
 		model.addAttribute("apartDormScore", apartDormScore);
 		model.addAttribute("apartDormOneDayScore", apartDormOneDayScore);
 		model.addAttribute("apartId", apartId);
+
+		Set<String> permissions = userService.findPermissions(username);
+		List<com.hsf.stdntapt.entity.Resource> menus = resourceService.findMenus(permissions);
+		model.addAttribute("menus", menus);
 		return "score/list";
 	}
 
@@ -198,6 +211,11 @@ public class ScoreController {
 		List<DormScore> oneDormScores = dormService.findOneDormScore(dormId);
 		model.addAttribute("oneDormScores", oneDormScores);
 		model.addAttribute("floorDormNo", floorDormNo);
+
+		String username = SecurityUtils.getSubject().getPrincipal().toString();
+		Set<String> permissions = userService.findPermissions(username);
+		List<com.hsf.stdntapt.entity.Resource> menus = resourceService.findMenus(permissions);
+		model.addAttribute("menus", menus);
 		return "score/dormScoreMap";
 	}
 }

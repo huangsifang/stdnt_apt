@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
@@ -12,8 +12,9 @@
 </head>
 <body>
 
+<jsp:include page="../navbar.jsp"></jsp:include>
+	
 <div style="margin:20px 50px">
-	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 	
 	<ul class="nav nav-tabs" id="roleUl">
 		<c:forEach items="${roleList}" var="role">
@@ -200,13 +201,15 @@
 	        </c:forEach>
 	    </tbody>
 	</table>
-	<ul class="pagination tablePage">
-	    <li><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${start-10}">&laquo;</a></li>
-	    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
-	    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
-	    </c:forEach>
-	    <li><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${start+10}">&raquo;</a></li>
-	</ul>
+	<c:if test="${allCount != 0}">
+		<ul class="pagination tablePage">
+		    <li><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${start-10}">&laquo;</a></li>
+		    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
+		    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
+		    </c:forEach>
+		    <li><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${start+10}">&raquo;</a></li>
+		</ul>
+	</c:if>
 </div>
 </body>
 <script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script> 

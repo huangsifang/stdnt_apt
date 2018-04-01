@@ -1,7 +1,9 @@
 package com.hsf.stdntapt.controller;
 
 import java.util.List;
+import java.util.Set;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.hsf.stdntapt.entity.Consellor;
 import com.hsf.stdntapt.entity.RepairType;
 import com.hsf.stdntapt.entity.Repairman;
+import com.hsf.stdntapt.entity.Resource;
 import com.hsf.stdntapt.entity.Role;
 import com.hsf.stdntapt.entity.Speciality;
 import com.hsf.stdntapt.entity.Staff;
@@ -23,6 +26,7 @@ import com.hsf.stdntapt.entity.User;
 import com.hsf.stdntapt.service.ClassService;
 import com.hsf.stdntapt.service.ConsellorService;
 import com.hsf.stdntapt.service.RepairService;
+import com.hsf.stdntapt.service.ResourceService;
 import com.hsf.stdntapt.service.RoleService;
 import com.hsf.stdntapt.service.SpeciService;
 import com.hsf.stdntapt.service.StaffService;
@@ -57,6 +61,9 @@ public class UserController {
 	@Autowired
 	private SpeciService speciService;
 
+	@Autowired
+	private ResourceService resourceService;
+
 	@RequiresPermissions("user:view")
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
@@ -74,6 +81,11 @@ public class UserController {
 		model.addAttribute("roleId", 1);
 		model.addAttribute("start", start);
 		model.addAttribute("allCount", userService.findOneRoleAll(1).size());
+
+		String username = SecurityUtils.getSubject().getPrincipal().toString();
+		Set<String> permissions = userService.findPermissions(username);
+		List<Resource> menus = resourceService.findMenus(permissions);
+		model.addAttribute("menus", menus);
 		return "user/list";
 	}
 
@@ -95,6 +107,11 @@ public class UserController {
 		model.addAttribute("roleId", roleId);
 		model.addAttribute("start", start);
 		model.addAttribute("allCount", userService.findOneRoleAll(roleId).size());
+
+		String username = SecurityUtils.getSubject().getPrincipal().toString();
+		Set<String> permissions = userService.findPermissions(username);
+		List<Resource> menus = resourceService.findMenus(permissions);
+		model.addAttribute("menus", menus);
 		return "user/list";
 	}
 

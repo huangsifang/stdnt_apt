@@ -10,6 +10,7 @@
     <link href="${pageContext.request.contextPath}/public/css/uploadForm.css" rel="stylesheet">
 </head>
 <body>
+<jsp:include page="../navbar.jsp"></jsp:include>
 
 <!-- 修改公寓模态框（Modal） -->
 <div class="modal fade" id="apartModal" tabindex="-1" role="dialog" aria-labelledby="apartModalLabel" aria-hidden="true">
@@ -107,7 +108,6 @@
 </div>
 
 <div style="margin:20px 50px">
-	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 	<shiro:hasPermission name="apartment:create">
 		<div class="pull-left" style="padding:20px">
 			<button class="btn btn-default" type="button" data-toggle="modal" data-target="#apartAddModal">公寓新增</button>

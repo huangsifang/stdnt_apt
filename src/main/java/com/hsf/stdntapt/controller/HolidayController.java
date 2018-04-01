@@ -22,6 +22,7 @@ import com.hsf.stdntapt.entity.HoliRecord;
 import com.hsf.stdntapt.entity.Holiday;
 import com.hsf.stdntapt.service.ApartmentService;
 import com.hsf.stdntapt.service.HolidayService;
+import com.hsf.stdntapt.service.ResourceService;
 import com.hsf.stdntapt.service.StudentService;
 import com.hsf.stdntapt.service.UserService;
 
@@ -40,6 +41,9 @@ public class HolidayController {
 
 	@Resource
 	StudentService studentService;
+
+	@Resource
+	ResourceService resourceService;
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String holidayList(final ModelMap model) {
@@ -65,6 +69,10 @@ public class HolidayController {
 			}
 		}
 		model.addAttribute("holidayList", holidayList);
+
+		Set<String> permissions = userService.findPermissions(username);
+		List<com.hsf.stdntapt.entity.Resource> menus = resourceService.findMenus(permissions);
+		model.addAttribute("menus", menus);
 		return "holiday/list";
 	}
 
@@ -210,6 +218,10 @@ public class HolidayController {
 		model.addAttribute("apartId", 1);
 		model.addAttribute("start", start);
 		model.addAttribute("allCount", holidayService.findApartAllRecords(holiId, apartId).size());
+
+		Set<String> permissions = userService.findPermissions(username);
+		List<com.hsf.stdntapt.entity.Resource> menus = resourceService.findMenus(permissions);
+		model.addAttribute("menus", menus);
 		return "holiday/record";
 	}
 
@@ -253,6 +265,10 @@ public class HolidayController {
 		model.addAttribute("apartId", apartId);
 		model.addAttribute("start", start);
 		model.addAttribute("allCount", holidayService.findApartAllRecords(holiId, apartId).size());
+
+		Set<String> permissions = userService.findPermissions(username);
+		List<com.hsf.stdntapt.entity.Resource> menus = resourceService.findMenus(permissions);
+		model.addAttribute("menus", menus);
 		return "holiday/record";
 	}
 
