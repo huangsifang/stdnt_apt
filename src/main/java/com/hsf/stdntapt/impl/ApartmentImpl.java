@@ -205,7 +205,7 @@ public class ApartmentImpl implements ApartmentService {
 	}
 
 	@Override
-	public int deleteBed(int bedId) {
-		return apartmentDao.deleteBed(bedId);
+	public int deleteBed(int dormId, int bedId) {
+		return apartmentDao.deleteBed(dormId, bedId);
 	}
 }

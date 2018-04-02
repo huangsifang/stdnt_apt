@@ -83,5 +83,5 @@ public interface ApartmentService {
 
 	public int deleteDorm(int dormId);
 
-	public int deleteBed(int bedId);
+	public int deleteBed(int dormId, int bedId);
 }

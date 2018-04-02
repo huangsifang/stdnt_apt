@@ -87,7 +87,9 @@
 </div>
 
 <div style="margin:20px 50px">
+	<button class="btn btn-default" onClick="addBed(${dormId})">新增床位</button>
 	<button class="btn btn-default" data-toggle="modal" data-target="#dormFeeModal">修改寝室费用</button>
+	<button class="btn btn-danger" onClick="deleteDorm(${dormId})">删除寝室</button>
 	<div class="row" style="padding: 20px">
 		<c:if test="${empty bedList}">
 			<div class="panel panel-default">
@@ -115,14 +117,22 @@
 	                   <div class="form-group row">
 	                      <label class="col-sm-4 control-label">姓名：</label>
 	                      <div class="col-sm-8">
-	                         <span>${bed.stdName}</span>
+		                      <div class="pull-left">
+		                         <span>${bed.stdName}&nbsp;</span>
+		                      </div>
+	                         <c:if test="${bed.stdId == dorm.leaderId && bed.stdId != 1}">
+	                         	<div class="pull-left" style="margin-top:5px">
+	                      	 		<span class="label label-info">寝室长</span>
+	                      	 	</div>
+	                      	 </c:if>
 	                      </div>
 	                   </div>
 	                   <div class="form-group row">
 	                      <div class="col-sm-8 col-sm-offset-4">
-	                         <button class="btn btn-default" type="button" data-toggle="modal" data-target="#bedStdModal" onClick="changeBedStd(${bed.bedId}, ${bed.dormId}, ${bed.stdId}, '${bed.stdName}')">修改</button>
+	                         <button class="btn btn-default" type="button" data-toggle="modal" data-target="#bedStdModal" onClick="changeBedStd(${bed.bedId}, ${bed.dormId}, ${bed.stdId}, '${bed.stdName}')"><i class="fa fa-edit"></i></button>
+	                         <button class="btn btn-danger" onClick="deleteBed(${bed.bedId}, ${bed.dormId})"><i class="fa fa-trash-o"></i></button>
 	                         <c:if test="${bed.stdId != dorm.leaderId && bed.stdId != 1}">
-	                         	<button class="btn btn-default" onClick="updateDormLeader(${bed.dormId}, ${bed.stdId}, '${bed.stdName}')">设为寝室长</button>
+	                         	<button style="margin-top:5px" class="btn btn-default" onClick="updateDormLeader(${bed.dormId}, ${bed.stdId}, '${bed.stdName}')">设为寝室长</button>
 	                      	 </c:if>
 	                      </div>
 	                   </div>
@@ -171,6 +181,69 @@
 						});
 					} else if(data == 'error') {
 						swal("失败！", "修改失败", "error");
+					}
+				},
+				error: function() {
+					swal("失败！", "发生错误", "error");
+		        }
+			});
+		});
+	}
+	
+	function addBed(dormId) {
+		$.ajax({
+			type: "POST",
+			datatype: "json",
+			url: "bed/create",
+			data: {"dormId":dormId},
+			contentType: "application/x-www-form-urlencoded",
+			success: function(data) {
+				if(data == 'success') {
+					swal({ 
+						title: "成功！", 
+						text: "新增成功", 
+						type: "success"
+					},
+					function(){
+						window.location.reload();
+					});
+				} else if(data == 'error') {
+					swal("失败！", "新增失败", "error");
+				}
+			},
+			error: function() {
+				swal("失败！", "发生错误", "error");
+	        }
+		});
+	}
+	
+	function deleteBed(bedId, dormId) {
+		swal({ 
+			title: "确定删除该床位吗", 
+			text: "同时将删除该床位关联的学生", 
+			type: "info", 
+			showCancelButton: true, 
+			closeOnConfirm: false
+		},
+		function(){ 
+			$.ajax({
+				type: "POST",
+				datatype: "json",
+				url: "bed/delete",
+				data: {"dormId":dormId, "bedId":bedId},
+				contentType: "application/x-www-form-urlencoded",
+				success: function(data) {
+					if(data == 'success') {
+						swal({ 
+							title: "成功！", 
+							text: "删除成功", 
+							type: "success"
+						},
+						function(){
+							window.location.reload();
+						});
+					} else if(data == 'error') {
+						swal("失败！", "删除失败", "error");
 					}
 				},
 				error: function() {
@@ -268,6 +341,47 @@
 			});
 		});
     });
+	
+	function deleteDorm(dormId) {
+		swal({ 
+			title: "确定删除该寝室吗？", 
+			text: "请确定该公寓下没有任何关联", 
+			type: "info", 
+			showCancelButton: true, 
+			closeOnConfirm: false
+		},
+		function(){
+			$.ajax({
+				type: "POST",
+				datatype: "json",
+				url: dormId+"/delete",
+				contentType: "application/x-www-form-urlencoded",
+				success: function(data) {
+					if(data == 'errorScore') {
+						swal("失败！", "该寝室下存在关联寝室得分，请先删除联系!", "warning");
+					} else if(data == 'errorRepair') {
+						swal("失败！", "该寝室下存在关联维修，请先删除联系!", "warning");
+					} else if(data == 'errorBed') {
+						swal("失败！", "该寝室下存在关联学生，请先删除联系!", "warning");
+					} else if(data =='success') {
+						swal({ 
+							title: "成功！", 
+							text: "删除成功", 
+							type: "success"
+						},
+						function(){
+							window.location = getRootPath() + "/apartment/"+${apartId}+"/floor";
+						});
+					} else if(data == 'error') {
+						swal("失败！", "删除失败", "error");
+					}
+				},
+				error: function() {
+					swal("错误！", "发生错误", "error");
+		        }
+			});
+		});
+	}
 	
 	function getRootPath() {//获得根目录
 		var strFullPath = window.document.location.href;

@@ -90,16 +90,16 @@
 	                      	<label class="col-sm-4 control-label">状态：</label>
 	                      	<div class="col-sm-8">
 								<c:if test="${repair.state == 0}">
-				                		<span>未接单  </span>
+				                		<span><span class="label label-warning">未接单 </span></span>
 				                		<shiro:hasPermission name="repair:delete"> 
-											<button class="btn btn-danger" onClick="deleteRepair(${repair.id})">取消订单</button>
+											<button style="margin-left:5px" class="btn btn-danger" onClick="deleteRepair(${repair.id})">取消订单</button>
 										</shiro:hasPermission>
 				                </c:if>
 				                <c:if test="${repair.state == 1}">
-				                	<span>已接单</span>
+				                	<span><span class="label label-info">已接单</span></span>
 				                </c:if>
 				                <c:if test="${repair.state == 2}">
-				                	<span>已结束</span>
+				                	<span><span class="label label-success">已结束</span></span>
 				                </c:if>
 	                      	</div>
 	                   	</div>

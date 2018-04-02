@@ -86,5 +86,5 @@ public interface ApartmentDao {
 
 	public int deleteDorm(@Param("dormId") int dormId);
 
-	public int deleteBed(@Param("bedId") int bedId);
+	public int deleteBed(@Param("dormId") int dormId, @Param("bedId") int bedId);
 }

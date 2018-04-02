@@ -243,8 +243,25 @@
 				apartId = $("#apartIdOther").val();
 			}
 			var floorDormId = $("#floorDormId").val();
-			$("#dormFindForm").attr("action", getRootPath()+"/score/"+apartId+"/dorm/"+floorDormId);
-			$("#dormFindForm").submit();
+			$.ajax({
+				type: "GET",
+				datatype: "text",
+				url: "apartment/"+apartId+"/floorDormId/"+floorDormId+"/check",
+				contentType: "application/x-www-form-urlencoded",
+				success: function(data) {
+					if(data == 'errorFloor') {
+						swal("失败！", "未找到对应楼层", "warning");
+					} else if(data == 'errorDorm') {
+						swal("成功！", "未找到对应寝室", "warning");
+					} else if(data == 'success') {
+						$("#dormFindForm").attr("action", getRootPath()+"/score/"+apartId+"/dorm/"+floorDormId);
+						$("#dormFindForm").submit();
+					}
+				},
+				error: function() {
+					swal("错误！", "发生错误", "error");
+		        }
+			});
 		});
 	});
 	function getRootPath() {//获得根目录

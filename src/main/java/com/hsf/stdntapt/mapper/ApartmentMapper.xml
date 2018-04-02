@@ -192,6 +192,6 @@
 		delete from dormitory where id=#{dormId}
 	</delete>
 	<delete id="deleteBed" parameterType="int">
-		delete from bed where bed_id=#{bedId}
+		delete from bed where bed_id=#{bedId} and dorm_id=#{dormId}
 	</delete>
 </mapper>

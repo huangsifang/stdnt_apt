@@ -282,20 +282,10 @@ public class ScoreController {
 			@PathVariable("apartId") int apartId, @PathVariable("floorDormNo") int floorDormNo, final ModelMap model) {
 		int floorNo = floorDormNo / 100;
 		int dormNo = floorDormNo % 100;
-		int floorId = 0;
-		int dormId = 0;
 		Floor floor = apartmentService.findFloorByApartIdFloorNo(apartId, floorNo);
-		if (floor != null) {
-			floorId = floor.getId();
-		} else {
-			model.addAttribute("msg", "未找到对应楼层");
-		}
+		int floorId = floor.getId();
 		Dormitory dorm = apartmentService.findByDormNoFloorId(dormNo, floorId);
-		if (dorm != null) {
-			dormId = dorm.getId();
-		} else {
-			model.addAttribute("msg", "未找到对应寝室");
-		}
+		int dormId = dorm.getId();
 		List<DormScore> oneDormScores = dormService.findOneDormScoreByPage(start, size, dormId);
 		for (DormScore score : oneDormScores) {
 			Staff staff = staffService.findOneStaff(score.getStaffId());

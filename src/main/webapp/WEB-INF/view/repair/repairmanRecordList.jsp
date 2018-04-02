@@ -54,6 +54,7 @@
 	            <th>接单时间</th>
 	            <th>维修时间</th>
 	            <th>状态</th>
+	            <th>操作</th>
 	        </tr>
 	    </thead>
 	    <tbody>
@@ -79,14 +80,19 @@
 	                </td>
 	                <c:if test="${record.state == 1}">
 	                	<td>
-		                	已接单  
-		                	<button class="btn btn-primary" data-toggle="modal" data-target="#repairRecordModal" type="button" onClick="finishOrder(${record.repairId})">确认已维修</button>
-		                	<button class="btn btn-danger" onClick="deleteRepairRecord(${record.repairId})">取消订单</button>
+		                	<span class="label label-info">已接单 </span>
 	                	</td>
 	                </c:if>
 	                <c:if test="${record.state == 2}">
-	                	<td>已结束</td>
+	                	<td><span class="label label-default">已结束</span></td>
 	                </c:if>
+                	<td>
+                		<c:if test="${record.state == 1}">
+	                		<button style="margin-left:5px" class="btn btn-primary" data-toggle="modal" data-target="#repairRecordModal" type="button" onClick="finishOrder(${record.repairId})"><i class="fa fa-check-square-o"></i></button>
+		                	<button class="btn btn-danger" onClick="deleteRepairRecord(${record.repairId})"><i class="fa fa-trash-o"></i></button>
+	                	</c:if>
+                	</td>
+	                
 	            </tr>
 	        </c:forEach>
 	    </tbody>

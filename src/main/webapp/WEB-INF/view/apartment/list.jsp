@@ -109,20 +109,38 @@
 
 <div style="margin:20px 50px">
 	<shiro:hasPermission name="apartment:create">
-		<div class="pull-left" style="padding:20px">
-			<button class="btn btn-default" type="button" data-toggle="modal" data-target="#apartAddModal">公寓新增</button>
+		<div class="row">
+			<div class="pull-left" style="padding:20px">
+				<button class="btn btn-default" type="button" data-toggle="modal" data-target="#apartAddModal">公寓新增</button>
+			</div>
+		    <form action="${pageContext.request.contextPath}/upload/uploadInfoFromType.do" method="post" name="formApart" id="formApart" onsubmit="return validate(formApart)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
+			     导入公寓信息： 
+				<a href="javascript:;" class="file">选择文件
+				    <input type="file" name="filename" id="importApartFile" accept="xlsx" onchange="importFileFun(importApartFile, apartFileName)"/>
+				</a>
+				<input class="fileName" id="apartFileName" value="未选择文件" disabled/>
+				<input type="hidden" name="filetype" value="apartment"/>
+				<input type="submit" name="Submit" value="确定" class="btn btn-primary importFileBtn"/> 
+				<input type="reset" name="Submit2" value="重置" class="btn btn-default importFileBtn"/>
+			</form>
 		</div>
-	    <form action="${pageContext.request.contextPath}/upload/uploadInfoFromType.do" method="post" name="formApart" id="formApart" onsubmit="return validate(formApart)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
-		     导入公寓信息： 
-			<a href="javascript:;" class="file">选择文件
-			    <input type="file" name="filename" id="importApartFile" accept="xlsx" onchange="importFileFun(importApartFile, apartFileName)"/>
-			</a>
-			<input class="fileName" id="apartFileName" value="未选择文件" disabled/>
-			<input type="hidden" name="filetype" value="apartment"/>
-			<input type="submit" name="Submit" value="确定" class="btn btn-primary importFileBtn"/> 
-			<input type="reset" name="Submit2" value="重置" class="btn btn-default importFileBtn"/>
-		</form>
 	</shiro:hasPermission>
+	
+	<form id="dormFindForm" method="get">
+		<div class="row">
+			<div class="col-sm-4">
+				<label for="apartId" class="control-label">公寓号：</label>
+				<input class="form-control" type="number" id="findApartId" />
+			</div>
+			<div class="col-sm-4">
+				<label for="apartId" class="control-label">寝室号：</label>
+				<input class="form-control" type="number" id="findFloorDormId" />
+			</div>
+			<div class="col-sm-4" style="padding-top:25px">
+				<button class="btn btn-default" type="button" id="dormFindBtn">查看</button>
+			</div>
+		</div>
+	</form>
 	
 	<table class="table">
 	    <thead>
@@ -139,7 +157,7 @@
 	        <c:forEach items="${apartList}" var="apart">
 	            <tr>
 	                <td>${apart.apartId}</td>
-	                <td>${apart.apartName}</td>
+	                <td><a href="apartment/${apart.apartId}/floor">${apart.apartName}</a></td>
 	                <td><a href="apartment/${apart.apartId}/floor">${apart.floorNum}</a></td>
 	                <td>${apart.dormNum}</td>
 	                <td>
@@ -163,11 +181,36 @@
 </div>
 </body>
 <script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script> 
+<script src="${pageContext.request.contextPath}/public/js/jquery.form.min.js" ></script>
 <script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
 <script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 	var staffNum = 0;
 	$(function() {
+		$("#dormFindBtn").click(function() {
+			var apartId = $("#findApartId").val();
+			var floorDormId = $("#findFloorDormId").val();
+			$.ajax({
+				type: "GET",
+				datatype: "text",
+				url: "apartment/"+apartId+"/floorDormId/"+floorDormId+"/check",
+				contentType: "application/x-www-form-urlencoded",
+				success: function(data) {
+					if(data == 'errorFloor') {
+						swal("失败！", "未找到对应楼层", "warning");
+					} else if(data == 'errorDorm') {
+						swal("成功！", "未找到对应寝室", "warning");
+					} else if(data == 'success') {
+						$("#dormFindForm").attr("action", getRootPath()+"/apartment/"+apartId+"/floorDormId/"+floorDormId);
+						$("#dormFindForm").submit();
+					}
+				},
+				error: function() {
+					swal("错误！", "发生错误", "error");
+		        }
+			});
+		});
+		
 		$(".uploadForm").ajaxForm({
 			beforeSubmit: function(formData, jqForm, options) {
 	            return true; 
@@ -261,55 +304,73 @@
 			var index = staffs[i].indexOf(':');
 			var staffId = staffs[i].slice(0, index);
 			var staffName = staffs[i].slice(index+1, staffs[i].length);
-			$("#staffInfo").append("<div style='margin-bottom:20px'><div class='col-sm-6'><input class='form-control' type='number' name='staffId' id='staffId"+i+"' onChange='changeStaff("+i+")' value="+staffId+"></div><span id='staffName"+i+"'>"+staffName+"</span>&nbsp;&nbsp;<button class='btn btn-default' type='button' onClick='deleteStaff("+apartId+","+staffId+")'>删除</button></div>");
+			$("#staffInfo").append("<div style='margin-bottom:20px'><div class='col-sm-6'><input class='form-control' type='number' name='staffId' id='staffId"+i+"' onChange='changeStaff("+i+")' value="+staffId+"></div><span id='staffName"+i+"'>"+staffName+"</span>&nbsp;&nbsp;<button class='btn btn-danger' type='button' onClick='deleteStaff("+apartId+","+staffId+")'>删除</button></div>");
 		}
 	}
 	function deleteApart(apartId) {
-		$.ajax({
-			type: "POST",
-			datatype: "json",
-			url: "apartment/"+apartId+"/delete",
-			contentType: "application/x-www-form-urlencoded",
-			success: function(data) {
-				if(data == 'errorStaff') {
-					swal("失败！", "该公寓下存在关联管理员，请先删除联系!", "warning");
-				} else if(data == 'errorScore') {
-					swal("失败！", "该公寓下存在关联寝室得分，请先删除联系!", "warning");
-				} else if(data == 'errorHoliday') {
-					swal("失败！", "该公寓下存在关联假期记录，请先删除联系!", "warning");
-				} else if(data == 'errorRepair') {
-					swal("失败！", "该公寓下存在关联维修，请先删除联系!", "warning");
-				} else if(data == 'errorBed') {
-					swal("失败！", "该公寓下存在关联学生，请先删除联系!", "warning");
-				} else if(data =='success') {
-					swal("成功！", "删除成功", "success");
-				} else if(data == 'error') {
-					swal("失败！", "删除失败", "error");
-				}
-			},
-			error: function() {
-				swal("错误！", "发生错误", "error");
-	        }
+		swal({ 
+			title: "确定删除该公寓吗？", 
+			text: "请确定该公寓下没有任何关联", 
+			type: "info", 
+			showCancelButton: true, 
+			closeOnConfirm: false
+		},
+		function(){
+			$.ajax({
+				type: "POST",
+				datatype: "json",
+				url: "apartment/"+apartId+"/delete",
+				contentType: "application/x-www-form-urlencoded",
+				success: function(data) {
+					if(data == 'errorStaff') {
+						swal("失败！", "该公寓下存在关联管理员，请先删除联系!", "warning");
+					} else if(data == 'errorScore') {
+						swal("失败！", "该公寓下存在关联寝室得分，请先删除联系!", "warning");
+					} else if(data == 'errorHoliday') {
+						swal("失败！", "该公寓下存在关联假期记录，请先删除联系!", "warning");
+					} else if(data == 'errorRepair') {
+						swal("失败！", "该公寓下存在关联维修，请先删除联系!", "warning");
+					} else if(data == 'errorBed') {
+						swal("失败！", "该公寓下存在关联学生，请先删除联系!", "warning");
+					} else if(data =='success') {
+						swal("成功！", "删除成功", "success");
+					} else if(data == 'error') {
+						swal("失败！", "删除失败", "error");
+					}
+				},
+				error: function() {
+					swal("错误！", "发生错误", "error");
+		        }
+			});
 		});
 	}
 	function deleteStaff(apartId, staffId) {
-		$.ajax({
-			type: "POST",
-			datatype: "json",
-			url: "apartment/staff/delete",
-			data: {apartId: apartId, staffId: staffId},
-			contentType: "application/x-www-form-urlencoded",
-			success: function(data) {
-				if(data == 'success') {
-					swal("成功！", "删除成功", "success");
-					$('#apartModal').modal('hide');
-				} else {
-					swal("失败！", "删除失败", "error");
-				}
-			},
-			error: function() {
-				swal("错误！", "发生错误", "error");
-	        }
+		swal({ 
+			title: "确定将该管理员从该公寓下删除吗？", 
+			text: "删除后该管理员对该公寓没有权限", 
+			type: "info", 
+			showCancelButton: true, 
+			closeOnConfirm: false
+		},
+		function(){
+			$.ajax({
+				type: "POST",
+				datatype: "json",
+				url: "apartment/staff/delete",
+				data: {apartId: apartId, staffId: staffId},
+				contentType: "application/x-www-form-urlencoded",
+				success: function(data) {
+					if(data == 'success') {
+						swal("成功！", "删除成功", "success");
+						$('#apartModal').modal('hide');
+					} else {
+						swal("失败！", "删除失败", "error");
+					}
+				},
+				error: function() {
+					swal("错误！", "发生错误", "error");
+		        }
+			});
 		});
 	}
 	function getRootPath() {//获得根目录

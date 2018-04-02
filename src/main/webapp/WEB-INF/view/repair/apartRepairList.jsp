@@ -45,16 +45,16 @@
 	                <td><fmt:formatDate value="${repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></td>
 	                <td>${repair.remark}</td>
 	                <c:if test="${repair.state == 0}">
-	                	<td>未接单</td>
+	                	<td><span class="label label-warning">未接单</span></td>
 	                </c:if>
 	                <c:if test="${repair.state == 1}">
-	                	<td>已接单</td>
+	                	<td><span class="label label-info">已接单</span></td>
 	                </c:if>
 	                <c:if test="${repair.state == 2}">
-	                	<td>已结束</td>
+	                	<td><span class="label label-success">已结束</span></td>
 	                </c:if>
 	                <c:if test="${repair.state == 3}">
-	                	<td>已取消</td>
+	                	<td><span class="label label-default">已取消</span></td>
 	                </c:if>
 	                <td>
 	                	<c:if test="${repair.state != 3}">

@@ -181,7 +181,7 @@ public class ApartmentController {
 							flag = true;
 							break;
 						}
-						apartmentService.deleteBed(bed.getBedId());
+						apartmentService.deleteBed(dorm.getId(), bed.getBedId());
 					}
 					if (flag) {
 						break;
@@ -195,6 +195,52 @@ public class ApartmentController {
 			}
 			if (!flag) {
 				apartmentService.deleteApartment(apartId);
+				msg = "success";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "error";
+		}
+		return msg;
+	}
+
+	@RequiresPermissions("apartment:delete")
+	@RequestMapping(value = "/{apartId}/floor/{floorId}/delete", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String deleteFloor(@PathVariable("apartId") int apartId, @PathVariable("floorId") int floorId) {
+		String msg = "";
+		boolean flag = false;
+		try {
+			List<Dormitory> dormList = apartmentService.findFloorDormAll(floorId);
+			for (Dormitory dorm : dormList) {
+				List<Repair> repairList = repairService.findDormRepairs(dorm.getId());
+				if (!repairList.isEmpty()) {
+					msg = "errorRepair";
+					flag = true;
+					break;
+				}
+				List<DormScore> scoreList = dormService.findOneDormScore(dorm.getId());
+				if (!scoreList.isEmpty()) {
+					msg = "errorScore";
+					flag = true;
+					break;
+				}
+				List<Bed> bedList = apartmentService.findBedsFromDorm(dorm.getId());
+				for (Bed bed : bedList) {
+					if (bed.getStdId() != 1) {
+						msg = "errorBed";
+						flag = true;
+						break;
+					}
+					apartmentService.deleteBed(dorm.getId(), bed.getBedId());
+				}
+				if (flag) {
+					break;
+				}
+				apartmentService.deleteDorm(dorm.getId());
+			}
+			if (!flag) {
+				apartmentService.deleteFloor(floorId);
 				msg = "success";
 			}
 		} catch (Exception e) {
@@ -259,7 +305,6 @@ public class ApartmentController {
 						dorm.setFee(dormFee);
 						apartmentService.updateDorm(dorm);
 					} else {
-						msg = "success";
 						break;
 					}
 				}
@@ -274,6 +319,7 @@ public class ApartmentController {
 					bed.setStdId(1);
 					apartmentService.createBed(bed);
 				}
+				msg = "success";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -283,8 +329,8 @@ public class ApartmentController {
 	}
 
 	@RequiresPermissions("apartment:view")
-	@RequestMapping(value = "dorm/{dormId}", method = RequestMethod.GET)
-	public String dormDetail(@PathVariable("dormId") int dormId, Model model) {
+	@RequestMapping(value = "{apartId}/dorm/{dormId}", method = RequestMethod.GET)
+	public String dormDetail(@PathVariable("apartId") int apartId, @PathVariable("dormId") int dormId, Model model) {
 		Dormitory dorm = apartmentService.findOneDorm(dormId);
 		Floor floor = apartmentService.findOneFloor(dorm.getFloorId());
 		dorm.setFloorNo(floor.getFloorNo());
@@ -301,13 +347,98 @@ public class ApartmentController {
 			}
 		}
 		model.addAttribute("bedList", bedList);
+		model.addAttribute("apartId", apartId);
+		model.addAttribute("dormId", dormId);
+		return "apartment/floor/dorm";
+	}
+
+	@RequiresPermissions("apartment:delete")
+	@RequestMapping(value = "{apartId}/dorm/{dormId}/delete", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String deleteDorm(@PathVariable("apartId") int apartId, @PathVariable("dormId") int dormId) {
+		String msg = "";
+		boolean flag = false;
+		try {
+			List<DormScore> scoreList = dormService.findOneDormScore(dormId);
+			if (!scoreList.isEmpty()) {
+				msg = "errorScore";
+				return msg;
+			}
+
+			List<Repair> repairList = repairService.findDormRepairs(dormId);
+			if (!repairList.isEmpty()) {
+				msg = "errorRepair";
+				return msg;
+			}
+			List<Bed> bedList = apartmentService.findBedsFromDorm(dormId);
+			for (Bed bed : bedList) {
+				if (bed.getStdId() != 1) {
+					msg = "errorBed";
+					flag = true;
+					break;
+				}
+				apartmentService.deleteBed(dormId, bed.getBedId());
+			}
+			if (!flag) {
+				apartmentService.deleteDorm(dormId);
+				msg = "success";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "error";
+		}
+		return msg;
+	}
+
+	@RequiresPermissions("apartment:view")
+	@RequestMapping(value = "{apartId}/floorDormId/{floorDormId}/check", method = RequestMethod.GET, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String checkDormDetail(@PathVariable("apartId") int apartId, @PathVariable("floorDormId") int floorDormId,
+			Model model) {
+		int floorNo = floorDormId / 100;
+		int dormNo = floorDormId % 100;
+		Floor floor = apartmentService.findFloorByApartIdFloorNo(apartId, floorNo);
+		int floorId = 0;
+		if (floor != null) {
+			floorId = floor.getId();
+		} else {
+			return "errorFloor";
+		}
+		Dormitory dorm = apartmentService.findByDormNoFloorId(dormNo, floorId);
+		if (dorm == null) {
+			return "errorDorm";
+		}
+		return "success";
+	}
+
+	@RequiresPermissions("apartment:view")
+	@RequestMapping(value = "{apartId}/floorDormId/{floorDormId}", method = RequestMethod.GET)
+	public String findDormDetail(@PathVariable("apartId") int apartId, @PathVariable("floorDormId") int floorDormId,
+			Model model) {
+		int floorNo = floorDormId / 100;
+		int dormNo = floorDormId % 100;
+		Floor floor = apartmentService.findFloorByApartIdFloorNo(apartId, floorNo);
+		Dormitory dorm = apartmentService.findByDormNoFloorId(dormNo, floor.getId());
+		dorm.setFloorNo(floorNo);
+		model.addAttribute("dorm", dorm);
+		List<Bed> bedList = apartmentService.findBedsFromDorm(dorm.getId());
+		for (Bed bed : bedList) {
+			if (bed.getStdId() > 0) {
+				Student std = studentService.findOneStd(bed.getStdId());
+				if (std != null) {
+					bed.setStdName(std.getStdName());
+				}
+			}
+		}
+		model.addAttribute("bedList", bedList);
 		return "apartment/floor/dorm";
 	}
 
 	@RequiresPermissions("apartment:update")
-	@RequestMapping(value = "/dorm/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@RequestMapping(value = "{apartId}/dorm/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
-	public String updateDorm(@RequestParam("dormId") int dormId, @RequestParam("fee") BigDecimal fee) {
+	public String updateDorm(@PathVariable("apartId") int apartId, @RequestParam("dormId") int dormId,
+			@RequestParam("fee") BigDecimal fee) {
 		String msg = "";
 		try {
 			Dormitory dorm = new Dormitory();
@@ -339,10 +470,10 @@ public class ApartmentController {
 	}
 
 	@RequiresPermissions("apartment:update")
-	@RequestMapping(value = "/dorm/student/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@RequestMapping(value = "{apartId}/dorm/student/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
-	public String updateDormStd(@RequestParam("bedId") int bedId, @RequestParam("dormId") int dormId,
-			@RequestParam("stdId") int stdId) {
+	public String updateDormStd(@PathVariable("apartId") int apartId, @RequestParam("bedId") int bedId,
+			@RequestParam("dormId") int dormId, @RequestParam("stdId") int stdId) {
 		String msg = "";
 		try {
 			Bed bed = new Bed(bedId, dormId);
@@ -357,12 +488,58 @@ public class ApartmentController {
 	}
 
 	@RequiresPermissions("apartment:update")
-	@RequestMapping(value = "/dorm/leader/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@RequestMapping(value = "{apartId}/dorm/leader/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
-	public String updateDormLeader(@RequestParam("dormId") int dormId, @RequestParam("stdId") int stdId) {
+	public String updateDormLeader(@PathVariable("apartId") int apartId, @RequestParam("dormId") int dormId,
+			@RequestParam("stdId") int stdId) {
 		String msg = "";
 		try {
 			apartmentService.updateDormLeader(dormId, stdId);
+			msg = "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "error";
+		}
+		return msg;
+	}
+
+	@RequiresPermissions("apartment:create")
+	@RequestMapping(value = "{apartId}/dorm/bed/create", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String addBed(@PathVariable("apartId") int apartId, @RequestParam("dormId") int dormId) {
+		String msg = "";
+		try {
+			List<Bed> bedList = apartmentService.findBedsFromDorm(dormId);
+			int i = 0;
+			for (i = 0; i < bedList.size(); i++) {
+				if (bedList.get(i).getBedId() != i + 1) {
+					Bed bed = new Bed(i + 1, dormId);
+					bed.setStdId(1);
+					apartmentService.createBed(bed);
+					break;
+				}
+			}
+			if (i >= bedList.size()) {
+				Bed bed = new Bed(i + 1, dormId);
+				bed.setStdId(1);
+				apartmentService.createBed(bed);
+			}
+			msg = "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "error";
+		}
+		return msg;
+	}
+
+	@RequiresPermissions("apartment:delete")
+	@RequestMapping(value = "{apartId}/dorm/bed/delete", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String deleteBed(@PathVariable("apartId") int apartId, @RequestParam("dormId") int dormId,
+			@RequestParam("bedId") int bedId) {
+		String msg = "";
+		try {
+			apartmentService.deleteBed(dormId, bedId);
 			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();

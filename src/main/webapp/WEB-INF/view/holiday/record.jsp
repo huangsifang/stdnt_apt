@@ -52,10 +52,10 @@
 	                <td>
 	                	<c:if test="${record.inHome}">
 		                	<c:if test="${record.hasSign}">
-								<span class="badge" style="background-color:#52a4db">已返校</span>
+								<span class="label label-primary">已返校</span>
 							</c:if>
 							<c:if test="${!record.hasSign}">
-								<span class="badge" style="background-color:#ee9e7e">未返校</span>
+								<span class="label label-warning">未返校</span>
 							</c:if>
 						</c:if>
 	                </td>

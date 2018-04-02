@@ -29,6 +29,7 @@
 	            <th>申请时间</th>
 	            <th>备注</th>
 	            <th>状态</th>
+	            <th>操作</th>
 	        </tr>
 	    </thead>
 	    <tbody>
@@ -46,14 +47,19 @@
 	                <td><fmt:formatDate value="${repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></td>
 	                <td>${repair.remark}</td>
 	                <c:if test="${repair.state == 0}">
-	                	<td>未接单  <button class="btn btn-default" onClick="takeOrder(${repair.id},${repair.repairType})">接单</button></td>
+	                	<td><span class="label label-info">未接单 </span></td>
 	                </c:if>
 	                <c:if test="${repair.state == 1}">
-	                	<td>已接单</td>
+	                	<td><span class="label label-default">已接单</span></td>
 	                </c:if>
 	                <c:if test="${repair.state == 2}">
-	                	<td>已结束</td>
+	                	<td><span class="label label-default">已结束</span></td>
 	                </c:if>
+	                <td>
+	                	<c:if test="${repair.state == 0}">
+	                		<button class="btn btn-default" style="margin-left:10px" onClick="takeOrder(${repair.id},${repair.repairType})">接单</button>
+	                	</c:if>
+	                </td>
 	            </tr>
 	        </c:forEach>
 	    </tbody>

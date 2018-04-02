@@ -9,9 +9,9 @@
     <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
 	<style>
 		.badge {
-			font-size: 1.5em;
+			font-size: 1.2em !important;
 			margin: 10px;
-			background-color:#cdcdcd;
+			background-color:#cdcdcd !important;
 		}
 		.badge:hover {
 			background-color:#777;
@@ -84,11 +84,12 @@
 	                <td>${floor.floorNo}</td>
 	                <td>
 	                	<span>${floor.dormNum}</span>
-	                	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#floorModal" onClick="showNumForm(${floor.id},${floor.dormNum})">修改</button>
+	                	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#floorModal" onClick="showNumForm(${floor.id},${floor.dormNum})"><i class="fa fa-edit"></i></button>
+	                	<button type="button" class="btn btn-danger" onClick="deleteFloor(${apartId}, ${floor.id})"><i class="fa fa-trash-o"></i></button>
 	                </td>
 	                <td style="font-size:1em">
 	                	<c:forEach items="${floor.dormList}" var="dorm">
-	                		<a href="${pageContext.request.contextPath}/apartment/dorm/${dorm.id}">
+	                		<a href="${pageContext.request.contextPath}/apartment/${apartId}/dorm/${dorm.id}">
 		                		<span class="badge">
 		                			${dorm.dormNo}
 		                		</span>
@@ -177,6 +178,39 @@ function updateFloorDorm(apartId) {
 		error: function() {
 			swal("失败！", "发生错误", "error");
         }
+	});
+}
+function deleteFloor(apartId, floorId) {
+	swal({ 
+		title: "确定删除该楼层吗？", 
+		text: "请确定该公寓下没有任何关联", 
+		type: "info", 
+		showCancelButton: true, 
+		closeOnConfirm: false
+	},
+	function(){
+		$.ajax({
+			type: "POST",
+			datatype: "json",
+			url: "floor/"+floorId+"/delete",
+			contentType: "application/x-www-form-urlencoded",
+			success: function(data) {
+				if(data == 'errorScore') {
+					swal("失败！", "该楼层下存在关联寝室得分，请先删除联系!", "warning");
+				} else if(data == 'errorRepair') {
+					swal("失败！", "该楼层下存在关联维修，请先删除联系!", "warning");
+				} else if(data == 'errorBed') {
+					swal("失败！", "该楼层下存在关联学生，请先删除联系!", "warning");
+				} else if(data =='success') {
+					swal("成功！", "删除成功", "success");
+				} else if(data == 'error') {
+					swal("失败！", "删除失败", "error");
+				}
+			},
+			error: function() {
+				swal("错误！", "发生错误", "error");
+	        }
+		});
 	});
 }
 function getRootPath() {//获得根目录
