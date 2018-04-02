@@ -178,6 +178,11 @@
 	        </tr>
 	    </thead>
 	    <tbody>
+	    	<c:if test="${empty userList}">
+	    		<tr>
+	    			<td colspan="3" style="text-align:center">还没有任何用户！</td>
+	    		</tr>
+	    	</c:if>
 	        <c:forEach items="${userList}" var="user">
 	            <tr>
 	                <td>${user.username}</td>
@@ -386,7 +391,8 @@
 					}
 					$(":radio[name='sex'][value='" + sex + "']").prop("checked", "checked");
 					$("#tel").val(data.staffTel);
-					$("#enterDate").val(data.hiredate.substring(0,10));
+					console.log(data.hiredate);
+					$("#enterDate").val(data.hiredateStr);
 				},
 				error: function() {
 					swal("错误！", "发生错误", "error");
@@ -431,7 +437,7 @@
 					}
 					$(":radio[name='sex'][value='" + sex + "']").prop("checked", "checked");
 					$("#tel").val(data.stdTel);
-					$("#enterDate").val(data.enterTime.substring(0,10));
+					$("#enterDate").val(data.enterTimeStr);
 					if(data.party) {
 						$("#isParty").attr('checked', true);
 						$("#isPartyHidden").val("true");

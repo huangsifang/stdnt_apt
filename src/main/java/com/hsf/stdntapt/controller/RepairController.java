@@ -122,6 +122,8 @@ public class RepairController {
 					}
 				}
 				model.addAttribute("dormRepairList", dormRepairList);
+			} else {
+				model.addAttribute("error", "error");
 			}
 			model.addAttribute("allType", allType);
 			return "repair/dormRepairList";
@@ -256,8 +258,10 @@ public class RepairController {
 				Repair repair = new Repair(dorm.getId(), applicantId, repairType);
 				repair.setRemark(remark);
 				repairService.createRepair(repair);
+				msg = "success";
+			} else {
+				msg = "errorNoDorm";
 			}
-			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
 			msg = "error";

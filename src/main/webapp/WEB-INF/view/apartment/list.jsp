@@ -112,7 +112,7 @@
 		<div class="pull-left" style="padding:20px">
 			<button class="btn btn-default" type="button" data-toggle="modal" data-target="#apartAddModal">公寓新增</button>
 		</div>
-	    <form action="${pageContext.request.contextPath}/uploadInfo/uploadInfoFromType.do" method="post" name="formApart" id="formApart" onsubmit="return validate(formApart)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
+	    <form action="${pageContext.request.contextPath}/upload/uploadInfoFromType.do" method="post" name="formApart" id="formApart" onsubmit="return validate(formApart)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
 		     导入公寓信息： 
 			<a href="javascript:;" class="file">选择文件
 			    <input type="file" name="filename" id="importApartFile" accept="xlsx" onchange="importFileFun(importApartFile, apartFileName)"/>

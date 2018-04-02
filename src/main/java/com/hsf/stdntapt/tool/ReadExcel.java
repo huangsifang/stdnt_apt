@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -18,6 +19,7 @@ import com.hsf.stdntapt.entity.Apartment;
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
 import com.hsf.stdntapt.entity.Consellor;
+import com.hsf.stdntapt.entity.DormScore;
 import com.hsf.stdntapt.entity.Repairman;
 import com.hsf.stdntapt.entity.SpeYears;
 import com.hsf.stdntapt.entity.Speciality;
@@ -468,6 +470,43 @@ public class ReadExcel {
 	}
 
 	/**
+	 * 读寝室分数EXCEL文件
+	 *
+	 * @param fileName
+	 * @return
+	 */
+	public List<DormScore> getScoreExcelInfo(String fileName, MultipartFile Mfile) {
+		List<DormScore> list = new ArrayList<DormScore>();
+		// 初始化输入流
+		InputStream is = null;
+		try {
+			// 根据新建的文件实例化输入流
+			is = Mfile.getInputStream();
+
+			Workbook wb = checkfile(fileName, Mfile, is);
+
+			if (wb != null) {
+				// 读取Excel里的信息
+				list = readScoreExcelValue(wb);
+			}
+
+			is.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					is = null;
+					e.printStackTrace();
+				}
+			}
+		}
+		return list;
+	}
+
+	/**
 	 * 读取学院Excel里面信息
 	 *
 	 * @param wb
@@ -744,8 +783,9 @@ public class ReadExcel {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
 						students.setStdTel(cell.getStringCellValue());
 					} else if (c == 4) {
-						cell.setCellType(Cell.CELL_TYPE_STRING);
-						students.setEnterTime(cell.getStringCellValue());
+						if (HSSFDateUtil.isCellDateFormatted(cell)) {
+							students.setEnterTime(cell.getDateCellValue());
+						}
 					} else if (c == 5) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
 						students.setParty(Boolean.parseBoolean(cell.getStringCellValue()));
@@ -854,11 +894,13 @@ public class ReadExcel {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
 						staffs.setStaffTel(cell.getStringCellValue());
 					} else if (c == 4) {
-						cell.setCellType(Cell.CELL_TYPE_STRING);
-						staffs.setHiredate(cell.getStringCellValue());
+						if (HSSFDateUtil.isCellDateFormatted(cell)) {
+							staffs.setHiredate(cell.getDateCellValue());
+						}
 					} else if (c == 5) {
-						cell.setCellType(Cell.CELL_TYPE_STRING);
-						staffs.setLeavedate(cell.getStringCellValue());
+						if (HSSFDateUtil.isCellDateFormatted(cell)) {
+							staffs.setLeavedate(cell.getDateCellValue());
+						}
 					}
 				}
 			}
@@ -973,6 +1015,62 @@ public class ReadExcel {
 			apartList.add(apart);
 		}
 		return apartList;
+	}
+
+	/**
+	 * 读取寝室分数Excel里面信息
+	 *
+	 * @param wb
+	 * @return
+	 */
+	private List<DormScore> readScoreExcelValue(Workbook wb) {
+		// 得到第一个shell
+		Sheet sheet = wb.getSheetAt(0);
+
+		// 得到Excel的行数
+		this.totalRows = sheet.getPhysicalNumberOfRows();
+
+		// 得到Excel的列数(前提是有行数)
+		if (totalRows >= 1 && sheet.getRow(0) != null) {
+			this.totalCells = sheet.getRow(0).getPhysicalNumberOfCells();
+		}
+		List<DormScore> scoreList = new ArrayList<DormScore>();
+		// 循环Excel行数,从第二行开始。标题不入库
+		for (int r = 1; r < totalRows; r++) {
+			DormScore score = new DormScore();
+			Row row = sheet.getRow(r).getCell(1).getRow();
+			if (row == null)
+				continue;
+			// 循环Excel的列,获取相关信息
+			for (int c = 0; c < this.totalCells; c++) {
+				Cell cell = row.getCell(c);
+				if (null != cell) {
+					if (c == 0) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						score.setApartId(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 1) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						score.setFloorNo(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 2) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						score.setDormNo(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 3) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						score.setScore(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 4) {
+						cell.setCellType(Cell.CELL_TYPE_STRING);
+						score.setStaffId(Integer.parseInt(cell.getStringCellValue()));
+					} else if (c == 5) {
+						if (HSSFDateUtil.isCellDateFormatted(cell)) {
+							score.setCreateTime(cell.getDateCellValue());
+						}
+					}
+				}
+			}
+			// 添加
+			scoreList.add(score);
+		}
+		return scoreList;
 	}
 
 }

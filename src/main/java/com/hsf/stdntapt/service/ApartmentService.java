@@ -73,6 +73,8 @@ public interface ApartmentService {
 
 	public int findStdApartId(int stdId);
 
+	public Apartment findStdApart(int stdId);
+
 	public Dormitory findStdDorm(int stdId);
 
 	public int findApartStdNum(int apartId);

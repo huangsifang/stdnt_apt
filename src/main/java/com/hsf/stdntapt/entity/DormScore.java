@@ -6,9 +6,12 @@ public class DormScore {
 	private long id;
 	private int dormId;
 	private int staffId;
+	private String staffName;
 	private Date createTime;
 	private int score;
 	private int apartId;
+	private int floorNo;
+	private int dormNo;
 	private int floorDormNo;
 	private String grade;
 	private int count;
@@ -20,6 +23,11 @@ public class DormScore {
 		this.dormId = dormId;
 		this.score = score;
 		this.staffId = staffId;
+	}
+
+	public DormScore(String grade, int count) {
+		this.grade = grade;
+		this.count = count;
 	}
 
 	public long getId() {
@@ -46,6 +54,14 @@ public class DormScore {
 		this.staffId = staffId;
 	}
 
+	public String getStaffName() {
+		return staffName;
+	}
+
+	public void setStaffName(String staffName) {
+		this.staffName = staffName;
+	}
+
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -68,6 +84,22 @@ public class DormScore {
 
 	public void setApartId(int apartId) {
 		this.apartId = apartId;
+	}
+
+	public int getFloorNo() {
+		return floorNo;
+	}
+
+	public void setFloorNo(int floorNo) {
+		this.floorNo = floorNo;
+	}
+
+	public int getDormNo() {
+		return dormNo;
+	}
+
+	public void setDormNo(int dormNo) {
+		this.dormNo = dormNo;
 	}
 
 	public int getFloorDormNo() {

@@ -164,6 +164,15 @@
         	) and deleted=0
        	) and deleted=0
     </select>
+    <select id="findStdApart" resultType="Apartment">
+    	select apart_id as apartId, apart_name as apartName from apartment where apart_id in(
+	    	select apart_id from floor where id in(
+	        	select floor_id from dormitory where id in(
+	        		select dorm_id from bed where std_id=#{stdId} and deleted=0
+	        	) and deleted=0
+	       	) and deleted=0
+       	) and deleted=0;
+    </select>
     <select id="findStdDorm" resultType="Dormitory">
     	select id, dorm_no as dormNo, floor_id as floorId, fee, leader_id as leaderId from dormitory where id in(
         	select dorm_id from bed where std_id=#{stdId} and deleted=0

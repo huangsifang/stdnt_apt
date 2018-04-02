@@ -15,6 +15,9 @@ public interface DormDao {
 
 	public List<DormScore> findOneDormScore(@Param("dormId") int dormId);
 
+	public List<DormScore> findOneDormScoreByPage(@Param("start") int start, @Param("size") int size,
+			@Param("dormId") int dormId);
+
 	public List<DormScore> findApartDormScore(@Param("apartId") int apartId);
 
 	public List<DormScore> findApartDormOneDayScore(@Param("apartId") int apartId, @Param("day") String day);

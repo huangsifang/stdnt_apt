@@ -84,6 +84,7 @@ public class MyRepairController {
 	public String finishRepairRecord(@RequestParam("repairId") int repairId,
 			@RequestParam("repairTime") String repairTime) {
 		String msg = "";
+		System.out.println(repairTime);
 		try {
 			String username = SecurityUtils.getSubject().getPrincipal().toString();
 			int repairmanId = Integer.parseInt(username);

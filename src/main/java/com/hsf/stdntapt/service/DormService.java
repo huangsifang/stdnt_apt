@@ -13,6 +13,8 @@ public interface DormService {
 
 	public List<DormScore> findOneDormScore(int dormId);
 
+	public List<DormScore> findOneDormScoreByPage(int start, int size, int dormId);
+
 	public List<DormScore> findApartDormScore(int apartId);
 
 	public List<DormScore> findApartDormOneDayScore(int apartId, String day);

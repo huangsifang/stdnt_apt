@@ -8,16 +8,16 @@
     <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
     <style>
     	fieldset {
-		  padding-bottom: 20px;
-		  border-bottom: 1px dashed #eee;
-		  margin-bottom: 20px;
+		  padding-bottom: 20px !important;
+		  border-bottom: 1px dashed #eee !important;
+		  margin-bottom: 20px !important;
 		}
 		fieldset.last-child,
 		fieldset:last-child {
-		  border-bottom: 0;
+		  border-bottom: 0 !important;
 		}
 		fieldset .form-group {
-		  margin-bottom: 0;
+		  margin-bottom: 0 !important;
 		}
     </style>
 </head>

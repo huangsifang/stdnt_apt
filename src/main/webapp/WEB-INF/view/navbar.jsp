@@ -21,7 +21,7 @@
 	<nav class="navbar navbar-default navbar-static-top" role="navigation">
 	    <div class="container-fluid">
 		    <div class="navbar-header">
-		        <a class="navbar-brand" href="#" id="apartmentBrand">学生公寓</a>
+		        <a class="navbar-brand" href="${pageContext.request.contextPath}/" id="apartmentBrand">学生公寓</a>
 		        <a class="navbar-brand" id="backBtn" onClick="back()"><i class="fa  fa-angle-left"></i>&nbsp;返回</a>
 		    </div>
 		    <div>
@@ -33,7 +33,7 @@
 		        	</c:forEach>
 		        </ul>
 		    </div>
-		    <div class="pull-right" style="margin-top:20px">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
+		    <div class="pull-right" id="loginInfo" style="margin-top:20px">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
 	    </div>
 	</nav>
 </body>

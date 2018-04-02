@@ -8,6 +8,7 @@ import com.hsf.stdntapt.entity.Apartment;
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
 import com.hsf.stdntapt.entity.Consellor;
+import com.hsf.stdntapt.entity.DormScore;
 import com.hsf.stdntapt.entity.Repairman;
 import com.hsf.stdntapt.entity.SpeYears;
 import com.hsf.stdntapt.entity.Speciality;
@@ -35,6 +36,8 @@ public interface InfoService {
 	public List<Repairman> getRepairmanInfo(String name, MultipartFile file);
 
 	public List<Apartment> getApartmentInfo(String name, MultipartFile file);
+
+	public List<DormScore> getScoreInfo(String name, MultipartFile file);
 
 	public void insertCollegeList(int collegeId, String collegeName);
 

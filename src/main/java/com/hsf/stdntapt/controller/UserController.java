@@ -220,7 +220,11 @@ public class UserController {
 						Staff newStaff = new Staff(usernameInt, name);
 						newStaff.setStaffSex(sexInt);
 						newStaff.setStaffTel(tel);
-						newStaff.setHiredate(hiredate);
+						if (hiredate.equals("")) {
+							newStaff.setHiredateStr(null);
+						} else {
+							newStaff.setHiredateStr(hiredate);
+						}
 						staffService.updateStaff(newStaff);
 					}
 				} else if (roleId == 3) {
@@ -242,7 +246,7 @@ public class UserController {
 						Student newStudent = new Student(usernameInt, name);
 						newStudent.setStdSex(sexInt);
 						newStudent.setStdTel(tel);
-						newStudent.setEnterTime(hiredate);
+						newStudent.setEnterTimeStr(hiredate);
 						newStudent.setParty(isPartyBoolean);
 						newStudent.setClassId(classId);
 						studentService.updateStudent(newStudent);

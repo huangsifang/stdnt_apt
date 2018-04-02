@@ -1,12 +1,15 @@
 package com.hsf.stdntapt.entity;
 
+import java.util.Date;
+
 public class Staff {
 	private int staffId;
 	private String staffName;
 	private int staffSex;
 	private String staffTel;
-	private String hiredate;
-	private String leavedate;
+	private Date hiredate;
+	private String hiredateStr;
+	private Date leavedate;
 
 	public Staff() {
 	}
@@ -48,19 +51,27 @@ public class Staff {
 		this.staffTel = staffTel;
 	}
 
-	public String getHiredate() {
+	public Date getHiredate() {
 		return hiredate;
 	}
 
-	public void setHiredate(String hiredate) {
+	public void setHiredate(Date hiredate) {
 		this.hiredate = hiredate;
 	}
 
-	public String getLeavedate() {
+	public String getHiredateStr() {
+		return hiredateStr;
+	}
+
+	public void setHiredateStr(String hiredateStr) {
+		this.hiredateStr = hiredateStr;
+	}
+
+	public Date getLeavedate() {
 		return leavedate;
 	}
 
-	public void setLeavedate(String leavedate) {
+	public void setLeavedate(Date leavedate) {
 		this.leavedate = leavedate;
 	}
 

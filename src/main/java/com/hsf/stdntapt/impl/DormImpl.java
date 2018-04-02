@@ -36,6 +36,11 @@ public class DormImpl implements DormService {
 	}
 
 	@Override
+	public List<DormScore> findOneDormScoreByPage(int start, int size, int dormId) {
+		return dormDao.findOneDormScoreByPage(start, size, dormId);
+	}
+
+	@Override
 	public List<DormScore> findApartDormScore(int apartId) {
 		return dormDao.findApartDormScore(apartId);
 	}

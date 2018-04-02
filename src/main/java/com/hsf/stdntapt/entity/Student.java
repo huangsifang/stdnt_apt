@@ -1,11 +1,14 @@
 package com.hsf.stdntapt.entity;
 
+import java.util.Date;
+
 public class Student {
 	private int stdId;
 	private String stdName;
 	private int stdSex;
 	private String stdTel;
-	private String enterTime;
+	private Date enterTime;
+	private String enterTimeStr;
 	private boolean isParty;
 	private int classId;
 	private int speciId;
@@ -50,12 +53,20 @@ public class Student {
 		this.stdTel = stdTel;
 	}
 
-	public String getEnterTime() {
+	public Date getEnterTime() {
 		return enterTime;
 	}
 
-	public void setEnterTime(String enterTime) {
+	public void setEnterTime(Date enterTime) {
 		this.enterTime = enterTime;
+	}
+
+	public String getEnterTimeStr() {
+		return enterTimeStr;
+	}
+
+	public void setEnterTimeStr(String enterTimeStr) {
+		this.enterTimeStr = enterTimeStr;
 	}
 
 	public boolean isParty() {

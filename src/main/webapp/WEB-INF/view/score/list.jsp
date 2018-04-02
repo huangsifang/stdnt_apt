@@ -21,6 +21,13 @@
     		text-align: center;
     		line-height: 400px;
     	}
+    	.badge {
+    		position: absolute;
+    		right: 0;
+    		top: -10px;
+    		font-size: 1.2em !important;
+    		background-color: #52a4db !important;
+    	}
     </style>
 </head>
 <body>
@@ -78,7 +85,7 @@
 			</div>
 		</shiro:hasPermission>
 		
-		<form action="${pageContext.request.contextPath}/uploadInfo/uploadInfoFromType.do" method="post" name="formScore" id="formScore" onsubmit="return validate(formScore)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
+		<form action="${pageContext.request.contextPath}/upload/uploadInfoFromType.do" method="post" name="formScore" id="formScore" onsubmit="return validate(formScore)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
 		     导入公寓得分： 
 			<a href="javascript:;" class="file">选择文件
 			    <input type="file" name="filename" id="importScoreFile" accept="xlsx" onchange="importFileFun(importScoreFile, scoreFileName)"/>
@@ -150,25 +157,25 @@
 				<div class="col-sm-3">
 					<div class="panel panel-default">
 						<div class="panel-body">
-							<div class="form-group row">
-		                      <label class="col-sm-6 control-label">公寓号：</label>
-		                      <div class="col-sm-6">
-		                         <span>${score.apartId}</span>
-		                      </div>
-		                   </div>
-		                   <div class="form-group row">
-		                      <label class="col-sm-6 control-label">寝室号：</label>
-		                      <div class="col-sm-6">
-		                         <span>${score.floorDormNo}</span>
-		                      </div>
-		                   </div>
-		                   <div class="form-group row">
-		                      <label class="col-sm-6 control-label">分数：</label>
-		                      <div class="col-sm-6">
-		                         <span>${score.score}</span>
-		                      </div>
-		                   </div>
-						</div>
+		                   <label class="col-sm-6 control-label">寝室号：</label>
+		                   <span>${score.floorDormNo}</span>
+							<c:if test="${score.score < 60}">
+	                      	 	<span class="badge" style="background-color:#ee9e7e !important">${score.score}</span>
+	                        </c:if>
+	                        <c:if test="${score.score < 80 && score.score >= 60}">
+	                      	 	<span class="badge" style="background-color:#f4db59 !important">${score.score}</span>
+	                        </c:if>
+	                        <c:if test="${score.score < 90 && score.score >= 80 }">
+								<span class="badge">
+		                			${score.score}
+		               			</span>
+	               			</c:if>
+	               			<c:if test="${score.score >= 90}">
+								<span class="badge" style="background-color:#9fe8ba !important">
+		                			${score.score}
+		               			</span>
+	               			</c:if>
+	               		</div>
 					</div>
 				</div>
 			</a>
@@ -178,11 +185,35 @@
 
 </body>
 <script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
+<script src="${pageContext.request.contextPath}/public/js/jquery.form.min.js" ></script> 
 <script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
 <script src="<c:url value='/public/js/echarts.common.min.js'/>"></script>
 <script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 	$(function() {
+		$(".uploadForm").ajaxForm({
+			beforeSubmit: function(formData, jqForm, options) {
+                return true; 
+            },
+			success: function(data){
+				if(data == 'error') {
+					swal("失败！", "新增失败", "error");
+				} else if(data == 'errorEmpty'){
+					swal("失败！", "请检查文件中内容是否有空", "error");
+				} else if(data == 'errorNoFloor'){
+					swal("失败！", "找不到对应楼层", "warning");
+				} else if(data == 'errorNoDorm'){
+					swal("失败！", "找不到对应寝室", "warning");
+				} else {
+					swal("成功！", data, "success");
+				}
+	        },
+	        error: function() {
+	        	swal("错误！", "发生错误", "error");
+	        },
+	        resetForm: true        // 成功提交后，重置所有的表单元素的值
+		});
+		
 		var nowApartId = Number('${apartId}')-1;
 		$("#apartUl li").eq(nowApartId).addClass("active");
 		
@@ -263,7 +294,6 @@
 	    scoreList[i].value = ${item.count};
 	    i++;
 	</c:forEach>
-	
 	var j=0;
 	<c:forEach var="item" items="${apartDormOneDayScore}">
 	dayScoreList[j]= new Object();
@@ -286,6 +316,10 @@
 	j++;
 	</c:forEach>
 	
+	var colorPalette = [
+        '#9fe7b9','#51a3db','#f7db5b','#ee9e7e'
+    ];
+	
 	$().ready(function() {
 	    //图表显示提示信息
 	    if(i != 0) {
@@ -293,6 +327,7 @@
 		    myChart.showLoading();
 		    //定义图表options
 			var options = {
+				color: colorPalette,
 			    title : {
 			        text: '公寓所有寝室得分分布图',
 			        subtext: '${apartId}号楼',
@@ -334,6 +369,7 @@
 	    	var myChartDay = echarts.init(document.getElementById('dayScoreMap'));
 		    myChartDay.showLoading();
 			var dayOptions = {
+				color: colorPalette,
 			    title : {
 			        text: '公寓今日寝室得分分布图',
 			        subtext: '${apartId}号楼',

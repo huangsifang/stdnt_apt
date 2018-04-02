@@ -21,6 +21,7 @@ import com.hsf.stdntapt.entity.Apartment;
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
 import com.hsf.stdntapt.entity.Consellor;
+import com.hsf.stdntapt.entity.DormScore;
 import com.hsf.stdntapt.entity.Repairman;
 import com.hsf.stdntapt.entity.SpeYears;
 import com.hsf.stdntapt.entity.Speciality;
@@ -150,6 +151,13 @@ public class InfoImpl implements InfoService {
 	public List<Apartment> getApartmentInfo(String name, MultipartFile file) {
 		ReadExcel ReadExcel = new ReadExcel();
 		List<Apartment> excelInfo = ReadExcel.getApartmentExcelInfo(name, file);
+		return excelInfo;
+	}
+
+	@Override
+	public List<DormScore> getScoreInfo(String name, MultipartFile file) {
+		ReadExcel ReadExcel = new ReadExcel();
+		List<DormScore> excelInfo = ReadExcel.getScoreExcelInfo(name, file);
 		return excelInfo;
 	}
 }

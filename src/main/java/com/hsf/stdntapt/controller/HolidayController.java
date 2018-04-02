@@ -63,8 +63,12 @@ public class HolidayController {
 		Set<String> roles = userService.findRoles(username);
 		for (String role : roles) {
 			if (role.equals("student")) {
-				int apartId = apartmentService.findStdApartId(Integer.parseInt(username));
-				model.addAttribute("apartId", apartId);
+				Apartment apart = apartmentService.findStdApart(Integer.parseInt(username));
+				if (apart == null) {
+					model.addAttribute("apartId", 0);
+				} else {
+					model.addAttribute("apartId", apart.getApartId());
+				}
 				break;
 			}
 		}

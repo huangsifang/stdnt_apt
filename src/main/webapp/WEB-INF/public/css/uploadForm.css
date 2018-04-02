@@ -40,12 +40,15 @@ input[type="file"] {
 	background-color: transparent;
     border: 0;
 }
-@media screen and (max-width: 685px) {
+@media screen and (max-width: 1065px) {
 	.fileName {
+		padding-top: 10px;
 		width: 60%;
 	}
     .importFileBtn {
+    	float: right;
         margin-top: 15px;
+        margin-right: 10px;
     }
     .exportInfo {
     	margin-top: 0;

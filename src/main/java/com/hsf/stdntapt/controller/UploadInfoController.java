@@ -1,5 +1,7 @@
 package com.hsf.stdntapt.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +24,7 @@ import com.hsf.stdntapt.entity.Bed;
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.College;
 import com.hsf.stdntapt.entity.Consellor;
+import com.hsf.stdntapt.entity.DormScore;
 import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
 import com.hsf.stdntapt.entity.Repairman;
@@ -33,6 +36,7 @@ import com.hsf.stdntapt.entity.StudentBed;
 import com.hsf.stdntapt.entity.User;
 import com.hsf.stdntapt.service.ApartmentService;
 import com.hsf.stdntapt.service.ConsellorService;
+import com.hsf.stdntapt.service.DormService;
 import com.hsf.stdntapt.service.InfoService;
 import com.hsf.stdntapt.service.RepairService;
 import com.hsf.stdntapt.service.ResourceService;
@@ -68,6 +72,9 @@ public class UploadInfoController {
 	@Resource
 	ResourceService resourceService;
 
+	@Resource
+	DormService dormService;
+
 	@RequiresPermissions("upload:create")
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(Model model) {
@@ -85,7 +92,7 @@ public class UploadInfoController {
 	@ResponseBody
 	public String uploadInfo(@RequestParam(value = "filename") MultipartFile file,
 			@RequestParam(value = "filetype") String type) {
-		String msg = "";
+		String msg = null;
 		// 获取文件名
 		String name = file.getOriginalFilename();
 		try {
@@ -131,10 +138,14 @@ public class UploadInfoController {
 			} else if (type.equals("student")) {
 				List<Student> studentList = infoService.getStudentInfo(name, file);
 				for (int i = 0; i < studentList.size(); i++) {
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					String enterTimeStr = null;
+					if (studentList.get(i).getEnterTime() != null) {
+						enterTimeStr = sdf.format(studentList.get(i).getEnterTime()).toString();
+					}
 					studentService.insertStudentList(studentList.get(i).getStdId(), studentList.get(i).getStdName(),
-							studentList.get(i).getStdSex(), studentList.get(i).getStdTel(),
-							studentList.get(i).getEnterTime(), studentList.get(i).isParty(),
-							studentList.get(i).getClassId());
+							studentList.get(i).getStdSex(), studentList.get(i).getStdTel(), enterTimeStr,
+							studentList.get(i).isParty(), studentList.get(i).getClassId());
 					User user = new User(studentList.get(i).getStdId() + "", "123456");
 					user.setRoleIdsStr("4");
 					userService.createUser(user);
@@ -154,9 +165,17 @@ public class UploadInfoController {
 			} else if (type.equals("staff")) {
 				List<Staff> staffList = infoService.getStaffInfo(name, file);
 				for (int i = 0; i < staffList.size(); i++) {
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					String hiredateStr = null;
+					String leavedateStr = null;
+					if (staffList.get(i).getHiredate() != null) {
+						hiredateStr = sdf.format(staffList.get(i).getHiredate()).toString();
+					}
+					if (staffList.get(i).getLeavedate() != null) {
+						leavedateStr = sdf.format(staffList.get(i).getLeavedate()).toString();
+					}
 					staffService.insertStaffList(staffList.get(i).getStaffId(), staffList.get(i).getStaffName(),
-							staffList.get(i).getStaffSex(), staffList.get(i).getStaffTel(),
-							staffList.get(i).getHiredate(), staffList.get(i).getLeavedate());
+							staffList.get(i).getStaffSex(), staffList.get(i).getStaffTel(), hiredateStr, leavedateStr);
 					User user = new User(staffList.get(i).getStaffId() + "", "123456");
 					user.setRoleIdsStr("2");
 					userService.createUser(user);
@@ -205,6 +224,34 @@ public class UploadInfoController {
 					}
 				}
 				msg = "解析成功,总共" + apartList.size() + "条!";
+			} else if (type.equals("score")) {
+				List<DormScore> scoreList = infoService.getScoreInfo(name, file);
+				for (int i = 0; i < scoreList.size(); i++) {
+					int apartId = scoreList.get(i).getApartId();
+					int floorNo = scoreList.get(i).getFloorNo();
+					int dormNo = scoreList.get(i).getDormNo();
+					int score = scoreList.get(i).getScore();
+					int staffId = scoreList.get(i).getStaffId();
+					Date createTime = scoreList.get(i).getCreateTime();
+					Floor floor = apartmentService.findFloorByApartIdFloorNo(apartId, floorNo);
+					if (floor != null) {
+						int floorId = floor.getId();
+						Dormitory dorm = apartmentService.findByDormNoFloorId(dormNo, floorId);
+						if (dorm != null) {
+							int dormId = dorm.getId();
+							DormScore dormScore = new DormScore(dormId, score, staffId);
+							dormScore.setCreateTime(createTime);
+							dormService.createDormScore(dormScore);
+						} else {
+							msg = "errorNoDorm";
+						}
+					} else {
+						msg = "errorNoFloor";
+					}
+				}
+				if (msg == null) {
+					msg = "解析成功,总共" + scoreList.size() + "条!";
+				}
 			}
 		} catch (NullPointerException e) {
 			e.printStackTrace();

@@ -60,75 +60,84 @@
 </div>
 
 <div style="margin:20px 50px">
-
-	<shiro:hasPermission name="repair:create">
-		<button class="btn btn-default btn-md" data-toggle="modal" data-target="#repairModal">报修</button>
-	</shiro:hasPermission>
-	<c:if test="${not empty dormRepairList}">
-		<div class="row" style="padding: 20px">
-			<c:forEach items="${dormRepairList}" var="repair">
-				<a href="${pageContext.request.contextPath}/repair/${repair.id}/record">
-					<div class="col-sm-3">
-						<div class="panel panel-default">
-							<div class="panel-body">
-								<div class="form-group row">
-			                      <label class="col-sm-4 control-label">公寓号：</label>
-			                      <div class="col-sm-8">
-			                         <span>${repair.dormId}</span>
-			                      </div>
-			                   </div>
-			                   <div class="form-group row">
-			                      <label class="col-sm-4 control-label">申请者：</label>
-			                      <div class="col-sm-8">
-			                         <span>${repair.applicantName}</span>
-			                      </div>
-			                   </div>
-			                   <div class="form-group row">
-			                      <label class="col-sm-4 control-label">维修类型：</label>
-			                      <div class="col-sm-8">
-			                         <span>${repair.repairTypeName}</span>
-			                      </div>
-			                   </div>
-			                   <div class="form-group row">
-			                      <label class="col-sm-4 control-label">申请时间：</label>
-			                      <div class="col-sm-8">
-			                         <span><fmt:formatDate value="${repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></span>
-			                      </div>
-			                   </div>
-			                   <div class="form-group row">
-			                      <div class="col-sm-offset-4 col-sm-8">
-			                         <span>
-			                         	<c:if test="${repair.state == 0}">
-						                	<td>未接单</td>
-						                </c:if>
-						                <c:if test="${repair.state == 1}">
-						                	<td>已接单</td>
-						                </c:if>
-						                <c:if test="${repair.state == 2}">
-						                	<td>已结束</td>
-						                </c:if>
-			                         </span>
-			                      </div>
-			                   </div>
-			                   <div class="form-group row">
-			                      <label class="col-sm-4 control-label">备注：</label>
-			                      <div class="col-sm-8">
-			                         <a href="#" class="tooltip-test" data-toggle="tooltip" title="${repair.remark}">
-			                         	<p style="width: 100%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">${repair.remark}</p>
-			                         </a>
-			                      </div>
-			                   </div>
-							</div>
-						</div>
-					</div>
-				</a>
-			</c:forEach>
+	
+	<c:if test="${not empty error}">
+		<div class="panel">
+			<div class="panel-body">
+				<span>您还未加入任何寝室，请联系公寓管理员</span>
+			</div>
 		</div>
 	</c:if>
-	<c:if test="${empty dormRepairList}">
-		<div class="emptyWord">
-			<span>您所在的寝室还没有任何维修信息</span>
-		</div>
+	<c:if test="${empty error}">
+		<shiro:hasPermission name="repair:create">
+			<button class="btn btn-default btn-md" data-toggle="modal" data-target="#repairModal">报修</button>
+		</shiro:hasPermission>
+		<c:if test="${not empty dormRepairList}">
+			<div class="row" style="padding: 20px">
+				<c:forEach items="${dormRepairList}" var="repair">
+					<a href="${pageContext.request.contextPath}/repair/${repair.id}/record">
+						<div class="col-sm-3">
+							<div class="panel panel-default">
+								<div class="panel-body">
+									<div class="form-group row">
+				                      <label class="col-sm-4 control-label">公寓号：</label>
+				                      <div class="col-sm-8">
+				                         <span>${repair.dormId}</span>
+				                      </div>
+				                   </div>
+				                   <div class="form-group row">
+				                      <label class="col-sm-4 control-label">申请者：</label>
+				                      <div class="col-sm-8">
+				                         <span>${repair.applicantName}</span>
+				                      </div>
+				                   </div>
+				                   <div class="form-group row">
+				                      <label class="col-sm-4 control-label">维修类型：</label>
+				                      <div class="col-sm-8">
+				                         <span>${repair.repairTypeName}</span>
+				                      </div>
+				                   </div>
+				                   <div class="form-group row">
+				                      <label class="col-sm-4 control-label">申请时间：</label>
+				                      <div class="col-sm-8">
+				                         <span><fmt:formatDate value="${repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></span>
+				                      </div>
+				                   </div>
+				                   <div class="form-group row">
+				                      <div class="col-sm-offset-4 col-sm-8">
+				                         <span>
+				                         	<c:if test="${repair.state == 0}">
+							                	<td>未接单</td>
+							                </c:if>
+							                <c:if test="${repair.state == 1}">
+							                	<td>已接单</td>
+							                </c:if>
+							                <c:if test="${repair.state == 2}">
+							                	<td>已结束</td>
+							                </c:if>
+				                         </span>
+				                      </div>
+				                   </div>
+				                   <div class="form-group row">
+				                      <label class="col-sm-4 control-label">备注：</label>
+				                      <div class="col-sm-8">
+				                         <a href="#" class="tooltip-test" data-toggle="tooltip" title="${repair.remark}">
+				                         	<p style="width: 100%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">${repair.remark}</p>
+				                         </a>
+				                      </div>
+				                   </div>
+								</div>
+							</div>
+						</div>
+					</a>
+				</c:forEach>
+			</div>
+		</c:if>
+		<c:if test="${empty dormRepairList}">
+			<div class="emptyWord">
+				<span>您所在的寝室还没有任何维修信息</span>
+			</div>
+		</c:if>
 	</c:if>
 </div>
 </body>
@@ -154,6 +163,9 @@ $(function() {
 					function(){
 						window.location.reload();
 					});
+				} else if(data == 'errorNoDorm') {
+					swal("失败！", "您还未加入任何寝室", "error");
+					$('#repairModal').modal('hide');
 				} else {
 					swal("失败！", "新增失败", "error");
 					$('#repairModal').modal('hide');

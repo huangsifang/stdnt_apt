@@ -134,6 +134,13 @@
 </div>
 
 <div style="margin:20px 50px">
+	<c:if test="${apartId == 0}">
+		<div class="panel">
+			<div class="panel-body">
+				<span>您还未加入任何寝室，请联系公寓管理员</span>
+			</div>
+		</div>
+	</c:if>
 	<shiro:hasPermission name="holiday:create">
 		<button class="btn btn-default btn-md" data-toggle="modal" data-target="#holidayModal" onClick="createHoliday()">新增</button>
 	</shiro:hasPermission>
@@ -170,8 +177,10 @@
 	                    </shiro:hasPermission>
 	                    
 	                    <shiro:hasPermission name="record:create">
-	                    	<c:if test="${!holiday.hasSign}">
-	                    		<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#recordModal" type="button" onClick="holidayRecord(${holiday.holiId},'${holiday.startTime}','${holiday.endTime}')">登记</button>
+	                    	<c:if test="${apartId != 0}">
+		                    	<c:if test="${!holiday.hasSign}">
+		                    		<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#recordModal" type="button" onClick="holidayRecord(${holiday.holiId},'${holiday.startTime}','${holiday.endTime}')">登记</button>
+		                    	</c:if>
 	                    	</c:if>
 	                    	<c:if test="${holiday.hasSign}">
 	                    		<button class="btn btn-primary btn-md" id="lookBtn"><a href="holiday/${holiday.holiId}/std/record">查看</a></button>

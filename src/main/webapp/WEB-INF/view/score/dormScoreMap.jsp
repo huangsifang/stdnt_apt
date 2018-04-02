@@ -7,22 +7,78 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>寝室得分</title>
+<link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
 </head>
 <body>
 	<jsp:include page="../navbar.jsp"></jsp:include>
 	
 	<div style="margin:20px 50px">
-	
-	    <!--定义页面图表容器-->
-	    <!-- 必须制定容器的大小（height、width） -->
-	    <div id="main" style="height: 400px; border: 1px solid #ccc; padding: 10px;"></div>
+		<c:if test="${apartId == 0 || floorDormNo == 0}">
+			<div class="panel">
+				<div class="panel-body">
+					<span>您还未加入任何寝室，请联系公寓管理员</span>
+				</div>
+			</div>
+		</c:if>
+		<c:if test="${apartId != 0 && floorDormNo != 0}">
+		    <div id="main" style="height: 400px; border: 1px solid #ccc; padding: 10px;"></div>
+		    
+		    <table class="table" style="margin-top:20px">
+			    <thead>
+			        <tr>
+			            <th>寝室号</th>
+			            <th>分数</th>
+			            <th>打分者</th>
+			            <th>打分时间</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			    	<c:if test="${empty oneDormScores}">
+			    		<tr>
+			    			<td colspan="4" style="text-align:center">寝室该没有任何得分j！</td>
+			    		</tr>
+			    	</c:if>
+			        <c:forEach items="${oneDormScores}" var="score">
+			            <tr>
+			                <td>${floorDormNo}</td>
+			                <td>${score.score}</td>
+			                <td>${score.staffName}</td>
+			                <td><fmt:formatDate value="${score.createTime}" pattern="yyyy-MM-dd HH:mm" /></td>
+			            </tr>
+			        </c:forEach>
+			    </tbody>
+			</table>
+			<c:if test="${allCount != 0}">
+				<ul class="pagination tablePage">
+				    <li><a href="${pageContext.request.contextPath}/score/${apartId}/dorm/${floorDormNo}?start=${start-10}">&laquo;</a></li>
+				    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
+				    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/score/${apartId}/dorm/${floorDormNo}?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
+				    </c:forEach>
+				    <li><a href="${pageContext.request.contextPath}/score/${apartId}/dorm/${floorDormNo}?start=${start+10}">&raquo;</a></li>
+				</ul>
+			</c:if>
+		</c:if>
 	</div>
 	<script src="<c:url value='/public/js/jquery-3.3.1.min.js'/>"></script>
 	<script src="<c:url value='/public/js/echarts.common.min.js'/>"></script>
     <script>
+    
+	    var start = Number('${start}');
+		var pageNum = start/10+1;
+		$(".tablePage li").eq(pageNum).addClass("active");
+		if(start <= 0) {
+			$(".tablePage li").eq(0).find("a").attr("href","#");
+			$(".tablePage li").eq(0).addClass("disabled");
+		}
+		if(start+10 >= Number('${allCount}')){
+			$(".tablePage li").eq(-1).find("a").attr("href","#");
+			$(".tablePage li").eq(-1).addClass("disabled");
+		}
+		
         var siteArray = new Array();
         var xArray = new Array();
-        var i = 0;
+        var i = "${oneDormScores.size()-1}";
         var year = "";
         var day= "";
         
@@ -32,8 +88,8 @@
             day = "${item.createTime}".slice(4, -18);
             siteArray[i].name = day + " " + year;
             siteArray[i].value = ${item.score};
-            xArray.push(day + " " + year);
-            i++;
+            xArray[i] = day + " " + year;
+            i--;
         </c:forEach>
         
         $().ready(function() {
