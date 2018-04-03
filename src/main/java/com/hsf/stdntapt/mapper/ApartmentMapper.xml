@@ -194,4 +194,29 @@
 	<delete id="deleteBed" parameterType="int">
 		delete from bed where bed_id=#{bedId} and dorm_id=#{dormId}
 	</delete>
+	<select id="findApartRotaAll" resultType="StaffRota">
+    	select rota_id as rotaId, apart_id as apartId, GROUP_CONCAT(staff_id) as staffIdsStr, week 
+    	from staff_rota 
+    	where apart_id=#{apartId} and deleted=0 
+    	group by week
+    </select>
+    <delete id="deleteStaffRota" parameterType="int">
+		delete from staff_rota where apart_id=#{apartId} and staff_id=#{staffId} and deleted=0
+	</delete>
+	<insert id="createStaffRota" parameterType="StaffRota" useGeneratedKeys="true" keyProperty="rota.rotaId">
+        INSERT INTO staff_rota(
+        	<if test="rota.apartId != null">apart_id,</if>
+	        <if test="rota.staffId != null">staff_id,</if>
+	        <if test="rota.week != null">week</if>
+		) VALUES (
+	        <if test="rota.apartId != null">#{rota.apartId},</if>
+	        <if test="rota.staffId != null">#{rota.staffId},</if>
+	        <if test="rota.week != null">#{rota.week}</if>
+		)
+    </insert>
+    <select id="findOneStaffRota" resultType="StaffRota">
+    	select rota_id as rotaId, apart_id as apartId, staff_id as staffId, week 
+    	from staff_rota 
+    	where staff_id=#{staffId} and week=#{week} and deleted=0
+    </select>
 </mapper>

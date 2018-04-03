@@ -12,6 +12,7 @@ import com.hsf.stdntapt.entity.Bed;
 import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
 import com.hsf.stdntapt.entity.Staff;
+import com.hsf.stdntapt.entity.StaffRota;
 import com.hsf.stdntapt.service.ApartmentService;
 
 @Service
@@ -207,5 +208,25 @@ public class ApartmentImpl implements ApartmentService {
 	@Override
 	public int deleteBed(int dormId, int bedId) {
 		return apartmentDao.deleteBed(dormId, bedId);
+	}
+
+	@Override
+	public List<StaffRota> findApartRotaAll(int apartId) {
+		return apartmentDao.findApartRotaAll(apartId);
+	}
+
+	@Override
+	public void deleteStaffRota(int apartId, int staffId) {
+		apartmentDao.deleteStaffRota(apartId, staffId);
+	}
+
+	@Override
+	public int createStaffRota(StaffRota rota) {
+		return apartmentDao.createStaffRota(rota);
+	}
+
+	@Override
+	public StaffRota findOneStaffRota(int staffId, int week) {
+		return apartmentDao.findOneStaffRota(staffId, week);
 	}
 }

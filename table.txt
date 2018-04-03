@@ -163,12 +163,22 @@ create table apartment(
 	deleted bit not null default 0
 );
 
-create table apart_staff_relation(	
+create table apart_staff_relation(
 	relation_id int(20) unsigned not null primary key auto_increment,
 	apart_id int(3) unsigned not null,
 	staff_id int(20) unsigned not null,
 	create_time datetime not null default current_timestamp,
 	leave_time datetime default null,
+	deleted bit not null default 0,
+	foreign key(apart_id) references apartment(apart_id),
+	foreign key(staff_id) references staff(staff_id)
+);
+
+create table staff_rota(
+	rota_id int(20) unsigned not null primary key auto_increment,
+	apart_id int(3) unsigned not null,
+	staff_id int(20) unsigned not null,
+	week int(2),
 	deleted bit not null default 0,
 	foreign key(apart_id) references apartment(apart_id),
 	foreign key(staff_id) references staff(staff_id)

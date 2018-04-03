@@ -9,6 +9,7 @@ import com.hsf.stdntapt.entity.Bed;
 import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
 import com.hsf.stdntapt.entity.Staff;
+import com.hsf.stdntapt.entity.StaffRota;
 
 public interface ApartmentDao {
 
@@ -87,4 +88,12 @@ public interface ApartmentDao {
 	public int deleteDorm(@Param("dormId") int dormId);
 
 	public int deleteBed(@Param("dormId") int dormId, @Param("bedId") int bedId);
+
+	public List<StaffRota> findApartRotaAll(@Param("apartId") int apartId);
+
+	public void deleteStaffRota(@Param("apartId") int apartId, @Param("staffId") int staffId);
+
+	public int createStaffRota(@Param("rota") StaffRota rota);
+
+	public StaffRota findOneStaffRota(@Param("staffId") int staffId, @Param("week") int week);
 }

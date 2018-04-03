@@ -164,6 +164,7 @@
 	                	<c:forEach items="${apart.staffs}" var="staff">
 	                		${staff.staffId}:${staff.staffName}<br />
 	                	</c:forEach>
+	                	<a href="apartment/${apart.apartId}/staffRota">查看值班表</a>
 	                </td>
 	                <td>
 	                    <shiro:hasPermission name="apartment:update">

@@ -1,6 +1,7 @@
 package com.hsf.stdntapt.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -25,12 +26,14 @@ import com.hsf.stdntapt.entity.Floor;
 import com.hsf.stdntapt.entity.HoliRecord;
 import com.hsf.stdntapt.entity.Repair;
 import com.hsf.stdntapt.entity.Staff;
+import com.hsf.stdntapt.entity.StaffRota;
 import com.hsf.stdntapt.entity.Student;
 import com.hsf.stdntapt.service.ApartmentService;
 import com.hsf.stdntapt.service.DormService;
 import com.hsf.stdntapt.service.HolidayService;
 import com.hsf.stdntapt.service.RepairService;
 import com.hsf.stdntapt.service.ResourceService;
+import com.hsf.stdntapt.service.StaffService;
 import com.hsf.stdntapt.service.StudentService;
 import com.hsf.stdntapt.service.UserService;
 
@@ -58,6 +61,9 @@ public class ApartmentController {
 
 	@Resource
 	ResourceService resourceService;
+
+	@Resource
+	StaffService staffService;
 
 	@RequiresPermissions("apartment:view")
 	@RequestMapping(method = RequestMethod.GET)
@@ -196,6 +202,70 @@ public class ApartmentController {
 			if (!flag) {
 				apartmentService.deleteApartment(apartId);
 				msg = "success";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "error";
+		}
+		return msg;
+	}
+
+	@RequiresPermissions("apartment:view")
+	@RequestMapping(value = "/{id}/staffRota", method = RequestMethod.GET)
+	public String staffRota(@PathVariable("id") int id, Model model) {
+		List<StaffRota> rotaList = apartmentService.findApartRotaAll(id);
+		List<StaffRota> rotaListFinal = new ArrayList();
+		for (int i = 0; i < 7; i++) {
+			rotaListFinal.add(new StaffRota(id, null, i + 1));
+		}
+		if (rotaList.get(0) != null) {
+			for (StaffRota rota : rotaList) {
+				List<Integer> staffIds = rota.getStaffIds();
+				List<Staff> staffs = new ArrayList();
+				for (int staffId : staffIds) {
+					staffs.add(staffService.findOneStaff(staffId));
+				}
+				rotaListFinal.get(rota.getWeek() - 1).setStaffs(staffs);
+			}
+		}
+		List<Staff> staffList = apartmentService.findApartStaffs(id);
+		model.addAttribute("staffList", staffList);
+		model.addAttribute("rotaList", rotaListFinal);
+		model.addAttribute("apartId", id);
+		return "apartment/rota/list";
+	}
+
+	@RequiresPermissions("apartment:delete")
+	@RequestMapping(value = "/{apartId}/staffRota/{staffId}/delete", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String deleteStaffRota(@PathVariable("apartId") int apartId, @PathVariable("staffId") int staffId) {
+		String msg = "";
+		try {
+			apartmentService.deleteStaffRota(apartId, staffId);
+			msg = "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			msg = "error";
+		}
+		return msg;
+	}
+
+	@RequiresPermissions("apartment:create")
+	@RequestMapping(value = "/{apartId}/staffRota/create", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@ResponseBody
+	public String createStaffRota(@PathVariable("apartId") int apartId, @RequestParam("week") int week,
+			@RequestParam("staffIds") int[] staffIds) {
+		String msg = "";
+		try {
+			for (int staffId : staffIds) {
+				StaffRota rota = new StaffRota(apartId, staffId, week);
+				StaffRota currentRota = apartmentService.findOneStaffRota(staffId, week);
+				if (currentRota == null) {
+					apartmentService.createStaffRota(rota);
+					msg = "success";
+				} else {
+					msg = "errorExist";
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

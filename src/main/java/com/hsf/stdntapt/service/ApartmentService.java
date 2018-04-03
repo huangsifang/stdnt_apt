@@ -7,6 +7,7 @@ import com.hsf.stdntapt.entity.Bed;
 import com.hsf.stdntapt.entity.Dormitory;
 import com.hsf.stdntapt.entity.Floor;
 import com.hsf.stdntapt.entity.Staff;
+import com.hsf.stdntapt.entity.StaffRota;
 
 public interface ApartmentService {
 	public int createApartment(Apartment apartment);
@@ -84,4 +85,12 @@ public interface ApartmentService {
 	public int deleteDorm(int dormId);
 
 	public int deleteBed(int dormId, int bedId);
+
+	public List<StaffRota> findApartRotaAll(int apartId);
+
+	public void deleteStaffRota(int apartId, int staffId);
+
+	public int createStaffRota(StaffRota rota);
+
+	public StaffRota findOneStaffRota(int staffId, int week);
 }
