@@ -4,7 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <html>
 <head>
-    <title></title>
+    <title>假期留校返家记录</title>
     <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">

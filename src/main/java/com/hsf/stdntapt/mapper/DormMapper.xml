@@ -19,6 +19,30 @@
         order by create_time desc
         limit 20
     </select>
+    <select id="getApartTopScores" parameterType="int" resultType="DormScore">
+        select dorm_id as dormId, avg(score) as avgScore from dorm_score 
+        where dorm_id in(
+	        select id from dormitory
+	        where floor_id in(
+	        	select id from floor
+	        	where apart_id=#{apartId} and deleted=0
+	        )and deleted=0
+        )and deleted=0 
+        group by dorm_id 
+        limit 10
+    </select>
+    <select id="getApartDayTopScores" resultType="DormScore">
+        select dorm_id as dormId, avg(score) as avgScore from dorm_score 
+        where dorm_id in(
+	        select id from dormitory
+	        where floor_id in(
+	        	select id from floor
+	        	where apart_id=#{apartId} and deleted=0
+	        )and deleted=0 
+        )and create_time like #{day} and deleted=0 
+        group by dorm_id 
+        limit 10
+    </select>
     <insert id="createDormScore" parameterType="DormScore" useGeneratedKeys="true" keyProperty="dormScore.id">
         INSERT INTO dorm_score(
         	<if test="dormScore.dormId != null">dorm_id,</if>
@@ -32,13 +56,22 @@
 	        <if test="dormScore.score != null">#{dormScore.score}</if>
 		)
     </insert>
+    <update id="updateDormScore" parameterType="DormScore" useGeneratedKeys="true" keyProperty="dormScore.id">
+    	UPDATE dorm_score SET 
+    		staff_id = #{dormScore.staffId}, 
+    		score = #{dormScore.score}
+    		where id = #{dormScore.id} and deleted=0
+    </update>
+    <delete id="deleteDormScore" parameterType="int">
+		delete from dorm_score where id=#{scoreId}
+	</delete>
     <select id="findOneDormScore" parameterType="int" resultType="DormScore">
         select dorm_id as dormId, staff_id as staffId, create_time as createTime, score from dorm_score 
         where dorm_id=#{dormId} and deleted=0
         order by create_time asc
     </select>
     <select id="findOneDormScoreByPage" parameterType="int" resultType="DormScore">
-        select dorm_id as dormId, staff_id as staffId, create_time as createTime, score from dorm_score 
+        select id, dorm_id as dormId, staff_id as staffId, create_time as createTime, score from dorm_score 
         where dorm_id=#{dormId} and deleted=0
         order by create_time desc limit #{start},#{size}
     </select>

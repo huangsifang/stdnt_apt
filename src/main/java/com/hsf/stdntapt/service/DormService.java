@@ -9,7 +9,15 @@ public interface DormService {
 
 	public List<DormScore> getApartNewScores(int apartId);
 
+	public List<DormScore> getApartTopScores(int apartId);
+
+	public List<DormScore> getApartDayTopScores(int apartId, String day);
+
 	public int createDormScore(DormScore dormScore);
+
+	public int updateDormScore(DormScore dormScore);
+
+	public void deleteDormScore(int scoreId);
 
 	public List<DormScore> findOneDormScore(int dormId);
 

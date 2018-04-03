@@ -9,6 +9,7 @@ public class DormScore {
 	private String staffName;
 	private Date createTime;
 	private int score;
+	private double avgScore;
 	private int apartId;
 	private int floorNo;
 	private int dormNo;
@@ -76,6 +77,14 @@ public class DormScore {
 
 	public void setScore(int score) {
 		this.score = score;
+	}
+
+	public double getAvgScore() {
+		return avgScore;
+	}
+
+	public void setAvgScore(double avgScore) {
+		this.avgScore = avgScore;
 	}
 
 	public int getApartId() {

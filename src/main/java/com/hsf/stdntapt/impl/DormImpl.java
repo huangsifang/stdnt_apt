@@ -26,8 +26,28 @@ public class DormImpl implements DormService {
 	}
 
 	@Override
+	public List<DormScore> getApartTopScores(int apartId) {
+		return dormDao.getApartTopScores(apartId);
+	}
+
+	@Override
+	public List<DormScore> getApartDayTopScores(int apartId, String day) {
+		return dormDao.getApartDayTopScores(apartId, day);
+	}
+
+	@Override
 	public int createDormScore(DormScore dormScore) {
 		return dormDao.createDormScore(dormScore);
+	}
+
+	@Override
+	public int updateDormScore(DormScore dormScore) {
+		return dormDao.updateDormScore(dormScore);
+	}
+
+	@Override
+	public void deleteDormScore(int scoreId) {
+		dormDao.deleteDormScore(scoreId);
 	}
 
 	@Override

@@ -3,7 +3,7 @@
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <html>
 <head>
-    <title></title>
+    <title>我的假期记录</title>
     <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
     <style>

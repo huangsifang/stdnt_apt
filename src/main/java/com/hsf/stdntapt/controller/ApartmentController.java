@@ -286,8 +286,7 @@ public class ApartmentController {
 	@ResponseBody
 	public String dormCreate(@PathVariable("apartId") int apartId, @PathVariable("floorId") int floorId,
 			@RequestParam(value = "dormNum") int dormNum, @RequestParam(value = "currentDormNum") int currentDormNum,
-			@RequestParam(value = "aDormBedNum") int aDormBedNum, @RequestParam(value = "dormFee") BigDecimal dormFee,
-			RedirectAttributes redirectAttributes) {
+			@RequestParam(value = "dormFee") BigDecimal dormFee, RedirectAttributes redirectAttributes) {
 		int dormId = 0;
 		String msg = "";
 		try {
@@ -309,16 +308,16 @@ public class ApartmentController {
 					}
 				}
 				/* 新增床位 */
-				int dormBedNum = apartmentService.getDormBedNum(dormId);
-				if (dormNum <= currentDormNum && aDormBedNum <= dormBedNum) {
-					msg = "errorEmpty";
-					break;
-				}
-				for (int j = dormBedNum; j < aDormBedNum; j++) {
-					Bed bed = new Bed(j + 1, dormId);
-					bed.setStdId(1);
-					apartmentService.createBed(bed);
-				}
+				// int dormBedNum = apartmentService.getDormBedNum(dormId);
+				// if (dormNum <= currentDormNum && aDormBedNum <= dormBedNum) {
+				// msg = "errorEmpty";
+				// break;
+				// }
+				// for (int j = dormBedNum; j < aDormBedNum; j++) {
+				// Bed bed = new Bed(j + 1, dormId);
+				// bed.setStdId(1);
+				// apartmentService.createBed(bed);
+				// }
 				msg = "success";
 			}
 		} catch (Exception e) {

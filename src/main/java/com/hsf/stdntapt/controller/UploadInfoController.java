@@ -157,9 +157,9 @@ public class UploadInfoController {
 					Floor floor = apartmentService.findFloorByApartIdFloorNo(stdBedList.get(i).getApartId(),
 							stdBedList.get(i).getFloorNo());
 					Dormitory dorm = apartmentService.findByDormNoFloorId(stdBedList.get(i).getDormNo(), floor.getId());
-					Bed bed = apartmentService.findBed(dorm.getId(), stdBedList.get(i).getBedId());
+					Bed bed = new Bed(stdBedList.get(i).getBedId(), dorm.getId());
 					bed.setStdId(stdBedList.get(i).getStdId());
-					apartmentService.updateDormStd(bed);
+					apartmentService.createBed(bed);
 				}
 				msg = "解析成功,总共" + stdBedList.size() + "条!";
 			} else if (type.equals("staff")) {
@@ -215,11 +215,12 @@ public class UploadInfoController {
 							dorm.setFee(apartList.get(i).getaStdYearFee());
 							dorm.setLeaderId(1);
 							apartmentService.createDorm(dorm);
-							for (int z = 0; z < apartList.get(i).getaDormBedNum(); z++) {
-								Bed bed = new Bed(z + 1, dorm.getId());
-								bed.setStdId(1);
-								apartmentService.createBed(bed);
-							}
+							// for (int z = 0; z <
+							// apartList.get(i).getaDormBedNum(); z++) {
+							// Bed bed = new Bed(z + 1, dorm.getId());
+							// bed.setStdId(1);
+							// apartmentService.createBed(bed);
+							// }
 						}
 					}
 				}

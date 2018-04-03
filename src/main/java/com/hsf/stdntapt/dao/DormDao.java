@@ -11,7 +11,15 @@ public interface DormDao {
 
 	public List<DormScore> getApartNewScores(@Param("apartId") int apartId);
 
+	public List<DormScore> getApartTopScores(@Param("apartId") int apartId);
+
+	public List<DormScore> getApartDayTopScores(@Param("apartId") int apartId, @Param("day") String day);
+
 	public int createDormScore(@Param("dormScore") DormScore dormScore);
+
+	public int updateDormScore(@Param("dormScore") DormScore dormScore);
+
+	public void deleteDormScore(@Param("scoreId") int scoreId);
 
 	public List<DormScore> findOneDormScore(@Param("dormId") int dormId);
 

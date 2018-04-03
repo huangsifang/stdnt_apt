@@ -1,9 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <html>
 <head>
-    <title></title>
+    <title>分数管理</title>
     <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/uploadForm.css" rel="stylesheet">
@@ -152,34 +153,88 @@
 	<div id="dayScoreMap"></div>
 	
 	<div class="row" style="padding: 20px">
-		<c:forEach items="${newScoreList}" var="score">
-			<a href="${pageContext.request.contextPath}/score/${score.apartId}/dorm/${score.floorDormNo}">
-				<div class="col-sm-3">
-					<div class="panel panel-default">
-						<div class="panel-body">
-		                   <label class="col-sm-6 control-label">寝室号：</label>
-		                   <span>${score.floorDormNo}</span>
-							<c:if test="${score.score < 60}">
-	                      	 	<span class="badge" style="background-color:#ee9e7e !important">${score.score}</span>
-	                        </c:if>
-	                        <c:if test="${score.score < 80 && score.score >= 60}">
-	                      	 	<span class="badge" style="background-color:#f4db59 !important">${score.score}</span>
-	                        </c:if>
-	                        <c:if test="${score.score < 90 && score.score >= 80 }">
-								<span class="badge">
-		                			${score.score}
-		               			</span>
-	               			</c:if>
-	               			<c:if test="${score.score >= 90}">
-								<span class="badge" style="background-color:#9fe8ba !important">
-		                			${score.score}
-		               			</span>
-	               			</c:if>
-	               		</div>
-					</div>
+		<div class="col-sm-6">
+			<div class="row" style="text-align:center">
+				<label>总排行</label>
+			</div>
+			<% int i=0; %>
+			<c:forEach items="${topScoreList}" var="score">
+				<div class="row">
+					<a href="${pageContext.request.contextPath}/score/${score.apartId}/dorm/${score.floorDormNo}">
+						<div class="col-sm-offset-3 col-sm-6">
+							<div class="panel panel-default">
+								<div class="panel-body">
+				                   <label class="col-sm-6 control-label"><%=i+1 %></label>
+				                   <span>${score.floorDormNo}</span>
+									<c:if test="${score.avgScore < 60}">
+			                      	 	<span class="badge" style="background-color:#ee9e7e !important">
+			                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+										</span>
+			                        </c:if>
+			                        <c:if test="${score.avgScore < 80 && score.avgScore >= 60}">
+			                      	 	<span class="badge" style="background-color:#f4db59 !important">
+			                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+			                      	 	</span>
+			                        </c:if>
+			                        <c:if test="${score.avgScore < 90 && score.avgScore >= 80 }">
+										<span class="badge">
+				                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+				               			</span>
+			               			</c:if>
+			               			<c:if test="${score.avgScore >= 90}">
+										<span class="badge" style="background-color:#9fe8ba !important">
+				                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+				               			</span>
+			               			</c:if>
+			               		</div>
+							</div>
+						</div>
+					</a>
 				</div>
-			</a>
-		</c:forEach>
+				<% i++; %>
+			</c:forEach>
+		</div>
+		<div class="col-sm-6">
+			<div class="row" style="text-align:center">
+				<label>今日排行</label>
+			</div>
+			<% int j=0; %>
+			<c:forEach items="${dayTopScoreList}" var="score">
+				<div class="row">
+					<a href="${pageContext.request.contextPath}/score/${score.apartId}/dorm/${score.floorDormNo}">
+						<div class="col-sm-offset-3 col-sm-6">
+							<div class="panel panel-default">
+								<div class="panel-body">
+				                   <label class="col-sm-6 control-label"><%=j+1 %></label>
+				                   <span>${score.floorDormNo}</span>
+									<c:if test="${score.avgScore < 60}">
+			                      	 	<span class="badge" style="background-color:#ee9e7e !important">
+			                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+			                      	 	</span>
+			                        </c:if>
+			                        <c:if test="${score.avgScore < 80 && score.avgScore >= 60}">
+			                      	 	<span class="badge" style="background-color:#f4db59 !important">
+			                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+			                      	 	</span>
+			                        </c:if>
+			                        <c:if test="${score.avgScore < 90 && score.avgScore >= 80 }">
+										<span class="badge">
+				                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+				               			</span>
+			               			</c:if>
+			               			<c:if test="${score.avgScore >= 90}">
+										<span class="badge" style="background-color:#9fe8ba !important">
+				                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+				               			</span>
+			               			</c:if>
+			               		</div>
+							</div>
+						</div>
+					</a>
+				</div>
+				<% j++; %>
+			</c:forEach>
+		</div>
 	</div>
 </div>
 
@@ -290,46 +345,50 @@
 	var gradeList = ['A:(90-100)', 'B:(80-90)', 'C:(60-80)', 'D:(0-60)'];
 	var scoreList = new Array();
 	var dayScoreList = new Array();
+	scoreList[0] = {"name": "A:(90-100)","value":0};
+	scoreList[1] = {"name": "B:(80-90)","value":0};
+	scoreList[2] = {"name": "C:(60-80)","value":0};
+	scoreList[3] = {"name": "D:(0-60)","value":0};
+	dayScoreList[0] = {"name": "A:(90-100)","value":0};
+	dayScoreList[1] = {"name": "B:(80-90)","value":0};
+	dayScoreList[2] = {"name": "C:(60-80)","value":0};
+	dayScoreList[3] = {"name": "D:(0-60)","value":0};
 	var i=0;
 	<c:forEach var="item" items="${apartDormScore}">
-		scoreList[i]= new Object();
 	    var grade = "${item.grade}";
 	    switch(grade) {
 	    case "A":
-	    	scoreList[i].name = grade + ":(90-100)";
+	    	scoreList[0].value = ${item.count};
 	    	break;
 	    case "B":
-	    	scoreList[i].name = grade + ":(80-90)";
+	    	scoreList[1].value = ${item.count};
 	    	break;
 	    case "C":
-	    	scoreList[i].name = grade + ":(60-80)";
+	    	scoreList[2].value = ${item.count};
 	    	break;
 	    case "D":
-	    	scoreList[i].name = grade + ":(0-60)";
+	    	scoreList[3].value = ${item.count};
 	    	break;
 	    }
-	    scoreList[i].value = ${item.count};
 	    i++;
 	</c:forEach>
 	var j=0;
 	<c:forEach var="item" items="${apartDormOneDayScore}">
-	dayScoreList[j]= new Object();
 	var grade = "${item.grade}";
 	switch(grade) {
 	case "A":
-		dayScoreList[j].name = grade + ":(90-100)";
+		dayScoreList[0].value = ${item.count};
 		break;
 	case "B":
-		dayScoreList[j].name = grade + ":(80-90)";
+		dayScoreList[1].value = ${item.count};
 		break;
 	case "C":
-		dayScoreList[j].name = grade + ":(60-80)";
+		dayScoreList[2].value = ${item.count};
 		break;
 	case "D":
-		dayScoreList[j].name = grade + ":(0-60)";
+		dayScoreList[3].value = ${item.count};
 		break;
 	}
-	dayScoreList[j].value = ${item.count};
 	j++;
 	</c:forEach>
 	

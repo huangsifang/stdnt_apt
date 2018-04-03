@@ -4,6 +4,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+	<title>首页</title>
 	<link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
 	<style type="text/css">
 		header{text-align: center;color: #fff;background: url(${pageContext.request.contextPath}/public/images/bg.jpg) no-repeat scroll center center ;-webkit-background-size: cover;-moz-background-size: cover;background-size: cover;-o-background-size: cover;height: 650px;}	

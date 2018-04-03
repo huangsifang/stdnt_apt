@@ -3,7 +3,7 @@
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <html>
 <head>
-    <title></title>
+    <title>寝室管理</title>
     <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
 </head>

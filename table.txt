@@ -53,11 +53,11 @@ insert into resource values(22, '公寓新增', 'button', '', 21, '0/1/21/', 'apartm
 insert into resource values(23, '公寓修改', 'button', '', 21, '0/1/21/', 'apartment:update', true);
 insert into resource values(24, '公寓删除', 'button', '', 21, '0/1/21/', 'apartment:delete', true);
 insert into resource values(25, '公寓查看', 'button', '', 21, '0/1/21/', 'apartment:view', true);
-insert into resource values(31, '打分管理', 'menu', '/score', 1, '0/1/', 'score:*', true);
-insert into resource values(32, '打分新增', 'button', '', 31, '0/1/31/', 'score:create', true);
-insert into resource values(33, '打分修改', 'button', '', 31, '0/1/31/', 'score:update', true);
-insert into resource values(34, '打分删除', 'button', '', 31, '0/1/31/', 'score:delete', true);
-insert into resource values(35, '打分查看', 'button', '', 31, '0/1/31/', 'score:view', true);
+insert into resource values(31, '分数管理', 'menu', '/score', 1, '0/1/', 'score:*', true);
+insert into resource values(32, '分数新增', 'button', '', 31, '0/1/31/', 'score:create', true);
+insert into resource values(33, '分数修改', 'button', '', 31, '0/1/31/', 'score:update', true);
+insert into resource values(34, '分数删除', 'button', '', 31, '0/1/31/', 'score:delete', true);
+insert into resource values(35, '分数查看', 'button', '', 31, '0/1/31/', 'score:view', true);
 insert into resource values(41, '假期管理', 'menu', '/holiday', 1, '0/1/', 'holiday:*', true);
 insert into resource values(42, '假期新增', 'button', '', 41, '0/1/41/', 'holiday:create', true);
 insert into resource values(43, '假期修改', 'button', '', 41, '0/1/41/', 'holiday:update', true);

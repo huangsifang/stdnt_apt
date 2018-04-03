@@ -3,7 +3,7 @@
 <%@taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <html>
 <head>
-    <title></title>
+    <title>楼层管理</title>
     <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
@@ -43,12 +43,12 @@
 						</div>
 						<input id="floorId" type="number" hidden/>
 						<input id="currentDormNum" type="number" name="currentDormNum" hidden/>
-						<div class="form-group">
+						<!-- <div class="form-group">
 							<label for="aDormBedNum" class="col-sm-4 control-label">床位数量/宿舍：</label>
 							<div class="col-sm-8">
 								<input class="form-control" type="number" name="aDormBedNum" value="4"/>
 					    	</div>
-						</div>
+						</div> -->
 						<div class="form-group">
 							<label for="dormFee" class="col-sm-4 control-label">费用/床：</label>
 							<div class="col-sm-8">

@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<title></title>
+	<title>批量管理</title>
 	<link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
 	<link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
 	<link href="${pageContext.request.contextPath}/public/css/uploadForm.css" rel="stylesheet">

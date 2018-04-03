@@ -1004,9 +1004,6 @@ public class ReadExcel {
 						apart.setaFloorDormNum(Integer.parseInt(cell.getStringCellValue()));
 					} else if (c == 4) {
 						cell.setCellType(Cell.CELL_TYPE_STRING);
-						apart.setaDormBedNum(Integer.parseInt(cell.getStringCellValue()));
-					} else if (c == 5) {
-						cell.setCellType(Cell.CELL_TYPE_STRING);
 						apart.setaStdYearFee(new BigDecimal(cell.getStringCellValue()));
 					}
 				}
