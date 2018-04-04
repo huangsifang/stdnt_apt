@@ -11,12 +11,11 @@
     <style>
     	.scoreMap {
     		height: 400px;
-    		border: 1px solid #ccc;
     		padding: 10px;
     	}
     	.scoreWord {
     		height: 400px;
-    		border: 1px solid #ccc;
+    		border-left: 1px dashed #ccc;
     		padding: 10px;
     		margin: 0 auto;
     		text-align: center;
@@ -77,7 +76,7 @@
     </div><!-- /.modal -->
 </div>
 
-<div style="margin:20px 50px">
+<div class="container">
 	
 	<div class="row">
 		<shiro:hasPermission name="score:create">
@@ -119,38 +118,42 @@
 		</div>
 	</form>
 	
-	<ul class="nav nav-tabs" id="apartUl">
-		<c:forEach items="${apartList}" var="apart">
-			<li><a href="${pageContext.request.contextPath}/score/${apart.apartId}">${apart.apartName}</a></li>
-	    </c:forEach>
-	</ul>
-	
-	<c:if test="${not empty apartId}">
-		<div class="row">
-			<div class="col-sm-6">
-				<c:if test="${empty apartDormScore}">
-					<div class="scoreWord">
-						该公寓未有任何得分记录
-					</div>
-				</c:if>
-				<c:if test="${not empty apartDormScore}">
-					<div id="scoreMap" class="scoreMap"></div>
-				</c:if>
-			</div>
-			<div class="col-sm-6">
-				<c:if test="${empty apartDormOneDayScore}">
-					<div class="scoreWord">
-						该公寓今日未有任何得分记录
-					</div>
-				</c:if>
-				<c:if test="${not empty apartDormOneDayScore}">
-					<div id="dayScoreMap" class="scoreMap"></div>
-				</c:if>
-			</div>
+	<div class="card">
+		<div class="header">
+			<ul class="nav nav-tabs" id="apartUl">
+				<c:forEach items="${apartList}" var="apart">
+					<li><a href="${pageContext.request.contextPath}/score/${apart.apartId}">${apart.apartName}</a></li>
+			    </c:forEach>
+			</ul>
 		</div>
-	</c:if>
-	<div id="scoreMap"></div>
-	<div id="dayScoreMap"></div>
+		
+		<c:if test="${not empty apartId}">
+			<div class="row">
+				<div class="col-sm-6">
+					<c:if test="${empty apartDormScore}">
+						<div class="scoreWord">
+							该公寓未有任何得分记录
+						</div>
+					</c:if>
+					<c:if test="${not empty apartDormScore}">
+						<div id="scoreMap" class="scoreMap"></div>
+					</c:if>
+				</div>
+				<div class="col-sm-6">
+					<c:if test="${empty apartDormOneDayScore}">
+						<div class="scoreWord">
+							该公寓今日未有任何得分记录
+						</div>
+					</c:if>
+					<c:if test="${not empty apartDormOneDayScore}">
+						<div id="dayScoreMap" class="scoreMap"></div>
+					</c:if>
+				</div>
+			</div>
+		</c:if>
+		<div id="scoreMap"></div>
+		<div id="dayScoreMap"></div>
+	</div>
 	
 	<div class="row" style="padding: 20px">
 		<div class="col-sm-6">

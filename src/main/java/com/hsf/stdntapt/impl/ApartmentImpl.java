@@ -226,7 +226,12 @@ public class ApartmentImpl implements ApartmentService {
 	}
 
 	@Override
-	public StaffRota findOneStaffRota(int staffId, int week) {
-		return apartmentDao.findOneStaffRota(staffId, week);
+	public StaffRota findOneStaffRota(int apartId, int staffId, int week) {
+		return apartmentDao.findOneStaffRota(apartId, staffId, week);
+	}
+
+	@Override
+	public List<StaffRota> findApartRotaAllByWeek(int apartId, int week) {
+		return apartmentDao.findApartRotaAllByWeek(apartId, week);
 	}
 }

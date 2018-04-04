@@ -13,6 +13,7 @@ public class StaffRota {
 	private String staffIdsStr;
 	private List<Integer> staffIds;
 	private List<Staff> staffs;
+	private Staff staff;
 	private int week;
 
 	public StaffRota() {
@@ -97,6 +98,14 @@ public class StaffRota {
 
 	public void setStaffs(List<Staff> staffs) {
 		this.staffs = staffs;
+	}
+
+	public Staff getStaff() {
+		return staff;
+	}
+
+	public void setStaff(Staff staff) {
+		this.staff = staff;
 	}
 
 	public int getWeek() {

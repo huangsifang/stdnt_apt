@@ -14,6 +14,7 @@ public class Apartment {
 	private BigDecimal aStdYearFee;
 	private List<Staff> staffs;
 	private String staffsStr;
+	private List<StaffRota> rotas;
 	private boolean deleted = Boolean.FALSE;
 
 	public Apartment() {
@@ -119,6 +120,14 @@ public class Apartment {
 		}
 		this.staffs = staffs;
 		this.staffsStr = staffsStr;
+	}
+
+	public List<StaffRota> getRotas() {
+		return rotas;
+	}
+
+	public void setRotas(List<StaffRota> rotas) {
+		this.rotas = rotas;
 	}
 
 	public boolean getDeleted() {

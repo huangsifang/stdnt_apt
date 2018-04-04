@@ -217,6 +217,11 @@
     <select id="findOneStaffRota" resultType="StaffRota">
     	select rota_id as rotaId, apart_id as apartId, staff_id as staffId, week 
     	from staff_rota 
-    	where staff_id=#{staffId} and week=#{week} and deleted=0
+    	where apart_id=#{apartId} and staff_id=#{staffId} and week=#{week} and deleted=0
+    </select>
+    <select id="findApartRotaAllByWeek" resultType="StaffRota">
+    	select rota_id as rotaId, apart_id as apartId, staff_id as staffId, week 
+    	from staff_rota 
+    	where apart_id=#{apartId} and week=#{week} and deleted=0
     </select>
 </mapper>

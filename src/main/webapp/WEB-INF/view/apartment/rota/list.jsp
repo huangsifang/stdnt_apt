@@ -4,9 +4,6 @@
 <html>
 <head>
     <title>公寓值班表</title>
-    <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="../../navbar.jsp"></jsp:include>
@@ -44,59 +41,63 @@
     </div><!-- /.modal -->
 </div>
 
-<div style="margin:20px 50px">
-	<table class="table">
-	    <thead>
-	        <tr>
-	            <th>时间</th>
-	            <th>值班人员</th>
-	            <th>操作</th>
-	        </tr>
-	    </thead>
-	    <tbody>
-	        <c:forEach items="${rotaList}" var="rota">
-	            <tr>
-	            	<c:if test="${rota.week == 1}">
-	            		<td>星期一</td>
-	            	</c:if>
-	            	<c:if test="${rota.week == 2}">
-	            		<td>星期二</td>
-	            	</c:if>
-	            	<c:if test="${rota.week == 3}">
-	            		<td>星期三</td>
-	            	</c:if>
-	            	<c:if test="${rota.week == 4}">
-	            		<td>星期四</td>
-	            	</c:if>
-	            	<c:if test="${rota.week == 5}">
-	            		<td>星期五</td>
-	            	</c:if>
-	            	<c:if test="${rota.week == 6}">
-	            		<td>星期六</td>
-	            	</c:if>
-	            	<c:if test="${rota.week == 7}">
-	            		<td>星期日</td>
-	            	</c:if>
-	                <td>
-		                <c:forEach items="${rota.staffs}" var="staff">
-		                	<div style="margin:5px 0">
-			                	${staff.staffId}:${staff.staffName}——${staff.staffTel}
-			                	<button class="btn btn-danger" onClick="deleteStaffRota(${rota.apartId},${staff.staffId})"><i class="fa fa-trash-o"></i></button>
-		                	</div>
-		                </c:forEach>
-	                </td>
-	                <td>
-	                	<button class="btn btn-default" data-toggle="modal" data-target="#staffModal" onClick="showStaffModal(${rota.week})">新增</button>
-	                </td>
-	            </tr>
-	        </c:forEach>
-	    </tbody>
-	</table>
+<div class="container">
+	<div class="card">
+		<div class="header">
+			<h4>${apartName}值班表</h4>
+		</div>
+		<div class="content table-responsive">
+			<table class="table">
+			    <thead>
+			        <tr>
+			            <th>时间</th>
+			            <th>值班人员</th>
+			            <th>操作</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			        <c:forEach items="${rotaList}" var="rota">
+			            <tr>
+			            	<c:if test="${rota.week == 1}">
+			            		<td>星期一</td>
+			            	</c:if>
+			            	<c:if test="${rota.week == 2}">
+			            		<td>星期二</td>
+			            	</c:if>
+			            	<c:if test="${rota.week == 3}">
+			            		<td>星期三</td>
+			            	</c:if>
+			            	<c:if test="${rota.week == 4}">
+			            		<td>星期四</td>
+			            	</c:if>
+			            	<c:if test="${rota.week == 5}">
+			            		<td>星期五</td>
+			            	</c:if>
+			            	<c:if test="${rota.week == 6}">
+			            		<td>星期六</td>
+			            	</c:if>
+			            	<c:if test="${rota.week == 7}">
+			            		<td>星期日</td>
+			            	</c:if>
+			                <td>
+				                <c:forEach items="${rota.staffs}" var="staff">
+				                	<div style="margin:5px 0">
+					                	${staff.staffId}:${staff.staffName}——${staff.staffTel}
+					                	<button class="btn btn-danger" onClick="deleteStaffRota(${rota.apartId},${staff.staffId})"><i class="fa fa-trash-o"></i></button>
+				                	</div>
+				                </c:forEach>
+			                </td>
+			                <td>
+			                	<button class="btn btn-default" data-toggle="modal" data-target="#staffModal" onClick="showStaffModal(${rota.week})">新增</button>
+			                </td>
+			            </tr>
+			        </c:forEach>
+			    </tbody>
+			</table>
+		</div>
+	</div>
 </div>
 </body>
-<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script> 
-<script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
-<script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 function deleteStaffRota(apartId, staffId) {
 	swal({ 

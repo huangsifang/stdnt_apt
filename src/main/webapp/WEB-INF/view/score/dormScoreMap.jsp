@@ -7,9 +7,6 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>寝室得分</title>
-	<link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
-	<link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
-	<link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
 	<style>
 		.badge {
 	    		position: absolute;
@@ -50,123 +47,128 @@
 	    </div><!-- /.modal -->
 	</div>
 	
-	<div style="margin:20px 50px">
-		<c:if test="${apartId == 0 || floorDormNo == 0}">
-			<div class="panel">
-				<div class="panel-body">
-					<span>您还未加入任何寝室，请联系公寓管理员</span>
-				</div>
-			</div>
-		</c:if>
-		<c:if test="${apartId != 0 && floorDormNo != 0}">
-			<div class="row">
-				<c:if test="${showTop}">
-				<div class="col-sm-9">
+	<div class="container">
+		<div class="card">
+			<div class="content">
+				<c:if test="${apartId == 0 || floorDormNo == 0}">
+					<div class="panel">
+						<div class="panel-body">
+							<span>您还未加入任何寝室，请联系公寓管理员</span>
+						</div>
+					</div>
 				</c:if>
-					<div class="row" style="text-align:center">
-						<label>我的寝室得分</label>
-					</div>
-				    <div id="main" style="height: 400px; border: 1px solid #ccc; padding: 10px;"></div>
-				    
-				    <table class="table" style="margin-top:20px">
-					    <thead>
-					        <tr>
-					            <th>寝室号</th>
-					            <th>分数</th>
-					            <th>打分者</th>
-					            <th>打分时间</th>
-					            <shiro:hasPermission name="score:update">
-					            	<th>操作</th>
-					            </shiro:hasPermission>
-					        </tr>
-					    </thead>
-					    <tbody>
-					    	<c:if test="${empty oneDormScores}">
-					    		<tr>
-					    			<td colspan="4" style="text-align:center">寝室该没有任何得分j！</td>
-					    		</tr>
-					    	</c:if>
-					        <c:forEach items="${oneDormScores}" var="score">
-					            <tr>
-					                <td>${floorDormNo}</td>
-					                <td>${score.score}</td>
-					                <td>${score.staffName}</td>
-					                <td><fmt:formatDate value="${score.createTime}" pattern="yyyy-MM-dd HH:mm" /></td>
-					                <shiro:hasPermission name="score:update">
-						            	<td>
-						            		<button class="btn btn-default" data-toggle="modal" data-target="#scoreModal" onClick="updateScore(${score.id})"><i class="fa fa-edit"></i></button>
-						            		<button class="btn btn-danger" onClick="deleteScore(${score.id})"><i class="fa fa-trash-o"></i></button>
-						            	</td>
-						            </shiro:hasPermission>
-					            </tr>
-					        </c:forEach>
-					    </tbody>
-					</table>
-					<c:if test="${allCount != 0}">
-						<ul class="pagination tablePage">
-						    <li><a href="${pageContext.request.contextPath}/score/${apartId}/dorm/${floorDormNo}?start=${start-10}">&laquo;</a></li>
-						    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
-						    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/score/${apartId}/dorm/${floorDormNo}?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
-						    </c:forEach>
-						    <li><a href="${pageContext.request.contextPath}/score/${apartId}/dorm/${floorDormNo}?start=${start+10}">&raquo;</a></li>
-						</ul>
-					</c:if>
-				</div>
-				<c:if test="${showTop}">
-				<div class="col-sm-2" style="margin-left:20px">
-					<div class="row" style="text-align:center">
-						<label>今日排行</label>
-					</div>
-					<% int j=0; %>
-					<c:if test="${empty dayTopScoreList}">
-						<div class="panel">
-							<div class="panel-body">
-								<span>今日未有任何分数记录</span>
+				<c:if test="${apartId != 0 && floorDormNo != 0}">
+					<div class="row">
+						<c:if test="${showTop}">
+						<div class="col-sm-9">
+						</c:if>
+							<div class="header">
+								<div class="row" style="text-align:center">
+									<label>我的寝室得分</label>
+								</div>
+							</div>
+						    <div id="main" style="height: 400px; padding: 10px;"></div>
+						    
+						    <div class="content table-responsive">
+							    <table class="table" style="margin-top:20px">
+								    <thead>
+								        <tr>
+								            <th>寝室号</th>
+								            <th>分数</th>
+								            <th>打分者</th>
+								            <th>打分时间</th>
+								            <shiro:hasPermission name="score:update">
+								            	<th>操作</th>
+								            </shiro:hasPermission>
+								        </tr>
+								    </thead>
+								    <tbody>
+								    	<c:if test="${empty oneDormScores}">
+								    		<tr>
+								    			<td colspan="4" style="text-align:center">寝室该没有任何得分j！</td>
+								    		</tr>
+								    	</c:if>
+								        <c:forEach items="${oneDormScores}" var="score">
+								            <tr>
+								                <td>${floorDormNo}</td>
+								                <td>${score.score}</td>
+								                <td>${score.staffName}</td>
+								                <td><fmt:formatDate value="${score.createTime}" pattern="yyyy-MM-dd HH:mm" /></td>
+								                <shiro:hasPermission name="score:update">
+									            	<td>
+									            		<button class="btn btn-default" data-toggle="modal" data-target="#scoreModal" onClick="updateScore(${score.id})"><i class="fa fa-edit"></i></button>
+									            		<button class="btn btn-danger" onClick="deleteScore(${score.id})"><i class="fa fa-trash-o"></i></button>
+									            	</td>
+									            </shiro:hasPermission>
+								            </tr>
+								        </c:forEach>
+								    </tbody>
+								</table>
+								<c:if test="${allCount != 0}">
+									<ul class="pagination tablePage">
+									    <li><a href="${pageContext.request.contextPath}/score/${apartId}/dorm/${floorDormNo}?start=${start-10}">&laquo;</a></li>
+									    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
+									    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/score/${apartId}/dorm/${floorDormNo}?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
+									    </c:forEach>
+									    <li><a href="${pageContext.request.contextPath}/score/${apartId}/dorm/${floorDormNo}?start=${start+10}">&raquo;</a></li>
+									</ul>
+								</c:if>
 							</div>
 						</div>
-					</c:if>
-					<c:forEach items="${dayTopScoreList}" var="score">
-						<div class="row">
-							<a href="${pageContext.request.contextPath}/score/${score.apartId}/dorm/${score.floorDormNo}">
-								<div class="panel panel-default">
+						<c:if test="${showTop}">
+						<div class="col-sm-2" style="margin-left:20px">
+							<div class="row" style="text-align:center">
+								<label>今日排行</label>
+							</div>
+							<% int j=0; %>
+							<c:if test="${empty dayTopScoreList}">
+								<div class="panel">
 									<div class="panel-body">
-					                   <label class="col-sm-6 control-label"><%=j+1 %></label>
-					                   <span>${score.floorDormNo}</span>
-										<c:if test="${score.avgScore < 60}">
-				                      	 	<span class="badge" style="background-color:#ee9e7e !important">
-				                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
-				                      	 	</span>
-				                        </c:if>
-				                        <c:if test="${score.avgScore < 80 && score.avgScore >= 60}">
-				                      	 	<span class="badge" style="background-color:#f4db59 !important">
-				                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
-				                      	 	</span>
-				                        </c:if>
-				                        <c:if test="${score.avgScore < 90 && score.avgScore >= 80 }">
-											<span class="badge">
-					                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
-					               			</span>
-				               			</c:if>
-				               			<c:if test="${score.avgScore >= 90}">
-											<span class="badge" style="background-color:#9fe8ba !important">
-					                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
-					               			</span>
-				               			</c:if>
-				               		</div>
+										<span>今日未有任何分数记录</span>
+									</div>
 								</div>
-							</a>
+							</c:if>
+							<c:forEach items="${dayTopScoreList}" var="score">
+								<div class="row">
+									<a href="${pageContext.request.contextPath}/score/${score.apartId}/dorm/${score.floorDormNo}">
+										<div class="panel panel-default">
+											<div class="panel-body">
+							                   <label class="col-sm-6 control-label"><%=j+1 %></label>
+							                   <span>${score.floorDormNo}</span>
+												<c:if test="${score.avgScore < 60}">
+						                      	 	<span class="badge" style="background-color:#ee9e7e !important">
+						                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+						                      	 	</span>
+						                        </c:if>
+						                        <c:if test="${score.avgScore < 80 && score.avgScore >= 60}">
+						                      	 	<span class="badge" style="background-color:#f4db59 !important">
+						                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+						                      	 	</span>
+						                        </c:if>
+						                        <c:if test="${score.avgScore < 90 && score.avgScore >= 80 }">
+													<span class="badge">
+							                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+							               			</span>
+						               			</c:if>
+						               			<c:if test="${score.avgScore >= 90}">
+													<span class="badge" style="background-color:#9fe8ba !important">
+							                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+							               			</span>
+						               			</c:if>
+						               		</div>
+										</div>
+									</a>
+								</div>
+								<% j++; %>
+							</c:forEach>
 						</div>
-						<% j++; %>
-					</c:forEach>
-				</div>
+					</div>
+					</c:if>
+				</c:if>
 			</div>
-			</c:if>
-		</c:if>
+		</div>
 	</div>
-	<script src="<c:url value='/public/js/jquery-3.3.1.min.js'/>"></script>
 	<script src="<c:url value='/public/js/echarts.common.min.js'/>"></script> 
-	<script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
-	<script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
     <script>
     	$(function() {
     		$("#scoreSubmitBtn").click(function() {

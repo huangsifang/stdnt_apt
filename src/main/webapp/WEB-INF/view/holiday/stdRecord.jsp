@@ -4,8 +4,6 @@
 <html>
 <head>
     <title>我的假期记录</title>
-    <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
     <style>
     	fieldset {
 		  padding-bottom: 20px !important;
@@ -19,23 +17,68 @@
 		fieldset .form-group {
 		  margin-bottom: 0 !important;
 		}
+		.change_link{
+			width: 100%;
+            font-size: 16px ;
+            text-align: right;
+            border-top: 1px solid rgb(219, 229, 232);
+            -webkit-border-radius: 0 0  5px 5px;
+               -moz-border-radius: 0 0  5px 5px;
+                    border-radius: 0 0  5px 5px;
+            background: rgb(225, 234, 235);
+            background: -moz-repeating-linear-gradient(-45deg, 
+            rgb(247, 247, 247) , 
+            rgb(247, 247, 247) 15px, 
+            rgb(225, 234, 235) 15px, 
+            rgb(225, 234, 235) 30px, 
+            rgb(247, 247, 247) 30px
+            );
+            background: -webkit-repeating-linear-gradient(-45deg, 
+            rgb(247, 247, 247) , 
+            rgb(247, 247, 247) 15px, 
+            rgb(225, 234, 235) 15px, 
+            rgb(225, 234, 235) 30px, 
+            rgb(247, 247, 247) 30px
+            );
+            background: -o-repeating-linear-gradient(-45deg, 
+            rgb(247, 247, 247) , 
+            rgb(247, 247, 247) 15px, 
+            rgb(225, 234, 235) 15px, 
+            rgb(225, 234, 235) 30px, 
+            rgb(247, 247, 247) 30px
+            );
+            background: repeating-linear-gradient(-45deg, 
+            rgb(247, 247, 247) , 
+            rgb(247, 247, 247) 15px, 
+            rgb(225, 234, 235) 15px, 
+            rgb(206, 247, 232) 30px, 
+            rgb(247, 247, 247) 30px
+            );
+        }
     </style>
 </head>
 <body>
 <jsp:include page="../navbar.jsp"></jsp:include>
 
-<div style="margin:20px 50px">
-	<div class="pull-right">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
+<div class="container">
 
-	<div class="row">
-		<div class="col-md-offset-3 col-md-4">
-			<div class="panel panel-default">
-			    <div class="panel-heading">
-			        <h3 class="panel-title">
-			        	我的假期信息
-			        </h3>
-			    </div>
-			    <div class="panel-body">
+	<div class="row" style="margin-top:20px">
+		<div class="col-md-offset-3 col-md-6">
+			<div class="card">
+				<fieldset class="change_link">
+				    <div class="header">
+				    	<h4 class="pull-left">我的假期信息</h4>
+				    	<c:if test="${stdRecord.inHome}">
+							<c:if test="${!hasSign}">
+								<button type="button" class="btn btn-default pull-right" onClick="sign(${stdRecord.holiId})">签到</button>
+							</c:if>
+							<c:if test="${hasSign}">
+								<button type="button" class="btn btn-default pull-right">已签到</button>
+							</c:if>
+						</c:if>
+				    </div>
+			    </fieldset>
+			    <div class="content">
 					<form id="recordForm" action="" method="post">
 						<fieldset>
 							<div class="form-group">
@@ -96,24 +139,6 @@
 								   	</div>
 								</div>
 							</fieldset>
-							<c:if test="${!hasSign}">
-								<fieldset>
-									<div class="form-group">
-										<div class="col-sm-offset-4 col-sm-8">
-											<button type="button" class="btn btn-default" onClick="sign(${stdRecord.holiId})">签到</button>
-									   	</div>
-									</div>
-								</fieldset>
-							</c:if>
-							<c:if test="${hasSign}">
-								<fieldset>
-									<div class="form-group">
-										<div class="col-sm-offset-4 col-sm-8">
-											<button type="button" class="btn btn-default">已签到</button>
-									   	</div>
-									</div>
-								</fieldset>
-							</c:if>
 						</c:if>
 					</form>
 			    </div>
@@ -122,9 +147,6 @@
 	</div>
 </div>
 </body>
-<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
-<script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
-<script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 function sign(holiId) {
 	$.ajax({

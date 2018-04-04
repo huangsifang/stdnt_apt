@@ -4,10 +4,12 @@
 <html>
 <head>
     <title>公寓管理</title>
-    <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/uploadForm.css" rel="stylesheet">
+    <style>
+    	.fileForm {
+    		margin: 10px 15px
+    	}
+    </style>
 </head>
 <body>
 <jsp:include page="../navbar.jsp"></jsp:include>
@@ -107,12 +109,9 @@
     </div><!-- /.modal -->
 </div>
 
-<div style="margin:20px 50px">
+<div class="container">
 	<shiro:hasPermission name="apartment:create">
 		<div class="row">
-			<div class="pull-left" style="padding:20px">
-				<button class="btn btn-default" type="button" data-toggle="modal" data-target="#apartAddModal">公寓新增</button>
-			</div>
 		    <form action="${pageContext.request.contextPath}/upload/uploadInfoFromType.do" method="post" name="formApart" id="formApart" onsubmit="return validate(formApart)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
 			     导入公寓信息： 
 				<a href="javascript:;" class="file">选择文件
@@ -142,49 +141,56 @@
 		</div>
 	</form>
 	
-	<table class="table">
-	    <thead>
-	        <tr>
-	            <th>公寓号</th>
-	            <th>公寓名</th>
-	            <th>楼层数</th>
-	            <th>宿舍数</th>
-	            <th>管理员</th>
-	            <th>操作</th>
-	        </tr>
-	    </thead>
-	    <tbody>
-	        <c:forEach items="${apartList}" var="apart">
-	            <tr>
-	                <td>${apart.apartId}</td>
-	                <td><a href="apartment/${apart.apartId}/floor">${apart.apartName}</a></td>
-	                <td><a href="apartment/${apart.apartId}/floor">${apart.floorNum}</a></td>
-	                <td>${apart.dormNum}</td>
-	                <td>
-	                	<c:forEach items="${apart.staffs}" var="staff">
-	                		${staff.staffId}:${staff.staffName}<br />
-	                	</c:forEach>
-	                	<a href="apartment/${apart.apartId}/staffRota">查看值班表</a>
-	                </td>
-	                <td>
-	                    <shiro:hasPermission name="apartment:update">
-	                    	<button class="btn btn-default" type="button" data-toggle="modal" data-target="#apartModal" onClick="updateApart(${apart.apartId},'${apart.apartName}','${apart.staffsStr}')">修改</button>
-	                    </shiro:hasPermission>
-	
-	                    <shiro:hasPermission name="apartment:delete">
-	                    	<button class="btn btn-danger" onClick="deleteApart(${apart.apartId})">删除</button>
-	                    </shiro:hasPermission>
-	                </td>
-	            </tr>
-	        </c:forEach>
-	    </tbody>
-	</table>
+	<div class="card">
+		<div class="header">
+			<h4 class="pull-left">公寓列表</h4>
+			<shiro:hasPermission name="apartment:create">
+				<button class="btn btn-default pull-right" type="button" data-toggle="modal" data-target="#apartAddModal">公寓新增</button>
+			</shiro:hasPermission>
+		</div>
+		<div class="content table-responsive">
+			<table class="table">
+			    <thead>
+			        <tr>
+			            <th>公寓号</th>
+			            <th>公寓名</th>
+			            <th>楼层数</th>
+			            <th>宿舍数</th>
+			            <th>管理员</th>
+			            <th>操作</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			        <c:forEach items="${apartList}" var="apart">
+			            <tr>
+			                <td>${apart.apartId}</td>
+			                <td><a href="apartment/${apart.apartId}/floor">${apart.apartName}</a></td>
+			                <td><a href="apartment/${apart.apartId}/floor">${apart.floorNum}</a></td>
+			                <td>${apart.dormNum}</td>
+			                <td>
+			                	<c:forEach items="${apart.staffs}" var="staff">
+			                		${staff.staffId}:${staff.staffName}<br />
+			                	</c:forEach>
+			                	<a href="apartment/${apart.apartId}/staffRota">查看值班表</a>
+			                </td>
+			                <td>
+			                    <shiro:hasPermission name="apartment:update">
+			                    	<button class="btn btn-default" type="button" data-toggle="modal" data-target="#apartModal" onClick="updateApart(${apart.apartId},'${apart.apartName}','${apart.staffsStr}')">修改</button>
+			                    </shiro:hasPermission>
+			
+			                    <shiro:hasPermission name="apartment:delete">
+			                    	<button class="btn btn-danger" onClick="deleteApart(${apart.apartId})">删除</button>
+			                    </shiro:hasPermission>
+			                </td>
+			            </tr>
+			        </c:forEach>
+			    </tbody>
+			</table>
+		</div>
+	</div>
 </div>
 </body>
-<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script> 
 <script src="${pageContext.request.contextPath}/public/js/jquery.form.min.js" ></script>
-<script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
-<script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 	var staffNum = 0;
 	$(function() {

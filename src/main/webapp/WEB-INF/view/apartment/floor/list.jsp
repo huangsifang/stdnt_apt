@@ -4,9 +4,6 @@
 <html>
 <head>
     <title>楼层管理</title>
-    <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
 	<style>
 		.badge {
 			font-size: 1.2em !important;
@@ -66,46 +63,48 @@
     </div><!-- /.modal -->
 </div>
 
-<div style="margin:20px 50px">
-	<div class="pull-left">
-		<button class="btn btn-default" onClick="addFloor(${apartId},${floorNum})">新增一层楼</button>
+<div class="container">
+	<div class="card">
+		<div class="header">
+			<h4 class="pull-left">值班表</h4>
+			<button class="btn btn-default pull-right" onClick="addFloor(${apartId},${floorNum})">新增一层楼</button>
+		</div>
+		<div class="content table-responsive">
+			<table class="table">
+			    <thead>
+			        <tr>
+			            <th>楼层号</th>
+			            <th>宿舍数量</th>
+			            <th>宿舍</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			        <c:forEach items="${floorList}" var="floor">
+			            <tr>
+			                <td>${floor.floorNo}</td>
+			                <td>
+			                	<span>${floor.dormNum}</span>
+			                	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#floorModal" onClick="showNumForm(${floor.id},${floor.dormNum})"><i class="fa fa-edit"></i></button>
+			                	<button type="button" class="btn btn-danger" onClick="deleteFloor(${apartId}, ${floor.id})"><i class="fa fa-trash-o"></i></button>
+			                </td>
+			                <td style="font-size:1em">
+			                	<c:forEach items="${floor.dormList}" var="dorm">
+			                		<a href="${pageContext.request.contextPath}/apartment/${apartId}/dorm/${dorm.id}">
+				                		<span class="badge">
+				                			${dorm.dormNo}
+				                		</span>
+			                		</a>
+			                	</c:forEach>
+			                </td>
+			            </tr>
+			        </c:forEach>
+			    </tbody>
+			</table>
+		</div>
 	</div>
-	<table class="table">
-	    <thead>
-	        <tr>
-	            <th>楼层号</th>
-	            <th>宿舍数量</th>
-	            <th>宿舍</th>
-	        </tr>
-	    </thead>
-	    <tbody>
-	        <c:forEach items="${floorList}" var="floor">
-	            <tr>
-	                <td>${floor.floorNo}</td>
-	                <td>
-	                	<span>${floor.dormNum}</span>
-	                	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#floorModal" onClick="showNumForm(${floor.id},${floor.dormNum})"><i class="fa fa-edit"></i></button>
-	                	<button type="button" class="btn btn-danger" onClick="deleteFloor(${apartId}, ${floor.id})"><i class="fa fa-trash-o"></i></button>
-	                </td>
-	                <td style="font-size:1em">
-	                	<c:forEach items="${floor.dormList}" var="dorm">
-	                		<a href="${pageContext.request.contextPath}/apartment/${apartId}/dorm/${dorm.id}">
-		                		<span class="badge">
-		                			${dorm.dormNo}
-		                		</span>
-	                		</a>
-	                	</c:forEach>
-	                </td>
-	            </tr>
-	        </c:forEach>
-	    </tbody>
-	</table>
 </div>
 </body>
-<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
 <script src="${pageContext.request.contextPath}/public/js/jquery.form.min.js" ></script> 
-<script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
-<script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 function showNumForm(floorId, dormNum) {
 	$("#floorId").val(floorId);

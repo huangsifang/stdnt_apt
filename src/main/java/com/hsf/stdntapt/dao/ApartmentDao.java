@@ -95,5 +95,8 @@ public interface ApartmentDao {
 
 	public int createStaffRota(@Param("rota") StaffRota rota);
 
-	public StaffRota findOneStaffRota(@Param("staffId") int staffId, @Param("week") int week);
+	public StaffRota findOneStaffRota(@Param("apartId") int apartId, @Param("staffId") int staffId,
+			@Param("week") int week);
+
+	public List<StaffRota> findApartRotaAllByWeek(@Param("apartId") int apartId, @Param("week") int week);
 }

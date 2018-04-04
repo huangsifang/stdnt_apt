@@ -5,80 +5,83 @@
 <html>
 <head>
     <title>公寓寝室维修</title>
-    <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="../navbar.jsp"></jsp:include>
 
-<div style="margin:20px 50px">
+<div class="container">
 
-	<ul class="nav nav-tabs" id="apartUl">
-		<c:forEach items="${apartList}" var="apart">
-			<li><a href="${pageContext.request.contextPath}/repair/apart/${apart.apartId}">${apart.apartName}</a></li>
-	    </c:forEach>
-	</ul>
+	<div class="card">
+		<div class="header">
+			<ul class="nav nav-tabs" id="apartUl">
+				<c:forEach items="${apartList}" var="apart">
+					<li><a href="${pageContext.request.contextPath}/repair/apart/${apart.apartId}">${apart.apartName}</a></li>
+			    </c:forEach>
+			</ul>
+		</div>
 	
-	<table class="table">
-	    <thead>
-	        <tr>
-	            <th>寝室号</th>
-	            <th>申请者</th>
-	            <th>维修类型</th>
-	            <th>申请时间</th>
-	            <th>备注</th>
-	            <th>状态</th>
-	            <th>操作</th>
-	        </tr>
-	    </thead>
-	    <tbody>
-	    	<c:if test="${empty repairList}">
-	    		<tr>
-	    			<td colspan="7" style="text-align:center">该公寓没有任何维修信息！</td>
-	    		</tr>
-	    	</c:if>
-	        <c:forEach items="${repairList}" var="repair">
-	            <tr>
-	                <td>${repair.dormNo}</td>
-	                <td>${repair.applicantName}</td>
-	                <td>${repair.repairTypeName}</td>
-	                <td><fmt:formatDate value="${repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></td>
-	                <td>${repair.remark}</td>
-	                <c:if test="${repair.state == 0}">
-	                	<td><span class="label label-warning">未接单</span></td>
-	                </c:if>
-	                <c:if test="${repair.state == 1}">
-	                	<td><span class="label label-info">已接单</span></td>
-	                </c:if>
-	                <c:if test="${repair.state == 2}">
-	                	<td><span class="label label-success">已结束</span></td>
-	                </c:if>
-	                <c:if test="${repair.state == 3}">
-	                	<td><span class="label label-default">已取消</span></td>
-	                </c:if>
-	                <td>
-	                	<c:if test="${repair.state != 3}">
-		                	<shiro:hasPermission name="repair:view">
-		                		<a href="${pageContext.request.contextPath}/repair/${repair.id}/record">查看</a>
-		                    </shiro:hasPermission>
-	                    </c:if>
-	                </td>
-	            </tr>
-	        </c:forEach>
-	    </tbody>
-	</table>
-	<c:if test="${allCount != 0}">
-		<ul class="pagination tablePage">
-		    <li><a href="${pageContext.request.contextPath}/repair/apart/${apartId}?start=${start-10}">&laquo;</a></li>
-		    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
-		    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/repair/apart/${apartId}?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
-		    </c:forEach>
-		    <li><a href="${pageContext.request.contextPath}/repair/apart/${apartId}?start=${start+10}">&raquo;</a></li>
-		</ul>
-	</c:if>
+		<div class="content table-responsive">
+			<table class="table">
+			    <thead>
+			        <tr>
+			            <th>寝室号</th>
+			            <th>申请者</th>
+			            <th>维修类型</th>
+			            <th>申请时间</th>
+			            <th>备注</th>
+			            <th>状态</th>
+			            <th>操作</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			    	<c:if test="${empty repairList}">
+			    		<tr>
+			    			<td colspan="7" style="text-align:center">该公寓没有任何维修信息！</td>
+			    		</tr>
+			    	</c:if>
+			        <c:forEach items="${repairList}" var="repair">
+			            <tr>
+			                <td>${repair.dormNo}</td>
+			                <td>${repair.applicantName}</td>
+			                <td>${repair.repairTypeName}</td>
+			                <td><fmt:formatDate value="${repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></td>
+			                <td>${repair.remark}</td>
+			                <c:if test="${repair.state == 0}">
+			                	<td><span class="label label-warning">未接单</span></td>
+			                </c:if>
+			                <c:if test="${repair.state == 1}">
+			                	<td><span class="label label-info">已接单</span></td>
+			                </c:if>
+			                <c:if test="${repair.state == 2}">
+			                	<td><span class="label label-success">已结束</span></td>
+			                </c:if>
+			                <c:if test="${repair.state == 3}">
+			                	<td><span class="label label-default">已取消</span></td>
+			                </c:if>
+			                <td>
+			                	<c:if test="${repair.state != 3}">
+				                	<shiro:hasPermission name="repair:view">
+				                		<a href="${pageContext.request.contextPath}/repair/${repair.id}/record">查看</a>
+				                    </shiro:hasPermission>
+			                    </c:if>
+			                </td>
+			            </tr>
+			        </c:forEach>
+			    </tbody>
+			</table>
+			<c:if test="${allCount != 0}">
+				<ul class="pagination tablePage">
+				    <li><a href="${pageContext.request.contextPath}/repair/apart/${apartId}?start=${start-10}">&laquo;</a></li>
+				    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
+				    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/repair/apart/${apartId}?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
+				    </c:forEach>
+				    <li><a href="${pageContext.request.contextPath}/repair/apart/${apartId}?start=${start+10}">&raquo;</a></li>
+				</ul>
+			</c:if>
+		</div>
+	</div>
 </div>
 </body>
-<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script> 
 <script>
 	$(function() {
 		var nowApartId = Number('${apartId}')-1;

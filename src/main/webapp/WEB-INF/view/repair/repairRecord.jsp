@@ -5,9 +5,7 @@
 <html>
 <head>
     <title>维修记录</title>
-    <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/jquery.eeyellow.Timeline.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
     <style>
     	fieldset {
 		  padding-bottom: 20px !important;
@@ -21,22 +19,60 @@
 		fieldset .form-group {
 		  margin-bottom: 0 !important;
 		}
+		.change_link{
+			width: 100%;
+            font-size: 16px;
+            padding-bottom: 10px;
+            border-top: 1px solid rgb(219, 229, 232);
+            -webkit-border-radius: 0 0  5px 5px;
+               -moz-border-radius: 0 0  5px 5px;
+                    border-radius: 0 0  5px 5px;
+            background: rgb(225, 234, 235);
+            background: -moz-repeating-linear-gradient(-45deg, 
+            rgb(247, 247, 247) , 
+            rgb(247, 247, 247) 15px, 
+            rgb(225, 234, 235) 15px, 
+            rgb(225, 234, 235) 30px, 
+            rgb(247, 247, 247) 30px
+            );
+            background: -webkit-repeating-linear-gradient(-45deg, 
+            rgb(247, 247, 247) , 
+            rgb(247, 247, 247) 15px, 
+            rgb(225, 234, 235) 15px, 
+            rgb(225, 234, 235) 30px, 
+            rgb(247, 247, 247) 30px
+            );
+            background: -o-repeating-linear-gradient(-45deg, 
+            rgb(247, 247, 247) , 
+            rgb(247, 247, 247) 15px, 
+            rgb(225, 234, 235) 15px, 
+            rgb(225, 234, 235) 30px, 
+            rgb(247, 247, 247) 30px
+            );
+            background: repeating-linear-gradient(-45deg, 
+            rgb(247, 247, 247) , 
+            rgb(247, 247, 247) 15px, 
+            rgb(225, 234, 235) 15px, 
+            rgb(206, 247, 232) 30px, 
+            rgb(247, 247, 247) 30px
+            );
+        }
     </style>
 </head>
 <body>
 <jsp:include page="../navbar.jsp"></jsp:include>
      
-<div style="margin:20px 50px">
+<div class="container">
 
 	<div class="row">
 		<div class="col-md-offset-1 col-md-4">
-			<div class="panel panel-default">
-			    <div class="panel-heading">
-			        <h3 class="panel-title">
-			        	维修信息
-			        </h3>
+			<div class="card">
+				<div class="change_link">
+				    <div class="header">
+				    	<h4>维修信息</h4>
+				    </div>
 			    </div>
-			    <div class="panel-body">
+			    <div class="content">
 					<fieldset>
 	                   <div class="form-group row">
 	                      <label class="col-sm-4 control-label">公寓名：</label>
@@ -109,13 +145,13 @@
 	    </div>
 	    <c:if test="${not empty repairman}">
 		    <div class="col-md-3">
-				<div class="panel panel-default">
-				    <div class="panel-heading">
-				        <h3 class="panel-title">
-				        	维修人员信息
-				        </h3>
+				<div class="card">
+				    <div class="change_link">
+					    <div class="header">
+					    	<h4>维修信息</h4>
+					    </div>
 				    </div>
-				    <div class="panel-body">
+				    <div class="content">
 				    	<fieldset>
 		                   <div class="form-group row">
 		                      <label class="col-sm-4 control-label">工号：</label>
@@ -205,10 +241,7 @@
 	</div>
 </div>
 </body>
-<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
-<script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
 <script src="${pageContext.request.contextPath}/public/js/jquery.eeyellow.Timeline.js"></script>
-<script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 $(function() {
 	$('.VivaTimeline').vivaTimeline({

@@ -5,22 +5,13 @@
 <html>
 <head>
     <title>用户管理</title>
-    <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/public/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
 </head>
 <body>
 
 <jsp:include page="../navbar.jsp"></jsp:include>
 	
-<div style="margin:20px 50px">
-	
-	<ul class="nav nav-tabs" id="roleUl">
-		<c:forEach items="${roleList}" var="role">
-			<li><a href="${pageContext.request.contextPath}/user/role/${role.id}">${role.description}</a></li>
-	    </c:forEach>
-	</ul>
+<div class="container">
 	
 	<!-- 新增修改用户模态框（Modal） -->
 	<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
@@ -165,63 +156,70 @@
 	    </div><!-- /.modal -->
 	</div>
 	
-	<shiro:hasPermission name="user:create">
-		<button class="btn btn-default pull-left" data-toggle="modal" data-target="#userModal" onClick="addUser()">用户新增</button>
-	</shiro:hasPermission>
-	
-	<table class="table">
-	    <thead>
-	        <tr>
-	            <th>用户名</th>
-	            <th>角色列表</th>
-	            <th>操作</th>
-	        </tr>
-	    </thead>
-	    <tbody>
-	    	<c:if test="${empty userList}">
-	    		<tr>
-	    			<td colspan="3" style="text-align:center">还没有任何用户！</td>
-	    		</tr>
-	    	</c:if>
-	        <c:forEach items="${userList}" var="user">
-	            <tr>
-	                <td>${user.username}</td>
-	                <td>${user.roleIdsStr}</td>
-	                <td>
-	                    <shiro:hasPermission name="user:update">
-	                    	<c:if test="${user.username != 'admin'}">
-	                    		<button class="btn btn-default" data-toggle="modal" data-target="#userModal" onClick="updateUser(${user.id}, ${user.username}, ${user.roleIds})">修改</button>
-	                    	</c:if>
-	                    </shiro:hasPermission>
-	
-	                    <shiro:hasPermission name="user:delete">
-	                    	<button class="btn btn-danger" onClick="deleteUser(${user.id},${user.username},'${user.roleIdsStr}')">删除</button>
-	                    </shiro:hasPermission>
-	
-	                    <shiro:hasPermission name="user:update">
-	                    	<button class="btn btn-warning" data-toggle="modal" data-target="#passwordModal" onClick="changePasswordUser(${user.id})">改密</button>
-	                    </shiro:hasPermission>
-	                </td>
-	            </tr>
-	        </c:forEach>
-	    </tbody>
-	</table>
-	<c:if test="${allCount != 0}">
-		<ul class="pagination tablePage">
-		    <li><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${start-10}">&laquo;</a></li>
-		    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
-		    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
-		    </c:forEach>
-		    <li><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${start+10}">&raquo;</a></li>
-		</ul>
-	</c:if>
+	<div class="card">
+		<div class="header">
+			<ul class="nav nav-tabs" id="roleUl">
+				<c:forEach items="${roleList}" var="role">
+					<li><a href="${pageContext.request.contextPath}/user/role/${role.id}">${role.description}</a></li>
+			    </c:forEach>
+			    <shiro:hasPermission name="user:create">
+					<button class="btn btn-default pull-right" data-toggle="modal" data-target="#userModal" onClick="addUser()">用户新增</button>
+				</shiro:hasPermission>
+			</ul>
+		</div>
+		<div class="content table-responsive">
+			<table class="table">
+			    <thead>
+			        <tr>
+			            <th>用户名</th>
+			            <th>角色列表</th>
+			            <th>操作</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			    	<c:if test="${empty userList}">
+			    		<tr>
+			    			<td colspan="3" style="text-align:center">还没有任何用户！</td>
+			    		</tr>
+			    	</c:if>
+			        <c:forEach items="${userList}" var="user">
+			            <tr>
+			                <td>${user.username}</td>
+			                <td>${user.roleIdsStr}</td>
+			                <td>
+			                    <shiro:hasPermission name="user:update">
+			                    	<c:if test="${user.username != 'admin'}">
+			                    		<button class="btn btn-default" data-toggle="modal" data-target="#userModal" onClick="updateUser(${user.id}, ${user.username}, ${user.roleIds})"><i class="fa fa-edit"></i></button>
+			                    	</c:if>
+			                    </shiro:hasPermission>
+			
+			                    <shiro:hasPermission name="user:delete">
+			                    	<button class="btn btn-danger" onClick="deleteUser(${user.id},${user.username},'${user.roleIdsStr}')"><i class="fa fa-trash-o"></i></button>
+			                    </shiro:hasPermission>
+			
+			                    <shiro:hasPermission name="user:update">
+			                    	<button class="btn btn-warning" data-toggle="modal" data-target="#passwordModal" onClick="changePasswordUser(${user.id})"><i class="fa fa-unlock"></i>&nbsp;&nbsp;改密</button>
+			                    </shiro:hasPermission>
+			                </td>
+			            </tr>
+			        </c:forEach>
+			    </tbody>
+			</table>
+			<c:if test="${allCount != 0}">
+				<ul class="pagination tablePage">
+				    <li><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${start-10}">&laquo;</a></li>
+				    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
+				    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
+				    </c:forEach>
+				    <li><a href="${pageContext.request.contextPath}/user/role/${roleId}?start=${start+10}">&raquo;</a></li>
+				</ul>
+			</c:if>
+		</div>
+	</div>
 </div>
 </body>
-<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script> 
-<script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
 <script src="${pageContext.request.contextPath}/public/js/bootstrap-datetimepicker.min.js" ></script>
 <script src="${pageContext.request.contextPath}/public/js/bootstrap-datetimepicker.zh-CN.js" ></script>
-<script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 	$(function() {
 		var start = Number('${start}');

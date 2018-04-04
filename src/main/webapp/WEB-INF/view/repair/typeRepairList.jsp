@@ -5,78 +5,79 @@
 <html>
 <head>
     <title>类型维修</title>
-    <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/css/table.css" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="../navbar.jsp"></jsp:include>
 
-<div style="margin:20px 50px">
+<div class="container">
 
-	<ul class="nav nav-tabs" id="typeUl">
-		<c:forEach items="${allType}" var="type">
-			<li><a href="${pageContext.request.contextPath}/repair/type/${type.typeId}">${type.typeName}</a></li>
-	    </c:forEach>
-	</ul>
-	<table class="table">
-	    <thead>
-	        <tr>
-	        	<th>维修类型</th>
-	        	<th>公寓名</th>
-	            <th>寝室号</th>
-	            <th>申请者</th>
-	            <th>申请时间</th>
-	            <th>备注</th>
-	            <th>状态</th>
-	            <th>操作</th>
-	        </tr>
-	    </thead>
-	    <tbody>
-	    	<c:if test="${empty repairByTypeList}">
-				<tr>
-					<td colspan="7" style="text-align:center">此类型没有任何维修申请！</td>
-				</tr>
+	<div class="card">
+		<div class="header">
+			<ul class="nav nav-tabs" id="typeUl">
+				<c:forEach items="${allType}" var="type">
+					<li><a href="${pageContext.request.contextPath}/repair/type/${type.typeId}">${type.typeName}</a></li>
+			    </c:forEach>
+			</ul>
+		</div>
+		<div class="content table-responsive">
+			<table class="table">
+			    <thead>
+			        <tr>
+			        	<th>维修类型</th>
+			        	<th>公寓名</th>
+			            <th>寝室号</th>
+			            <th>申请者</th>
+			            <th>申请时间</th>
+			            <th>备注</th>
+			            <th>状态</th>
+			            <th>操作</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			    	<c:if test="${empty repairByTypeList}">
+						<tr>
+							<td colspan="7" style="text-align:center">此类型没有任何维修申请！</td>
+						</tr>
+					</c:if>
+			        <c:forEach items="${repairByTypeList}" var="repair">
+			            <tr>
+			            	<td>${repair.repairTypeName}</td>
+			            	<td>${repair.apartName}</td>
+			                <td>${repair.dormNo}</td>
+			                <td>${repair.applicantName}</td>
+			                <td><fmt:formatDate value="${repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></td>
+			                <td>${repair.remark}</td>
+			                <c:if test="${repair.state == 0}">
+			                	<td><span class="label label-info">未接单 </span></td>
+			                </c:if>
+			                <c:if test="${repair.state == 1}">
+			                	<td><span class="label label-default">已接单</span></td>
+			                </c:if>
+			                <c:if test="${repair.state == 2}">
+			                	<td><span class="label label-default">已结束</span></td>
+			                </c:if>
+			                <td>
+			                	<c:if test="${repair.state == 0}">
+			                		<button class="btn btn-default" style="margin-left:10px" onClick="takeOrder(${repair.id},${repair.repairType})">接单</button>
+			                	</c:if>
+			                </td>
+			            </tr>
+			        </c:forEach>
+			    </tbody>
+			</table>
+			<c:if test="${allCount != 0}">
+				<ul class="pagination tablePage">
+				    <li><a href="${pageContext.request.contextPath}/repair/type/${typeId}?start=${start-10}">&laquo;</a></li>
+				    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
+				    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/repair/type/${typeId}?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
+				    </c:forEach>
+				    <li><a href="${pageContext.request.contextPath}/repair/type/${typeId}?start=${start+10}">&raquo;</a></li>
+				</ul>
 			</c:if>
-	        <c:forEach items="${repairByTypeList}" var="repair">
-	            <tr>
-	            	<td>${repair.repairTypeName}</td>
-	            	<td>${repair.apartName}</td>
-	                <td>${repair.dormNo}</td>
-	                <td>${repair.applicantName}</td>
-	                <td><fmt:formatDate value="${repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></td>
-	                <td>${repair.remark}</td>
-	                <c:if test="${repair.state == 0}">
-	                	<td><span class="label label-info">未接单 </span></td>
-	                </c:if>
-	                <c:if test="${repair.state == 1}">
-	                	<td><span class="label label-default">已接单</span></td>
-	                </c:if>
-	                <c:if test="${repair.state == 2}">
-	                	<td><span class="label label-default">已结束</span></td>
-	                </c:if>
-	                <td>
-	                	<c:if test="${repair.state == 0}">
-	                		<button class="btn btn-default" style="margin-left:10px" onClick="takeOrder(${repair.id},${repair.repairType})">接单</button>
-	                	</c:if>
-	                </td>
-	            </tr>
-	        </c:forEach>
-	    </tbody>
-	</table>
-	<c:if test="${allCount != 0}">
-		<ul class="pagination tablePage">
-		    <li><a href="${pageContext.request.contextPath}/repair/type/${typeId}?start=${start-10}">&laquo;</a></li>
-		    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
-		    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/repair/type/${typeId}?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
-		    </c:forEach>
-		    <li><a href="${pageContext.request.contextPath}/repair/type/${typeId}?start=${start+10}">&raquo;</a></li>
-		</ul>
-	</c:if>
+		</div>
+	</div>
 </div>
 </body>
-<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
-<script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 $(function() {
 	var nowTypeId = Number('${typeId}')-1;

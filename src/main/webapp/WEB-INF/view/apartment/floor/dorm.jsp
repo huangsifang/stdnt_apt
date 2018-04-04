@@ -4,8 +4,6 @@
 <html>
 <head>
     <title>寝室管理</title>
-    <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="../../navbar.jsp"></jsp:include>
@@ -86,7 +84,7 @@
     </div><!-- /.modal -->
 </div>
 
-<div style="margin:20px 50px">
+<div class="container" style="margin-top:50px">
 	<button class="btn btn-default" onClick="addBed(${dormId})">新增床位</button>
 	<button class="btn btn-default" data-toggle="modal" data-target="#dormFeeModal">修改寝室费用</button>
 	<button class="btn btn-danger" onClick="deleteDorm(${dormId})">删除寝室</button>
@@ -143,9 +141,6 @@
 	</div>
 </div>
 </body>
-<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
-<script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
-<script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 	function changeBedStd(bedId, dormId, stdId, stdName) {
 		$("#bedId").val(bedId);

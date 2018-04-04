@@ -92,5 +92,7 @@ public interface ApartmentService {
 
 	public int createStaffRota(StaffRota rota);
 
-	public StaffRota findOneStaffRota(int staffId, int week);
+	public StaffRota findOneStaffRota(int apartId, int staffId, int week);
+
+	public List<StaffRota> findApartRotaAllByWeek(int apartId, int week);
 }

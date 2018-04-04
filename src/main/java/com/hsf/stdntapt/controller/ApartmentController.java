@@ -218,7 +218,7 @@ public class ApartmentController {
 		for (int i = 0; i < 7; i++) {
 			rotaListFinal.add(new StaffRota(id, null, i + 1));
 		}
-		if (rotaList.get(0) != null) {
+		if (rotaList.size() != 0 && rotaList.get(0) != null) {
 			for (StaffRota rota : rotaList) {
 				List<Integer> staffIds = rota.getStaffIds();
 				List<Staff> staffs = new ArrayList();
@@ -232,6 +232,7 @@ public class ApartmentController {
 		model.addAttribute("staffList", staffList);
 		model.addAttribute("rotaList", rotaListFinal);
 		model.addAttribute("apartId", id);
+		model.addAttribute("apartName", apartmentService.findApartName(id));
 		return "apartment/rota/list";
 	}
 
@@ -259,7 +260,7 @@ public class ApartmentController {
 		try {
 			for (int staffId : staffIds) {
 				StaffRota rota = new StaffRota(apartId, staffId, week);
-				StaffRota currentRota = apartmentService.findOneStaffRota(staffId, week);
+				StaffRota currentRota = apartmentService.findOneStaffRota(apartId, staffId, week);
 				if (currentRota == null) {
 					apartmentService.createStaffRota(rota);
 					msg = "success";

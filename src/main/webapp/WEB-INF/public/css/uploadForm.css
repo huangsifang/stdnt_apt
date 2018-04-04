@@ -8,6 +8,7 @@ input[type="file"] {
 	margin:10px 0;
 	border:1px solid #eee;
 	box-shadow:1px 1px 5px #eee;
+	background:#fff
 }
 .file {
     position: relative;

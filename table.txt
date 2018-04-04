@@ -129,8 +129,8 @@ create table staff(
 	staff_name varchar(11) not null,
 	staff_sex int(1),
 	staff_tel varchar(11),
-	hiredate datetime not null default current_timestamp,
-	leavedate datetime default null,
+	hiredate date default null,
+	leavedate date default null,
 	deleted bit not null default 0
 );
 insert into staff values(0, '¹ÜÀíÔ±', '', '', '', '', 0);

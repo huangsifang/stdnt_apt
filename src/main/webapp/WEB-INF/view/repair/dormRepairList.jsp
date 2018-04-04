@@ -5,8 +5,6 @@
 <html>
 <head>
     <title>我的寝室维修</title>
-    <link href="${pageContext.request.contextPath}/public/css/bootstrap.min.css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/public/css/sweetalert.min.css" rel="stylesheet">
     <style type="text/css">
     .emptyWord {
    		height: 400px;
@@ -15,6 +13,12 @@
    		margin: 0 auto;
    		text-align: center;
    		line-height: 400px;
+   	}
+   	.panel a {
+   		color: gray !important;
+   	}
+   	.panel a:hover {
+   		color: #6BAAA8 !important;
    	}
     </style>
 </head>
@@ -59,7 +63,7 @@
     </div><!-- /.modal -->
 </div>
 
-<div style="margin:20px 50px">
+<div class="container">
 	
 	<c:if test="${not empty error}">
 		<div class="panel">
@@ -70,13 +74,13 @@
 	</c:if>
 	<c:if test="${empty error}">
 		<shiro:hasPermission name="repair:create">
-			<button class="btn btn-default btn-md" data-toggle="modal" data-target="#repairModal">报修</button>
+			<button style="margin-top:20px;margin-left:20px" class="btn btn-default btn-md" data-toggle="modal" data-target="#repairModal">寝室报修</button>
 		</shiro:hasPermission>
 		<c:if test="${not empty dormRepairList}">
 			<div class="row" style="padding: 20px">
 				<c:forEach items="${dormRepairList}" var="repair">
 					<a href="${pageContext.request.contextPath}/repair/${repair.id}/record">
-						<div class="col-sm-3">
+						<div class="col-md-4 col-sm-6">
 							<div class="panel panel-default">
 								<div class="panel-body">
 									<div class="form-group row">
@@ -107,13 +111,13 @@
 				                      <div class="col-sm-offset-4 col-sm-8">
 				                         <span>
 				                         	<c:if test="${repair.state == 0}">
-							                	<td>未接单</td>
+							                	<td><span class="label label-warning">未接单</span></td>
 							                </c:if>
 							                <c:if test="${repair.state == 1}">
-							                	<td>已接单</td>
+							                	<td><span class="label label-info">已接单</span></td>
 							                </c:if>
 							                <c:if test="${repair.state == 2}">
-							                	<td>已结束</td>
+							                	<td><span class="label label-success">已结束</span></td>
 							                </c:if>
 				                         </span>
 				                      </div>
@@ -141,9 +145,6 @@
 	</c:if>
 </div>
 </body>
-<script src="${pageContext.request.contextPath}/public/js/jquery-3.3.1.min.js" ></script>
-<script src="${pageContext.request.contextPath}/public/js/bootstrap.min.js" ></script>
-<script src="${pageContext.request.contextPath}/public/js/sweetalert.min.js" ></script>
 <script>
 $(function() {
 	$("#repairBtn").click(function() {
