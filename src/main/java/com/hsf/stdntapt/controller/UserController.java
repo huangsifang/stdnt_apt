@@ -1,5 +1,6 @@
 package com.hsf.stdntapt.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.Consellor;
 import com.hsf.stdntapt.entity.RepairType;
 import com.hsf.stdntapt.entity.Repairman;
@@ -73,7 +75,16 @@ public class UserController {
 		List<Class> classList = classService.findSpeciAllClass(1);
 		List<RepairType> allTypeList = repairService.findAllRepairType();
 		List<Role> roleList = roleService.findAll();
-		model.addAttribute("userList", userService.findOneRoleAllPage(start, size, 1));
+		List<User> userList = userService.findOneRoleAllPage(start, size, 1);
+		for (User user : userList) {
+			List<Role> roles = new ArrayList();
+			for (Long oneRoleId : user.getRoleIds()) {
+				Role role = roleService.findOne(oneRoleId);
+				roles.add(role);
+			}
+			user.setRoles(roles);
+		}
+		model.addAttribute("userList", userList);
 		model.addAttribute("roleList", roleList);
 		model.addAttribute("speciList", speciList);
 		model.addAttribute("classList", classList);
@@ -99,7 +110,17 @@ public class UserController {
 		List<Class> classList = classService.findSpeciAllClass(1);
 		List<RepairType> allTypeList = repairService.findAllRepairType();
 		List<Role> roleList = roleService.findAll();
-		model.addAttribute("userList", userService.findOneRoleAllPage(start, size, roleId));
+
+		List<User> userList = userService.findOneRoleAllPage(start, size, roleId);
+		for (User user : userList) {
+			List<Role> roles = new ArrayList();
+			for (Long oneRoleId : user.getRoleIds()) {
+				Role role = roleService.findOne(oneRoleId);
+				roles.add(role);
+			}
+			user.setRoles(roles);
+		}
+		model.addAttribute("userList", userList);
 		model.addAttribute("roleList", roleList);
 		model.addAttribute("speciList", speciList);
 		model.addAttribute("classList", classList);
@@ -311,7 +332,6 @@ public class UserController {
 		return msg;
 	}
 
-	@RequiresPermissions("user:update")
 	@RequestMapping(value = "/{id}/changePassword", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
 	public String changePassword(@PathVariable("id") Long id, @RequestParam("newPassword") String newPassword) {

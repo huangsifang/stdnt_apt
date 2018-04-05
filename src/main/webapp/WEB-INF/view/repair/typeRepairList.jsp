@@ -117,6 +117,17 @@ function takeOrder(repairId, repairType) {
 					swal("失败！", "接单失败", "error");
 				} else if(data == "errorNoPower") {
 					swal("失败！", "您没有权限接受该类维修!", "error");
+				} else if(data == "errorAgain") {
+					swal("失败！", "请再次尝试!", "warning");
+				} else if(data == "errorExist") {
+					swal({ 
+						title: "失败！", 
+						text: "慢了一步，已被他人抢先!", 
+						type: "warning"
+					},
+					function(){
+						window.location.reload();
+					});
 				}
 			},
 			error: function() {

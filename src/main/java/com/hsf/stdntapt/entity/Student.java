@@ -11,7 +11,9 @@ public class Student {
 	private String enterTimeStr;
 	private boolean isParty;
 	private int classId;
+	private String className;
 	private int speciId;
+	private String apartName;
 
 	public Student() {
 	}
@@ -85,12 +87,28 @@ public class Student {
 		this.classId = classId;
 	}
 
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
 	public int getSpeciId() {
 		return speciId;
 	}
 
 	public void setSpeciId(int speciId) {
 		this.speciId = speciId;
+	}
+
+	public String getApartName() {
+		return apartName;
+	}
+
+	public void setApartName(String apartName) {
+		this.apartName = apartName;
 	}
 
 }

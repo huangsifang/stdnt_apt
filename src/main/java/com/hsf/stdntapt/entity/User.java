@@ -22,6 +22,7 @@ public class User implements Serializable {
 	private String salt; // 加密密码的盐
 	private List<Long> roleIds; // 拥有的角色列表
 	private String roleIdsStr; // 拥有的角色列表
+	private List<Role> roles;
 	private Boolean locked = Boolean.FALSE;
 
 	public User() {
@@ -138,4 +139,13 @@ public class User implements Serializable {
 		return "User{" + "id=" + id + ", username='" + username + '\'' + ", password='" + password + '\'' + ", salt='"
 				+ salt + '\'' + ", roleIds=" + roleIds + ", locked=" + locked + '}';
 	}
+
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+
 }

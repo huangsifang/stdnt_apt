@@ -54,6 +54,8 @@ public interface RepairDao {
 
 	public List<String> findRepairmanTypes(@Param("repairmanId") int repairmanId);
 
+	public List<RepairType> findRepairmanAllTypes(@Param("repairmanId") int repairmanId);
+
 	public List<RepairRecord> findMyRepairRecordList(@Param("repairmanId") int repairmanId);
 
 	public List<RepairRecord> findMyRepairRecordListByPage(@Param("start") int start, @Param("size") int size,

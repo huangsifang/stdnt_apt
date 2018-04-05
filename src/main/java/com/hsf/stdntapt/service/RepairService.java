@@ -49,6 +49,8 @@ public interface RepairService {
 
 	public List<String> findRepairmanTypes(int repairmanId);
 
+	public List<RepairType> findRepairmanAllTypes(int repairmanId);
+
 	public List<RepairRecord> findMyRepairRecordList(int repairmanId);
 
 	public List<RepairRecord> findMyRepairRecordListByPage(int start, int size, int repairmanId);

@@ -154,6 +154,12 @@
         select type_id as typeId from repairman_type_relation where repairman_id=#{repairmanId} and deleted=0
     </select>
     
+    <select id="findRepairmanAllTypes" resultType="RepairType">
+    	select type_id as typeId, type_name as typeName from repair_type where type_id in (
+        	select type_id as typeId from repairman_type_relation where repairman_id=#{repairmanId} and deleted=0
+        )
+    </select>
+    
     <select id="findMyRepairRecordList" parameterType="int" resultType="RepairRecord">
         select repair_id as repairId, repairman_id as repairmanId, accept_time as accepttime, repair_time as repairTime, state from repair_record 
         where repairman_id=#{repairmanId} and deleted=0
@@ -167,7 +173,8 @@
     
     <select id="findOneRepairRecordFromRepairId" parameterType="long" resultType="RepairRecord">
         select repair_id as repairId, repairman_id as repairmanId, accept_time as accepttime, repair_time as repairTime, state from repair_record 
-        where repair_id=#{repairId} and deleted=0
+        where repair_id=#{repairId} and deleted=0 
+        limit 1
     </select>
     
     <select id="findRepairHistoryRecordFromRepairId" parameterType="long" resultType="RepairRecord">

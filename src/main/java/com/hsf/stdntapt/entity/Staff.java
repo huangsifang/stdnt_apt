@@ -1,6 +1,7 @@
 package com.hsf.stdntapt.entity;
 
 import java.util.Date;
+import java.util.List;
 
 public class Staff {
 	private int staffId;
@@ -10,6 +11,7 @@ public class Staff {
 	private Date hiredate;
 	private String hiredateStr;
 	private Date leavedate;
+	private List<Apartment> aparts;
 
 	public Staff() {
 	}
@@ -73,6 +75,14 @@ public class Staff {
 
 	public void setLeavedate(Date leavedate) {
 		this.leavedate = leavedate;
+	}
+
+	public List<Apartment> getAparts() {
+		return aparts;
+	}
+
+	public void setAparts(List<Apartment> aparts) {
+		this.aparts = aparts;
 	}
 
 }

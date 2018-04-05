@@ -12,6 +12,7 @@ public class Repairman {
 	private String repairmanTel;
 	private String typeIdsStr;
 	private List<String> typeIds;
+	private List<RepairType> types;
 
 	public Repairman() {
 	}
@@ -85,6 +86,14 @@ public class Repairman {
 			}
 			this.typeIdsStr = s.toString();
 		}
+	}
+
+	public List<RepairType> getTypes() {
+		return types;
+	}
+
+	public void setTypes(List<RepairType> types) {
+		this.types = types;
 	}
 
 }

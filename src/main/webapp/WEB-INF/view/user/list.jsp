@@ -172,7 +172,7 @@
 			    <thead>
 			        <tr>
 			            <th>用户名</th>
-			            <th>角色列表</th>
+			            <th>角色</th>
 			            <th>操作</th>
 			        </tr>
 			    </thead>
@@ -185,7 +185,11 @@
 			        <c:forEach items="${userList}" var="user">
 			            <tr>
 			                <td>${user.username}</td>
-			                <td>${user.roleIdsStr}</td>
+			                <td>
+			                <c:forEach items="${user.roles}" var="role">
+			                	${role.description}<br />
+			                </c:forEach>
+			                </td>
 			                <td>
 			                    <shiro:hasPermission name="user:update">
 			                    	<c:if test="${user.username != 'admin'}">

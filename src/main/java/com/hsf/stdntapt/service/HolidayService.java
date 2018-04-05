@@ -25,9 +25,9 @@ public interface HolidayService {
 
 	public List<HoliRecord> findApartAllHoliRecords(int apartId);
 
-	public List<HoliRecord> findApartAllHomeRecords();
+	public List<HoliRecord> findApartAllHomeRecords(int holiId, int apartId);
 
-	public List<HoliRecord> findApartAllSchoolRecords();
+	public List<HoliRecord> findApartAllSchoolRecords(int holiId, int apartId);
 
 	public int createHoliRecord(HoliRecord record);
 

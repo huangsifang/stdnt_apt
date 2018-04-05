@@ -20,4 +20,7 @@
     <select id="findClassSpeciId" parameterType="int" resultType="int">
 		select speci_id as speciId from class where class_id=#{classId}
     </select>
+    <select id="findOne" parameterType="int" resultType="Class">
+		select class_id as classId, class_name as className, speci_id as speciId, consell_id as consellId from class where class_id=#{classId}
+    </select>
 </mapper>

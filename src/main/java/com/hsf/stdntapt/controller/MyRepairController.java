@@ -50,7 +50,10 @@ public class MyRepairController {
 	public String myRepairList(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
 			@RequestParam(value = "size", required = false, defaultValue = "10") int size, final ModelMap model) {
 		String username = SecurityUtils.getSubject().getPrincipal().toString();
-		int repairmanId = Integer.parseInt(username);
+		int repairmanId = 1;
+		if (!username.equals("admin")) {
+			repairmanId = Integer.parseInt(username);
+		}
 		List<RepairRecord> myRepairRecordList = repairService.findMyRepairRecordListByPage(start, size, repairmanId);
 		for (RepairRecord record : myRepairRecordList) {
 			Repair repair = repairService.findOneRepair(record.getRepairId());

@@ -18,6 +18,15 @@
 					<li><a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apart.apartId}/record">${apart.apartName}</a></li>
 			    </c:forEach>
 			</ul>
+			<div class="row" style="padding:20px 20px 0 20px">
+				<h4 class="pull-left">学士假期返家留校记录</h4>
+				<div class="pull-right">
+					<a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record">共${allCount}条记录</a>，
+					<a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?type=home">返家${homeRecordNum}人</a>，
+					<a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?type=school">留校${schoolRecordNum}人</a>
+					  |  公寓共${apartStdNum}学生
+				</div>
+			</div>
 		</div>
 	
 		<div class="content table-responsive">
@@ -32,7 +41,9 @@
 			            <th>是否外出</th>
 			            <th>外出地址</th>
 			            <th>是否返校</th>
-			            <th>操作</th>
+			            <shiro:hasPermission name="record:delete">
+			            	<th>操作</th>
+			            </shiro:hasPermission>
 			        </tr>
 			    </thead>
 			    <tbody>
@@ -60,19 +71,15 @@
 									</c:if>
 								</c:if>
 			                </td>
-			                <td>
-			                    <shiro:hasPermission name="record:delete">
-			                    	<button class="btn btn-danger btn-md" type="button" onClick="deleteRecord(${record.holiId},${record.stdId})"><i class="fa fa-trash-o"></i></button>
-			                    </shiro:hasPermission>
-			                </td>
+			                <shiro:hasPermission name="record:delete">
+				                <td>
+				                	<button class="btn btn-danger btn-md" type="button" onClick="deleteRecord(${record.holiId},${record.stdId})"><i class="fa fa-trash-o"></i></button>
+				                </td>
+			                </shiro:hasPermission>
 			            </tr>
 			        </c:forEach>
 			    </tbody>
 			</table>
-			<div class="pull-right" style="padding:20px">
-				<span>共${allCount}条记录，</span>
-				<span>公寓共${apartStdNum}学生</span>
-			</div>
 			<c:if test="${allCount != 0}">
 				<ul class="pagination tablePage">
 				    <li><a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?start=${start-10}">&laquo;</a></li>

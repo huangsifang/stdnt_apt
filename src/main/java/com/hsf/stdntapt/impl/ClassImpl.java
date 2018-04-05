@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.hsf.stdntapt.dao.ClassDao;
+import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.service.ClassService;
 
 @Service
@@ -22,5 +23,10 @@ public class ClassImpl implements ClassService {
 	@Override
 	public int findClassSpeciId(int classId) {
 		return classDao.findClassSpeciId(classId);
+	}
+
+	@Override
+	public Class findOne(int classId) {
+		return classDao.findOne(classId);
 	}
 }

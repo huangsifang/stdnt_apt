@@ -63,13 +63,13 @@ public class HolidayImpl implements HolidayService {
 	}
 
 	@Override
-	public List<HoliRecord> findApartAllHomeRecords() {
-		return holidayDao.findApartAllHomeRecords();
+	public List<HoliRecord> findApartAllHomeRecords(int holiId, int apartId) {
+		return holidayDao.findApartAllHomeRecords(holiId, apartId);
 	}
 
 	@Override
-	public List<HoliRecord> findApartAllSchoolRecords() {
-		return holidayDao.findApartAllSchoolRecords();
+	public List<HoliRecord> findApartAllSchoolRecords(int holiId, int apartId) {
+		return holidayDao.findApartAllSchoolRecords(holiId, apartId);
 	}
 
 	@Override

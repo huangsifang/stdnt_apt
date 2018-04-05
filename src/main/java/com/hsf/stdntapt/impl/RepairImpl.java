@@ -119,6 +119,11 @@ public class RepairImpl implements RepairService {
 	}
 
 	@Override
+	public List<RepairType> findRepairmanAllTypes(int repairmanId) {
+		return repairDao.findRepairmanAllTypes(repairmanId);
+	}
+
+	@Override
 	public List<RepairRecord> findMyRepairRecordList(int repairmanId) {
 		return repairDao.findMyRepairRecordList(repairmanId);
 	}

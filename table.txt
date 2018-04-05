@@ -82,6 +82,7 @@ insert into resource values(92, '批量新增', 'button', '', 91, '0/1/91/', 'upload
 insert into resource values(93, '批量修改', 'button', '', 91, '0/1/91/', 'upload:update', true);
 insert into resource values(94, '批量删除', 'button', '', 91, '0/1/91/', 'upload:delete', true);
 insert into resource values(95, '批量查看', 'button', '', 91, '0/1/91/', 'upload:view', true);
+insert into resource values(991, '个人中心', 'menu', '/personal', 1, '0/1/', 'personal:*', true);
 
 insert into repair_type values(1, '灯具', false);
 insert into repair_type values(2, '水龙头', false);

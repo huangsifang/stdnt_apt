@@ -65,7 +65,7 @@ public class ScoreController {
 			return "redirect:/score/" + apartId + "/dorm/" + floorDormNo;
 		} else {
 			List<Apartment> apartList = null;
-			if (username.equals("admin")) {
+			if (username.equals("admin") || userService.findRoles(username).contains("consellor")) {
 				apartList = apartmentService.findAll();
 			} else {
 				apartList = apartmentService.findStaffAparts(Integer.parseInt(username));
@@ -226,7 +226,7 @@ public class ScoreController {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		String username = SecurityUtils.getSubject().getPrincipal().toString();
 		List<Apartment> apartList = null;
-		if (username.equals("admin")) {
+		if (username.equals("admin") || userService.findRoles(username).contains("consellor")) {
 			apartList = apartmentService.findAll();
 		} else {
 			apartList = apartmentService.findStaffAparts(Integer.parseInt(username));

@@ -28,9 +28,9 @@ public interface HolidayDao {
 
 	public List<HoliRecord> findApartAllHoliRecords(@Param("apartId") int apartId);
 
-	public List<HoliRecord> findApartAllHomeRecords();
+	public List<HoliRecord> findApartAllHomeRecords(@Param("holiId") int holiId, @Param("apartId") int apartId);
 
-	public List<HoliRecord> findApartAllSchoolRecords();
+	public List<HoliRecord> findApartAllSchoolRecords(@Param("holiId") int holiId, @Param("apartId") int apartId);
 
 	public int createHoliRecord(@Param("record") HoliRecord record);
 
