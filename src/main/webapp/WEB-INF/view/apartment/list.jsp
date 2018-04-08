@@ -87,12 +87,12 @@
 							<input class="form-control" type="text" name="aFloorDormNum"/>
 				    	</div>
 					</div>
-					<div class="form-group">
+					<!-- <div class="form-group">
 						<label for="aDormBedNum" class="col-sm-3 control-label">床位数/寝室：</label>
 						<div class="col-sm-8">
 							<input class="form-control" type="text" name="aDormBedNum"/>
 				    	</div>
-					</div>
+					</div> -->
 					<div class="form-group">
 						<label for="aStdYearFee" class="col-sm-3 control-label">费用/人：</label>
 						<div class="col-sm-8">
@@ -110,84 +110,93 @@
 </div>
 
 <div class="container">
-	<shiro:hasPermission name="apartment:create">
-		<div class="row">
-		    <form action="${pageContext.request.contextPath}/upload/uploadInfoFromType.do" method="post" name="formApart" id="formApart" onsubmit="return validate(formApart)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
-			     导入公寓信息： 
-				<a href="javascript:;" class="file">选择文件
-				    <input type="file" name="filename" id="importApartFile" accept="xlsx" onchange="importFileFun(importApartFile, apartFileName)"/>
-				</a>
-				<input class="fileName" id="apartFileName" value="未选择文件" disabled/>
-				<input type="hidden" name="filetype" value="apartment"/>
-				<input type="submit" name="Submit" value="确定" class="btn btn-primary importFileBtn"/> 
-				<input type="reset" name="Submit2" value="重置" class="btn btn-default importFileBtn"/>
-			</form>
-		</div>
-	</shiro:hasPermission>
-	
-	<form id="dormFindForm" method="get">
-		<div class="row">
-			<div class="col-sm-4">
-				<label for="apartId" class="control-label">公寓号：</label>
-				<input class="form-control" type="number" id="findApartId" />
-			</div>
-			<div class="col-sm-4">
-				<label for="apartId" class="control-label">寝室号：</label>
-				<input class="form-control" type="number" id="findFloorDormId" />
-			</div>
-			<div class="col-sm-4" style="padding-top:25px">
-				<button class="btn btn-default" type="button" id="dormFindBtn">查看</button>
+	<c:if test="${empty apartList}">
+		<div class="panel" style="margin-top:20px">
+			<div class="panel-body">
+				<span>您还未加入任何公寓，请联系管理员</span>
 			</div>
 		</div>
-	</form>
-	
-	<div class="card">
-		<div class="header">
-			<h4 class="pull-left">公寓列表</h4>
-			<shiro:hasPermission name="apartment:create">
-				<button class="btn btn-default pull-right" type="button" data-toggle="modal" data-target="#apartAddModal">公寓新增</button>
-			</shiro:hasPermission>
+	</c:if>
+	<c:if test="${not empty apartList}">
+		<shiro:hasPermission name="apartment:create">
+			<div class="row">
+			    <form action="${pageContext.request.contextPath}/upload/uploadInfoFromType.do" method="post" name="formApart" id="formApart" onsubmit="return validate(formApart)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
+				     导入公寓信息： 
+					<a href="javascript:;" class="file">选择文件
+					    <input type="file" name="filename" id="importApartFile" accept="xlsx" onchange="importFileFun(importApartFile, apartFileName)"/>
+					</a>
+					<input class="fileName" id="apartFileName" value="未选择文件" disabled/>
+					<input type="hidden" name="filetype" value="apartment"/>
+					<input type="submit" name="Submit" value="确定" class="btn btn-primary importFileBtn"/> 
+					<input type="reset" name="Submit2" value="重置" class="btn btn-default importFileBtn"/>
+				</form>
+			</div>
+		</shiro:hasPermission>
+		
+		<form id="dormFindForm" method="get">
+			<div class="row">
+				<div class="col-sm-4">
+					<label for="apartId" class="control-label">公寓号：</label>
+					<input class="form-control" type="number" id="findApartId" />
+				</div>
+				<div class="col-sm-4">
+					<label for="apartId" class="control-label">寝室号：</label>
+					<input class="form-control" type="number" id="findFloorDormId" />
+				</div>
+				<div class="col-sm-4" style="padding-top:25px">
+					<button class="btn btn-default" type="button" id="dormFindBtn">查看</button>
+				</div>
+			</div>
+		</form>
+		
+		<div class="card">
+			<div class="header">
+				<h4 class="pull-left">公寓列表</h4>
+				<shiro:hasPermission name="apartment:create">
+					<button class="btn btn-default pull-right" type="button" data-toggle="modal" data-target="#apartAddModal">公寓新增</button>
+				</shiro:hasPermission>
+			</div>
+			<div class="content table-responsive">
+				<table class="table">
+				    <thead>
+				        <tr>
+				            <th>公寓号</th>
+				            <th>公寓名</th>
+				            <th>楼层数</th>
+				            <th>宿舍数</th>
+				            <th>管理员</th>
+				            <th>操作</th>
+				        </tr>
+				    </thead>
+				    <tbody>
+				        <c:forEach items="${apartList}" var="apart">
+				            <tr>
+				                <td>${apart.apartId}</td>
+				                <td><a href="apartment/${apart.apartId}/floor">${apart.apartName}</a></td>
+				                <td><a href="apartment/${apart.apartId}/floor">${apart.floorNum}</a></td>
+				                <td>${apart.dormNum}</td>
+				                <td>
+				                	<c:forEach items="${apart.staffs}" var="staff">
+				                		${staff.staffId}:${staff.staffName}<br />
+				                	</c:forEach>
+				                	<a href="apartment/${apart.apartId}/staffRota">查看值班表</a>
+				                </td>
+				                <td>
+				                    <shiro:hasPermission name="apartment:update">
+				                    	<button class="btn btn-default" type="button" data-toggle="modal" data-target="#apartModal" onClick="updateApart(${apart.apartId},'${apart.apartName}','${apart.staffsStr}')">修改</button>
+				                    </shiro:hasPermission>
+				
+				                    <shiro:hasPermission name="apartment:delete">
+				                    	<button class="btn btn-danger" onClick="deleteApart(${apart.apartId})">删除</button>
+				                    </shiro:hasPermission>
+				                </td>
+				            </tr>
+				        </c:forEach>
+				    </tbody>
+				</table>
+			</div>
 		</div>
-		<div class="content table-responsive">
-			<table class="table">
-			    <thead>
-			        <tr>
-			            <th>公寓号</th>
-			            <th>公寓名</th>
-			            <th>楼层数</th>
-			            <th>宿舍数</th>
-			            <th>管理员</th>
-			            <th>操作</th>
-			        </tr>
-			    </thead>
-			    <tbody>
-			        <c:forEach items="${apartList}" var="apart">
-			            <tr>
-			                <td>${apart.apartId}</td>
-			                <td><a href="apartment/${apart.apartId}/floor">${apart.apartName}</a></td>
-			                <td><a href="apartment/${apart.apartId}/floor">${apart.floorNum}</a></td>
-			                <td>${apart.dormNum}</td>
-			                <td>
-			                	<c:forEach items="${apart.staffs}" var="staff">
-			                		${staff.staffId}:${staff.staffName}<br />
-			                	</c:forEach>
-			                	<a href="apartment/${apart.apartId}/staffRota">查看值班表</a>
-			                </td>
-			                <td>
-			                    <shiro:hasPermission name="apartment:update">
-			                    	<button class="btn btn-default" type="button" data-toggle="modal" data-target="#apartModal" onClick="updateApart(${apart.apartId},'${apart.apartName}','${apart.staffsStr}')">修改</button>
-			                    </shiro:hasPermission>
-			
-			                    <shiro:hasPermission name="apartment:delete">
-			                    	<button class="btn btn-danger" onClick="deleteApart(${apart.apartId})">删除</button>
-			                    </shiro:hasPermission>
-			                </td>
-			            </tr>
-			        </c:forEach>
-			    </tbody>
-			</table>
-		</div>
-	</div>
+	</c:if>
 </div>
 </body>
 <script src="${pageContext.request.contextPath}/public/js/jquery.form.min.js" ></script>
@@ -320,7 +329,9 @@
 			text: "请确定该公寓下没有任何关联", 
 			type: "info", 
 			showCancelButton: true, 
-			closeOnConfirm: false
+			closeOnConfirm: false,
+			confirmButtonText:"确定",
+	        cancelButtonText:"取消"
 		},
 		function(){
 			$.ajax({
@@ -357,7 +368,9 @@
 			text: "删除后该管理员对该公寓没有权限", 
 			type: "info", 
 			showCancelButton: true, 
-			closeOnConfirm: false
+			closeOnConfirm: false,
+			confirmButtonText:"确定",
+	        cancelButtonText:"取消"
 		},
 		function(){
 			$.ajax({

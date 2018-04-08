@@ -14,14 +14,6 @@ import com.hsf.stdntapt.dao.ResourceDao;
 import com.hsf.stdntapt.entity.Resource;
 import com.hsf.stdntapt.service.ResourceService;
 
-/**
- * <p>
- * User: Zhang Kaitao
- * <p>
- * Date: 14-2-14
- * <p>
- * Version: 1.0
- */
 @Service
 
 public class ResourceServiceImpl implements ResourceService {

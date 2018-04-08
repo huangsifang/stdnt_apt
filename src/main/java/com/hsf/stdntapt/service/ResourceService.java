@@ -5,14 +5,6 @@ import java.util.Set;
 
 import com.hsf.stdntapt.entity.Resource;
 
-/**
- * <p>
- * User: Zhang Kaitao
- * <p>
- * Date: 14-1-28
- * <p>
- * Version: 1.0
- */
 public interface ResourceService {
 
 	public long createResource(Resource resource);

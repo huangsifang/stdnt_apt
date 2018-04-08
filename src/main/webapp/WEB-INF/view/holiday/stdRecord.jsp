@@ -70,7 +70,7 @@
 				    	<h4 class="pull-left">我的假期信息</h4>
 				    	<c:if test="${stdRecord.inHome}">
 							<c:if test="${!hasSign}">
-								<button type="button" class="btn btn-default pull-right" onClick="sign(${stdRecord.holiId})">签到</button>
+								<button type="button" class="btn btn-default pull-right" onClick="sign(${stdRecord.holiId})">返校签到</button>
 							</c:if>
 							<c:if test="${hasSign}">
 								<button type="button" class="btn btn-default pull-right">已签到</button>
@@ -120,16 +120,16 @@
 							   	</div>
 							</div>
 						</fieldset>
-						<fieldset>
-							<c:if test="${!stdRecord.inHome}">
+						<c:if test="${!stdRecord.inHome}">
+							<fieldset>
 								<div class="form-group">
 									<label for="holiId" class="col-sm-4 control-label">是否外出：</label>
 									<div class="col-sm-8">
 										<span>${stdRecord.isOutStr}</span>
 								   	</div>
 								</div>
-							</c:if>
-						</fieldset>
+							</fieldset>
+						</c:if>
 						<c:if test="${stdRecord.inHome}">
 							<fieldset>
 								<div class="form-group" id="addressGroup">

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -77,8 +78,34 @@ public class UserController {
 		List<Role> roleList = roleService.findAll();
 		List<User> userList = userService.findOneRoleAllPage(start, size, 1);
 		for (User user : userList) {
+			String userName = user.getUsername();
+			int userId = 1;
+			if (!userName.equals("admin")) {
+				userId = Integer.parseInt(userName);
+			}
 			List<Role> roles = new ArrayList();
 			for (Long oneRoleId : user.getRoleIds()) {
+				if (oneRoleId == 2) {
+					Staff staff = staffService.findOneStaff(userId);
+					if (staff != null) {
+						user.setName(staff.getStaffName());
+					}
+				} else if (oneRoleId == 3) {
+					Consellor consellor = consellorService.findOneConsellor(userId);
+					if (consellor != null) {
+						user.setName(consellor.getConsellName());
+					}
+				} else if (oneRoleId == 4) {
+					Student student = studentService.findOneStd(userId);
+					if (student != null) {
+						user.setName(student.getStdName());
+					}
+				} else if (oneRoleId == 5) {
+					Repairman repairman = repairService.findRepairman(userId);
+					if (repairman != null) {
+						user.setName(repairman.getRepairmanName());
+					}
+				}
 				Role role = roleService.findOne(oneRoleId);
 				roles.add(role);
 			}
@@ -100,43 +127,69 @@ public class UserController {
 		return "user/list";
 	}
 
-	@RequiresPermissions("user:view")
+	@RequiresPermissions(value = { "user:view", "userStudent:view" }, logical = Logical.OR)
 	@RequestMapping(value = "/role/{roleId}", method = RequestMethod.GET)
 	public String userRolelist(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
 			@RequestParam(value = "size", required = false, defaultValue = "10") int size,
 			@PathVariable("roleId") int roleId, Model model) {
-		setCommonData(model);
 		List<Speciality> speciList = speciService.findSpeciAll();
 		List<Class> classList = classService.findSpeciAllClass(1);
 		List<RepairType> allTypeList = repairService.findAllRepairType();
-		List<Role> roleList = roleService.findAll();
 
 		List<User> userList = userService.findOneRoleAllPage(start, size, roleId);
 		for (User user : userList) {
+			String userName = user.getUsername();
+			int userId = 1;
+			if (!userName.equals("admin")) {
+				userId = Integer.parseInt(userName);
+			}
 			List<Role> roles = new ArrayList();
 			for (Long oneRoleId : user.getRoleIds()) {
+				if (oneRoleId == 2) {
+					Staff staff = staffService.findOneStaff(userId);
+					if (staff != null) {
+						user.setName(staff.getStaffName());
+					}
+				} else if (oneRoleId == 3) {
+					Consellor consellor = consellorService.findOneConsellor(userId);
+					if (consellor != null) {
+						user.setName(consellor.getConsellName());
+					}
+				} else if (oneRoleId == 4) {
+					Student student = studentService.findOneStd(userId);
+					if (student != null) {
+						user.setName(student.getStdName());
+					}
+				} else if (oneRoleId == 5) {
+					Repairman repairman = repairService.findRepairman(userId);
+					if (repairman != null) {
+						user.setName(repairman.getRepairmanName());
+					}
+				}
 				Role role = roleService.findOne(oneRoleId);
 				roles.add(role);
 			}
 			user.setRoles(roles);
 		}
 		model.addAttribute("userList", userList);
-		model.addAttribute("roleList", roleList);
 		model.addAttribute("speciList", speciList);
 		model.addAttribute("classList", classList);
+		String username = SecurityUtils.getSubject().getPrincipal().toString();
+		Set<String> permissions = userService.findPermissions(username);
+		if (permissions.contains("user:*")) {
+			setCommonData(model);
+		}
 		model.addAttribute("allTypeList", allTypeList);
 		model.addAttribute("roleId", roleId);
 		model.addAttribute("start", start);
 		model.addAttribute("allCount", userService.findOneRoleAll(roleId).size());
 
-		String username = SecurityUtils.getSubject().getPrincipal().toString();
-		Set<String> permissions = userService.findPermissions(username);
 		List<Resource> menus = resourceService.findMenus(permissions);
 		model.addAttribute("menus", menus);
 		return "user/list";
 	}
 
-	@RequiresPermissions("user:create")
+	@RequiresPermissions(value = { "user:create", "userStudent:create" }, logical = Logical.OR)
 	@RequestMapping(value = "/create", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
 	public String create(@RequestParam(value = "username") String username,
@@ -184,7 +237,7 @@ public class UserController {
 		return msg;
 	}
 
-	@RequiresPermissions("user:update")
+	@RequiresPermissions(value = { "user:update", "userStudent:update" }, logical = Logical.OR)
 	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
 	public String update(@PathVariable("id") Long id, @RequestParam(value = "username") String username,
@@ -306,7 +359,7 @@ public class UserController {
 		return msg;
 	}
 
-	@RequiresPermissions("user:delete")
+	@RequiresPermissions(value = { "user:delete", "userStudent:delete" }, logical = Logical.OR)
 	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
 	public String delete(@PathVariable("id") Long id, @RequestParam(value = "username") int username,

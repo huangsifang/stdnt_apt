@@ -66,7 +66,7 @@
 <div class="container">
 	<div class="card">
 		<div class="header">
-			<h4 class="pull-left">值班表</h4>
+			<h4 class="pull-left">公寓楼层寝室表</h4>
 			<button class="btn btn-default pull-right" onClick="addFloor(${apartId},${floorNum})">新增一层楼</button>
 		</div>
 		<div class="content table-responsive">
@@ -83,9 +83,9 @@
 			            <tr>
 			                <td>${floor.floorNo}</td>
 			                <td>
-			                	<span>${floor.dormNum}</span>
-			                	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#floorModal" onClick="showNumForm(${floor.id},${floor.dormNum})"><i class="fa fa-edit"></i></button>
-			                	<button type="button" class="btn btn-danger" onClick="deleteFloor(${apartId}, ${floor.id})"><i class="fa fa-trash-o"></i></button>
+			                	<span>${floor.dormNum}</span><br />
+			                	<button type="button" class="btn btn-default" style="margin-top:10px" data-toggle="modal" data-target="#floorModal" onClick="showNumForm(${floor.id},${floor.dormNum})"><i class="fa fa-edit"></i></button>
+			                	<button type="button" class="btn btn-danger" style="margin-top:10px" onClick="deleteFloor(${apartId}, ${floor.id})"><i class="fa fa-trash-o"></i></button>
 			                </td>
 			                <td style="font-size:1em">
 			                	<c:forEach items="${floor.dormList}" var="dorm">
@@ -119,7 +119,9 @@ function addFloor(apartId, floorNum) {
 		text: "增加第"+floorNo+"层楼", 
 		type: "info", 
 		showCancelButton: true, 
-		closeOnConfirm: false
+		closeOnConfirm: false,
+		confirmButtonText:"确定",
+        cancelButtonText:"取消"
 	},
 	function(){
 		$.ajax({
@@ -185,7 +187,9 @@ function deleteFloor(apartId, floorId) {
 		text: "请确定该公寓下没有任何关联", 
 		type: "info", 
 		showCancelButton: true, 
-		closeOnConfirm: false
+		closeOnConfirm: false,
+		confirmButtonText:"确定",
+        cancelButtonText:"取消"
 	},
 	function(){
 		$.ajax({

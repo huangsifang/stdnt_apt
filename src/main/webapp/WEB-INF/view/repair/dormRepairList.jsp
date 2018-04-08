@@ -82,7 +82,7 @@
 					<a href="${pageContext.request.contextPath}/repair/${repair.id}/record">
 						<div class="col-md-4 col-sm-6">
 							<div class="panel panel-default">
-								<div class="panel-body">
+								<div class="panel-body" style="height:290px">
 									<div class="form-group row">
 				                      <label class="col-sm-4 control-label">公寓号：</label>
 				                      <div class="col-sm-8">

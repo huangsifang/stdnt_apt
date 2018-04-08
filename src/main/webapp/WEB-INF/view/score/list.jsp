@@ -78,167 +78,176 @@
 
 <div class="container">
 	
-	<div class="row">
-		<shiro:hasPermission name="score:create">
-			<div class="pull-left" style="padding:20px">
-				<button class="btn btn-default" data-toggle="modal" data-target="#scoreModal">打分</button>
+	<c:if test="${empty apartList}">
+		<div class="panel" style="margin-top:20px">
+			<div class="panel-body">
+				<span>您还未加入任何公寓，请联系管理员</span>
 			</div>
-		</shiro:hasPermission>
-		
-		<form action="${pageContext.request.contextPath}/upload/uploadInfoFromType.do" method="post" name="formScore" id="formScore" onsubmit="return validate(formScore)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
-		     导入公寓得分： 
-			<a href="javascript:;" class="file">选择文件
-			    <input type="file" name="filename" id="importScoreFile" accept="xlsx" onchange="importFileFun(importScoreFile, scoreFileName)"/>
-			</a>
-			<input class="fileName" id="scoreFileName" value="未选择文件" disabled/>
-			<input type="hidden" name="filetype" value="score"/>
-			<input type="submit" name="Submit" value="确定" class="btn btn-primary importFileBtn"/> 
-			<input type="reset" name="Submit2" value="重置" class="btn btn-default importFileBtn"/>
-		</form>
-	</div>
-	
-	<form id="dormFindForm" method="get">
+		</div>
+	</c:if>
+	<c:if test="${not empty apartList}">
 		<div class="row">
-			<div class="col-sm-4">
-				<label for="apartId" class="control-label">公寓号：</label>
-				<c:if test="${not empty apartId}">
-					<input class="form-control" type="number" id="apartId" value="${apartId}" />
-				</c:if>
-				<c:if test="${empty apartId}">
-					<input class="form-control" type="number" id="apartIdOther" />
-				</c:if>
-			</div>
-			<div class="col-sm-4">
-				<label for="apartId" class="control-label">寝室号：</label>
-				<input class="form-control" type="number" id="floorDormId" />
-			</div>
-			<div class="col-sm-4" style="padding-top:25px">
-				<button class="btn btn-default" type="button" id="dormFindBtn">查找</button>
-			</div>
-		</div>
-	</form>
-	
-	<div class="card">
-		<div class="header">
-			<ul class="nav nav-tabs" id="apartUl">
-				<c:forEach items="${apartList}" var="apart">
-					<li><a href="${pageContext.request.contextPath}/score/${apart.apartId}">${apart.apartName}</a></li>
-			    </c:forEach>
-			</ul>
+			<shiro:hasPermission name="score:create">
+				<div class="pull-left" style="padding:20px">
+					<button class="btn btn-default" data-toggle="modal" data-target="#scoreModal">打分</button>
+				</div>
+			</shiro:hasPermission>
+			
+			<form action="${pageContext.request.contextPath}/upload/uploadInfoFromType.do" method="post" name="formScore" id="formScore" onsubmit="return validate(formScore)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
+			     导入公寓得分： 
+				<a href="javascript:;" class="file">选择文件
+				    <input type="file" name="filename" id="importScoreFile" accept="xlsx" onchange="importFileFun(importScoreFile, scoreFileName)"/>
+				</a>
+				<input class="fileName" id="scoreFileName" value="未选择文件" disabled/>
+				<input type="hidden" name="filetype" value="score"/>
+				<input type="submit" name="Submit" value="确定" class="btn btn-primary importFileBtn"/> 
+				<input type="reset" name="Submit2" value="重置" class="btn btn-default importFileBtn"/>
+			</form>
 		</div>
 		
-		<c:if test="${not empty apartId}">
+		<form id="dormFindForm" method="get">
 			<div class="row">
-				<div class="col-sm-6">
-					<c:if test="${empty apartDormScore}">
-						<div class="scoreWord">
-							该公寓未有任何得分记录
-						</div>
+				<div class="col-sm-4">
+					<label for="apartId" class="control-label">公寓号：</label>
+					<c:if test="${not empty apartId}">
+						<input class="form-control" type="number" id="apartId" value="${apartId}" />
 					</c:if>
-					<c:if test="${not empty apartDormScore}">
-						<div id="scoreMap" class="scoreMap"></div>
-					</c:if>
-				</div>
-				<div class="col-sm-6">
-					<c:if test="${empty apartDormOneDayScore}">
-						<div class="scoreWord">
-							该公寓今日未有任何得分记录
-						</div>
-					</c:if>
-					<c:if test="${not empty apartDormOneDayScore}">
-						<div id="dayScoreMap" class="scoreMap"></div>
+					<c:if test="${empty apartId}">
+						<input class="form-control" type="number" id="apartIdOther" />
 					</c:if>
 				</div>
+				<div class="col-sm-4">
+					<label for="apartId" class="control-label">寝室号：</label>
+					<input class="form-control" type="number" id="floorDormId" />
+				</div>
+				<div class="col-sm-4" style="padding-top:25px">
+					<button class="btn btn-default" type="button" id="dormFindBtn">查找</button>
+				</div>
 			</div>
-		</c:if>
-		<div id="scoreMap"></div>
-		<div id="dayScoreMap"></div>
-	</div>
-	
-	<div class="row" style="padding: 20px">
-		<div class="col-sm-6">
-			<div class="row" style="text-align:center">
-				<label>总排行</label>
+		</form>
+		
+		<div class="card">
+			<div class="header">
+				<ul class="nav nav-tabs" id="apartUl">
+					<c:forEach items="${apartList}" var="apart">
+						<li><a href="${pageContext.request.contextPath}/score/${apart.apartId}">${apart.apartName}</a></li>
+				    </c:forEach>
+				</ul>
 			</div>
-			<% int i=0; %>
-			<c:forEach items="${topScoreList}" var="score">
+			
+			<c:if test="${not empty apartId}">
 				<div class="row">
-					<a href="${pageContext.request.contextPath}/score/${score.apartId}/dorm/${score.floorDormNo}">
-						<div class="col-sm-offset-3 col-sm-6">
-							<div class="panel panel-default">
-								<div class="panel-body">
-				                   <label class="col-sm-6 control-label"><%=i+1 %></label>
-				                   <span>${score.floorDormNo}</span>
-									<c:if test="${score.avgScore < 60}">
-			                      	 	<span class="badge" style="background-color:#ee9e7e !important">
-			                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
-										</span>
-			                        </c:if>
-			                        <c:if test="${score.avgScore < 80 && score.avgScore >= 60}">
-			                      	 	<span class="badge" style="background-color:#f4db59 !important">
-			                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
-			                      	 	</span>
-			                        </c:if>
-			                        <c:if test="${score.avgScore < 90 && score.avgScore >= 80 }">
-										<span class="badge">
-				                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
-				               			</span>
-			               			</c:if>
-			               			<c:if test="${score.avgScore >= 90}">
-										<span class="badge" style="background-color:#9fe8ba !important">
-				                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
-				               			</span>
-			               			</c:if>
-			               		</div>
+					<div class="col-sm-6">
+						<c:if test="${empty apartDormScore}">
+							<div class="scoreWord">
+								该公寓未有任何得分记录
 							</div>
-						</div>
-					</a>
+						</c:if>
+						<c:if test="${not empty apartDormScore}">
+							<div id="scoreMap" class="scoreMap"></div>
+						</c:if>
+					</div>
+					<div class="col-sm-6">
+						<c:if test="${empty apartDormOneDayScore}">
+							<div class="scoreWord">
+								该公寓今日未有任何得分记录
+							</div>
+						</c:if>
+						<c:if test="${not empty apartDormOneDayScore}">
+							<div id="dayScoreMap" class="scoreMap"></div>
+						</c:if>
+					</div>
 				</div>
-				<% i++; %>
-			</c:forEach>
+			</c:if>
+			<div id="scoreMap"></div>
+			<div id="dayScoreMap"></div>
 		</div>
-		<div class="col-sm-6">
-			<div class="row" style="text-align:center">
-				<label>今日排行</label>
+		
+		<div class="row" style="padding: 20px">
+			<div class="col-sm-6">
+				<div class="row" style="text-align:center">
+					<label>总排行</label>
+				</div>
+				<% int i=0; %>
+				<c:forEach items="${topScoreList}" var="score">
+					<div class="row">
+						<a href="${pageContext.request.contextPath}/score/${score.apartId}/dorm/${score.floorDormNo}">
+							<div class="col-sm-offset-3 col-sm-6">
+								<div class="panel panel-default">
+									<div class="panel-body">
+					                   <label class="col-sm-6 control-label"><%=i+1 %></label>
+					                   <span>${score.floorDormNo}</span>
+										<c:if test="${score.avgScore < 60}">
+				                      	 	<span class="badge" style="background-color:#ee9e7e !important">
+				                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+											</span>
+				                        </c:if>
+				                        <c:if test="${score.avgScore < 80 && score.avgScore >= 60}">
+				                      	 	<span class="badge" style="background-color:#f4db59 !important">
+				                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+				                      	 	</span>
+				                        </c:if>
+				                        <c:if test="${score.avgScore < 90 && score.avgScore >= 80 }">
+											<span class="badge">
+					                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+					               			</span>
+				               			</c:if>
+				               			<c:if test="${score.avgScore >= 90}">
+											<span class="badge" style="background-color:#9fe8ba !important">
+					                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+					               			</span>
+				               			</c:if>
+				               		</div>
+								</div>
+							</div>
+						</a>
+					</div>
+					<% i++; %>
+				</c:forEach>
 			</div>
-			<% int j=0; %>
-			<c:forEach items="${dayTopScoreList}" var="score">
-				<div class="row">
-					<a href="${pageContext.request.contextPath}/score/${score.apartId}/dorm/${score.floorDormNo}">
-						<div class="col-sm-offset-3 col-sm-6">
-							<div class="panel panel-default">
-								<div class="panel-body">
-				                   <label class="col-sm-6 control-label"><%=j+1 %></label>
-				                   <span>${score.floorDormNo}</span>
-									<c:if test="${score.avgScore < 60}">
-			                      	 	<span class="badge" style="background-color:#ee9e7e !important">
-			                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
-			                      	 	</span>
-			                        </c:if>
-			                        <c:if test="${score.avgScore < 80 && score.avgScore >= 60}">
-			                      	 	<span class="badge" style="background-color:#f4db59 !important">
-			                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
-			                      	 	</span>
-			                        </c:if>
-			                        <c:if test="${score.avgScore < 90 && score.avgScore >= 80 }">
-										<span class="badge">
-				                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
-				               			</span>
-			               			</c:if>
-			               			<c:if test="${score.avgScore >= 90}">
-										<span class="badge" style="background-color:#9fe8ba !important">
-				                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
-				               			</span>
-			               			</c:if>
-			               		</div>
-							</div>
-						</div>
-					</a>
+			<div class="col-sm-6">
+				<div class="row" style="text-align:center">
+					<label>今日排行</label>
 				</div>
-				<% j++; %>
-			</c:forEach>
+				<% int j=0; %>
+				<c:forEach items="${dayTopScoreList}" var="score">
+					<div class="row">
+						<a href="${pageContext.request.contextPath}/score/${score.apartId}/dorm/${score.floorDormNo}">
+							<div class="col-sm-offset-3 col-sm-6">
+								<div class="panel panel-default">
+									<div class="panel-body">
+					                   <label class="col-sm-6 control-label"><%=j+1 %></label>
+					                   <span>${score.floorDormNo}</span>
+										<c:if test="${score.avgScore < 60}">
+				                      	 	<span class="badge" style="background-color:#ee9e7e !important">
+				                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+				                      	 	</span>
+				                        </c:if>
+				                        <c:if test="${score.avgScore < 80 && score.avgScore >= 60}">
+				                      	 	<span class="badge" style="background-color:#f4db59 !important">
+				                      	 		<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+				                      	 	</span>
+				                        </c:if>
+				                        <c:if test="${score.avgScore < 90 && score.avgScore >= 80 }">
+											<span class="badge">
+					                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+					               			</span>
+				               			</c:if>
+				               			<c:if test="${score.avgScore >= 90}">
+											<span class="badge" style="background-color:#9fe8ba !important">
+					                			<fmt:formatNumber type="number" value="${score.avgScore}" maxFractionDigits="2"/>
+					               			</span>
+				               			</c:if>
+				               		</div>
+								</div>
+							</div>
+						</a>
+					</div>
+					<% j++; %>
+				</c:forEach>
+			</div>
 		</div>
-	</div>
+	</c:if>
 </div>
 
 </body>
@@ -284,8 +293,9 @@
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
 					if(data == "success") {
-						swal("成功！", "新增成功", "success");
 						$('#scoreModal').modal('hide');
+						$(".modal-backdrop").hide();
+						swal("成功！", "新增成功", "success");
 					} else {
 						swal("失败！", "新增失败", "error");
 					}

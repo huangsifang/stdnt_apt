@@ -70,7 +70,7 @@
 			                <td>${record.repair.applicantName}</td>
 			                <td>${record.repair.applicantTel}</td>
 			                <td><fmt:formatDate value="${record.repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></td>
-			                <td>${record.repair.remark}</td>
+			                <td style="width:100px;"><p style="width:100px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis"><a href="#" class="tooltip-test" data-toggle="tooltip" title="${record.repair.remark}">${record.repair.remark}</a></p></td>
 			                <td><fmt:formatDate value="${record.acceptTime}" pattern="yyyy-MM-dd HH:mm" /></td>
 			                <td>
 			                	<c:if test="${not empty record.repairTime}">

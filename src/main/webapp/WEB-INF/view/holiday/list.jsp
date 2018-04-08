@@ -131,74 +131,84 @@
 </div>
 
 <div class="container">
-	<div class="card">
-		<c:if test="${apartId == 0}">
-			<div class="panel">
-				<div class="panel-body">
-					<span>您还未加入任何寝室，请联系公寓管理员</span>
-				</div>
+	<c:if test="${empty apartList && apartId == null}">
+		<div class="panel" style="margin-top:20px">
+			<div class="panel-body">
+				<span>您还未加入任何公寓，请联系管理员</span>
 			</div>
-		</c:if>
-		<div class="header">
-			<h4 class="pull-left">假期列表</h4>
-			<shiro:hasPermission name="holiday:create">
-				<button class="btn btn-default btn-md pull-right" data-toggle="modal" data-target="#holidayModal" onClick="createHoliday()">新增</button>
-			</shiro:hasPermission>
 		</div>
-		
-		<div class="content table-responsive">
-			<table class="table">
-			    <thead>
-			        <tr>
-			            <th>假期号</th>
-			            <th>假期名</th>
-			            <th>开始时间</th>
-			            <th>结束时间</th>
-			            <th>操作</th>
-			        </tr>
-			    </thead>
-			    <tbody>
-			    	<c:if test="${empty holidayList}">
-						<tr>
-							<td colspan="5" style="text-align:center">还未添加任何假期！</td>
-						</tr>
-					</c:if>
-			        <c:forEach items="${holidayList}" var="holiday">
-			            <tr>
-			                <td>${holiday.holiId}</td>
-			                <td>${holiday.holiName}</td>
-			                <td>${holiday.startTime}</td>
-			                <td>${holiday.endTime}</td>
-			                <td>
-			                    <shiro:hasPermission name="holiday:update">
-			                    	<button class="btn btn-default btn-md" data-toggle="modal" data-target="#holidayModal" type="button" onClick="updateHoliday(${holiday.holiId},'${holiday.holiName}','${holiday.startTime}','${holiday.endTime}')"><i class="fa fa-edit"></i></button>
-			                    </shiro:hasPermission>
+	</c:if>
+	
+	<c:if test="${not empty apartList || apartId != null}">
+		<div class="card">
+			<c:if test="${apartId == 0}">
+				<div class="panel">
+					<div class="panel-body">
+						<span>您还未加入任何寝室，请联系公寓管理员</span>
+					</div>
+				</div>
+			</c:if>
+			<div class="header">
+				<h4 class="pull-left">假期列表</h4>
+				<shiro:hasPermission name="holiday:create">
+					<button class="btn btn-default btn-md pull-right" data-toggle="modal" data-target="#holidayModal" onClick="createHoliday()">新增</button>
+				</shiro:hasPermission>
+			</div>
 			
-			                    <shiro:hasPermission name="holiday:delete">
-			                    	<button class="btn btn-danger btn-md" type="button" onClick="deleteHoliday(${holiday.holiId})"><i class="fa fa-trash-o"></i></button>
-			                    </shiro:hasPermission>
-			                    
-			                    <shiro:hasPermission name="record:create">
-			                    	<c:if test="${apartId != 0}">
-				                    	<c:if test="${!holiday.hasSign}">
-				                    		<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#recordModal" type="button" onClick="holidayRecord(${holiday.holiId},'${holiday.startTime}','${holiday.endTime}')">登记</button>
+			<div class="content table-responsive">
+				<table class="table">
+				    <thead>
+				        <tr>
+				            <th>假期号</th>
+				            <th>假期名</th>
+				            <th>开始时间</th>
+				            <th>结束时间</th>
+				            <th>操作</th>
+				        </tr>
+				    </thead>
+				    <tbody>
+				    	<c:if test="${empty holidayList}">
+							<tr>
+								<td colspan="5" style="text-align:center">还未添加任何假期！</td>
+							</tr>
+						</c:if>
+				        <c:forEach items="${holidayList}" var="holiday">
+				            <tr>
+				                <td>${holiday.holiId}</td>
+				                <td>${holiday.holiName}</td>
+				                <td>${holiday.startTime}</td>
+				                <td>${holiday.endTime}</td>
+				                <td>
+				                    <shiro:hasPermission name="holiday:update">
+				                    	<button class="btn btn-default btn-md" data-toggle="modal" data-target="#holidayModal" type="button" onClick="updateHoliday(${holiday.holiId},'${holiday.holiName}','${holiday.startTime}','${holiday.endTime}')"><i class="fa fa-edit"></i></button>
+				                    </shiro:hasPermission>
+				
+				                    <shiro:hasPermission name="holiday:delete">
+				                    	<button class="btn btn-danger btn-md" type="button" onClick="deleteHoliday(${holiday.holiId})"><i class="fa fa-trash-o"></i></button>
+				                    </shiro:hasPermission>
+				                    
+				                    <shiro:hasPermission name="record:create">
+				                    	<c:if test="${apartId != 0}">
+					                    	<c:if test="${!holiday.hasSign}">
+					                    		<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#recordModal" type="button" onClick="holidayRecord(${holiday.holiId},'${holiday.startTime}','${holiday.endTime}')">登记</button>
+					                    	</c:if>
 				                    	</c:if>
-			                    	</c:if>
-			                    	<c:if test="${holiday.hasSign}">
-			                    		<button class="btn btn-primary btn-md" id="lookBtn"><a href="holiday/${holiday.holiId}/std/record">查看</a></button>
-			                    	</c:if>
-			                    </shiro:hasPermission>
-			                    
-			                    <shiro:hasPermission name="record:view">
-			                    	<button class="btn btn-primary btn-md" id="lookBtn"><a href="holiday/${holiday.holiId}/apart/record">查看</a></button>
-			                    </shiro:hasPermission>
-			                </td>
-			            </tr>
-			        </c:forEach>
-			    </tbody>
-			</table>
+				                    	<c:if test="${holiday.hasSign}">
+				                    		<button class="btn btn-primary btn-md" id="lookBtn"><a href="holiday/${holiday.holiId}/std/record">查看</a></button>
+				                    	</c:if>
+				                    </shiro:hasPermission>
+				                    
+				                    <shiro:hasPermission name="record:view">
+				                    	<button class="btn btn-primary btn-md" id="lookBtn"><a href="holiday/${holiday.holiId}/apart/record">查看</a></button>
+				                    </shiro:hasPermission>
+				                </td>
+				            </tr>
+				        </c:forEach>
+				    </tbody>
+				</table>
+			</div>
 		</div>
-	</div>
+	</c:if>
 </div>
 </body>
 <script src="${pageContext.request.contextPath}/public/js/bootstrap-datetimepicker.min.js" ></script>
@@ -337,7 +347,7 @@ $('#startTime').datetimepicker({
 		$("#endTime").datetimepicker('setStartDate',null);
 	}
 });
- $('#endTime').datetimepicker({
+$('#endTime').datetimepicker({
 	language:  'zh-CN', 
 	format:'yyyy-mm-dd', 
 	weekStart: 1, /*以星期一为一星期开始*/
@@ -353,7 +363,7 @@ $('#startTime').datetimepicker({
 		$("#startTime").datetimepicker('setEndDate',new Date());
 	}
 });
- $('#recordStartTime').datetimepicker({
+$('#recordStartTime').datetimepicker({
 	language:  'zh-CN', 
 	format:'yyyy-mm-dd', 
 	weekStart: 1, /*以星期一为一星期开始*/
@@ -369,7 +379,7 @@ $('#startTime').datetimepicker({
 		$("#recordEndTime").datetimepicker('setStartDate',null);
 	}
 });
- $('#recordEndTime').datetimepicker({
+$('#recordEndTime').datetimepicker({
 	language:  'zh-CN', 
 	format:'yyyy-mm-dd', 
 	weekStart: 1, /*以星期一为一星期开始*/

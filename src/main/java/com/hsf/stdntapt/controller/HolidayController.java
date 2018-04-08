@@ -75,6 +75,13 @@ public class HolidayController {
 		}
 		model.addAttribute("holidayList", holidayList);
 
+		List<Apartment> apartList = null;
+		if (username.equals("admin") || userService.findRoles(username).contains("consellor")) {
+			apartList = apartmentService.findAll();
+		} else {
+			apartList = apartmentService.findStaffAparts(Integer.parseInt(username));
+		}
+		model.addAttribute("apartList", apartList);
 		Set<String> permissions = userService.findPermissions(username);
 		List<com.hsf.stdntapt.entity.Resource> menus = resourceService.findMenus(permissions);
 		model.addAttribute("menus", menus);
@@ -179,7 +186,8 @@ public class HolidayController {
 	@RequestMapping(value = "/{holiId}/apart/record", method = RequestMethod.GET)
 	public String recordList(@RequestParam(value = "start", required = false, defaultValue = "0") int start,
 			@RequestParam(value = "size", required = false, defaultValue = "10") int size,
-			@PathVariable("holiId") int holiId, final ModelMap model) {
+			@PathVariable("holiId") int holiId,
+			@RequestParam(value = "type", required = false, defaultValue = "all") String type, final ModelMap model) {
 		String username = SecurityUtils.getSubject().getPrincipal().toString();
 		List<Apartment> apartList = null;
 		if (username.equals("admin") || userService.findRoles(username).contains("consellor")) {
@@ -191,7 +199,32 @@ public class HolidayController {
 		if (apartList != null) {
 			apartList.get(0).getApartId();
 		}
-		final List<HoliRecord> recordList = holidayService.findApartAllRecordsByPage(start, size, holiId, apartId);
+		List<HoliRecord> recordList = new ArrayList();
+		final List<HoliRecord> homeRecordList = holidayService.findApartAllHomeRecordsByPage(start, size, holiId,
+				apartId);
+		final List<HoliRecord> schoolRecordList = holidayService.findApartAllSchoolRecordsByPage(start, size, holiId,
+				apartId);
+		int allCount = 1;
+		int homeRecordNum = 0;
+		int schoolRecordNum = 0;
+		List<HoliRecord> allHomeRecordList = holidayService.findApartAllHomeRecords(holiId, apartId);
+		if (allHomeRecordList != null) {
+			homeRecordNum = allHomeRecordList.size();
+		}
+		List<HoliRecord> allSchoolRecordList = holidayService.findApartAllSchoolRecords(holiId, apartId);
+		if (allSchoolRecordList != null) {
+			schoolRecordNum = allSchoolRecordList.size();
+		}
+		if (type.equals("home")) {
+			recordList = homeRecordList;
+			allCount = allHomeRecordList.size();
+		} else if (type.equals("school")) {
+			recordList = schoolRecordList;
+			allCount = allSchoolRecordList.size();
+		} else {
+			recordList = holidayService.findApartAllRecordsByPage(start, size, holiId, apartId);
+			allCount = holidayService.findApartAllRecords(holiId, apartId).size();
+		}
 		for (HoliRecord record : recordList) {
 			String holiName = holidayService.findHoliName(holiId);
 			record.setHoliName(holiName);
@@ -225,7 +258,11 @@ public class HolidayController {
 		model.addAttribute("holiId", holiId);
 		model.addAttribute("apartId", apartId);
 		model.addAttribute("start", start);
-		model.addAttribute("allCount", holidayService.findApartAllRecords(holiId, apartId).size());
+		model.addAttribute("allCount", allCount);
+		model.addAttribute("allHomeSchoolCount", holidayService.findApartAllRecords(holiId, apartId).size());
+		model.addAttribute("homeRecordNum", homeRecordNum);
+		model.addAttribute("schoolRecordNum", schoolRecordNum);
+		model.addAttribute("type", type);
 
 		Set<String> permissions = userService.findPermissions(username);
 		List<com.hsf.stdntapt.entity.Resource> menus = resourceService.findMenus(permissions);
@@ -247,22 +284,30 @@ public class HolidayController {
 			apartList = apartmentService.findStaffAparts(Integer.parseInt(username));
 		}
 		List<HoliRecord> recordList = new ArrayList();
-		final List<HoliRecord> homeRecordList = holidayService.findApartAllHomeRecords(holiId, apartId);
-		final List<HoliRecord> schoolRecordList = holidayService.findApartAllSchoolRecords(holiId, apartId);
+		final List<HoliRecord> homeRecordList = holidayService.findApartAllHomeRecordsByPage(start, size, holiId,
+				apartId);
+		final List<HoliRecord> schoolRecordList = holidayService.findApartAllSchoolRecordsByPage(start, size, holiId,
+				apartId);
+		int allCount = 1;
+		int homeRecordNum = 0;
+		int schoolRecordNum = 0;
+		List<HoliRecord> allSchoolRecordList = holidayService.findApartAllSchoolRecords(holiId, apartId);
+		if (allSchoolRecordList != null) {
+			schoolRecordNum = allSchoolRecordList.size();
+		}
+		List<HoliRecord> allHomeRecordList = holidayService.findApartAllHomeRecords(holiId, apartId);
+		if (allHomeRecordList != null) {
+			homeRecordNum = allHomeRecordList.size();
+		}
 		if (type.equals("home")) {
+			allCount = allHomeRecordList.size();
 			recordList = homeRecordList;
 		} else if (type.equals("school")) {
+			allCount = allSchoolRecordList.size();
 			recordList = schoolRecordList;
 		} else {
 			recordList = holidayService.findApartAllRecordsByPage(start, size, holiId, apartId);
-		}
-		int homeRecordNum = 0;
-		int schoolRecordNum = 0;
-		if (homeRecordList != null) {
-			homeRecordNum = homeRecordList.size();
-		}
-		if (schoolRecordList != null) {
-			schoolRecordNum = schoolRecordList.size();
+			allCount = holidayService.findApartAllRecords(holiId, apartId).size();
 		}
 		for (HoliRecord record : recordList) {
 			String holiName = holidayService.findHoliName(holiId);
@@ -274,6 +319,12 @@ public class HolidayController {
 			if (record.isInHome()) {
 				record.setHomeOrSchool("返家");
 				record.setIsOutStr("");
+				List<HoliBack> backList = holidayService.findStdHoliBack(holiId, record.getStdId());
+				boolean hasSign = false;
+				if (!backList.isEmpty()) {
+					hasSign = true;
+				}
+				record.setHasSign(hasSign);
 			} else {
 				record.setHomeOrSchool("留校");
 				if (record.isOut()) {
@@ -290,9 +341,11 @@ public class HolidayController {
 		model.addAttribute("holiId", holiId);
 		model.addAttribute("apartId", apartId);
 		model.addAttribute("start", start);
-		model.addAttribute("allCount", holidayService.findApartAllRecords(holiId, apartId).size());
+		model.addAttribute("allCount", allCount);
+		model.addAttribute("allHomeSchoolCount", holidayService.findApartAllRecords(holiId, apartId).size());
 		model.addAttribute("homeRecordNum", homeRecordNum);
 		model.addAttribute("schoolRecordNum", schoolRecordNum);
+		model.addAttribute("type", type);
 
 		Set<String> permissions = userService.findPermissions(username);
 		List<com.hsf.stdntapt.entity.Resource> menus = resourceService.findMenus(permissions);

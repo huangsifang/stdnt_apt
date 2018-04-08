@@ -45,7 +45,7 @@
 			                <td>${repair.applicantName}</td>
 			                <td>${repair.repairTypeName}</td>
 			                <td><fmt:formatDate value="${repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></td>
-			                <td>${repair.remark}</td>
+			                <td style="width:100px;"><p style="width:100px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis"><a href="#" class="tooltip-test" data-toggle="tooltip" title="${repair.remark}">${repair.remark}</a></p></td>
 			                <c:if test="${repair.state == 0}">
 			                	<td><span class="label label-warning">未接单</span></td>
 			                </c:if>

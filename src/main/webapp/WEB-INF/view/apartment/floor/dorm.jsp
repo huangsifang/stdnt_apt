@@ -155,7 +155,9 @@
 			text: stdName, 
 			type: "info", 
 			showCancelButton: true, 
-			closeOnConfirm: false
+			closeOnConfirm: false,
+			confirmButtonText:"确定",
+	        cancelButtonText:"取消"
 		},
 		function(){ 
 			$.ajax({
@@ -218,7 +220,9 @@
 			text: "同时将删除该床位关联的学生", 
 			type: "info", 
 			showCancelButton: true, 
-			closeOnConfirm: false
+			closeOnConfirm: false,
+			confirmButtonText:"确定",
+	        cancelButtonText:"取消"
 		},
 		function(){ 
 			$.ajax({
@@ -343,7 +347,9 @@
 			text: "请确定该公寓下没有任何关联", 
 			type: "info", 
 			showCancelButton: true, 
-			closeOnConfirm: false
+			closeOnConfirm: false,
+			confirmButtonText:"确定",
+	        cancelButtonText:"取消"
 		},
 		function(){
 			$.ajax({

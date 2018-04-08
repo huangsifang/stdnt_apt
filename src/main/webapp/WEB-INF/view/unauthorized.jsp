@@ -6,6 +6,6 @@
 </head>
 <body>
 
-<div class="error">您没有权限[${exception.message}]</div>
+<div class="error">您没有权限，请确认登录账号或联系管理员<br />[${exception.message}]</div>
 </body>
 </html>

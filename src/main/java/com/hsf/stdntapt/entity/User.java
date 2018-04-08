@@ -7,17 +7,10 @@ import java.util.List;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-/**
- * <p>
- * User: Zhang Kaitao
- * <p>
- * Date: 14-1-28
- * <p>
- * Version: 1.0
- */
 public class User implements Serializable {
 	private Long id; // 编号
 	private String username; // 用户名
+	private String name;
 	private String password; // 密码
 	private String salt; // 加密密码的盐
 	private List<Long> roleIds; // 拥有的角色列表
@@ -47,6 +40,14 @@ public class User implements Serializable {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getPassword() {
@@ -146,6 +147,14 @@ public class User implements Serializable {
 
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
+	}
+
+	public boolean isContainRoleId(int roleId) {
+		if (this.roleIdsStr.contains(String.valueOf(roleId))) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

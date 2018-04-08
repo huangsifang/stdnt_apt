@@ -75,7 +75,7 @@
 </head>
 <body>
 	<div id="loginInfo">欢迎[<shiro:principal/>]登录成功！<a href="${pageContext.request.contextPath}/logout">退出</a></div>
-	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation" id="navMenu">
 	    <div class="container">
 		    <div class="navbar-header">
 		        <a class="navbar-brand" id="backBtn" onClick="back()"><i class="fa  fa-angle-left"></i>&nbsp;返回</a>
@@ -108,11 +108,15 @@ $(function() {
 		url = pathname.substring(0, second);
 		//$("#apartmentBrand").hide();
 		$("#backBtn").show();
-		$(".nav li a[href='"+url+"']").parent().addClass("active");
+		$("#navMenu .nav li a[href='"+url+"']").parent().addClass("active");
+		if(url.substring(first, second) == "/user") {
+			var stdUrl = pathname.substring(0, first)+"/user/role/4";
+			$("#navMenu .nav li a[href='"+stdUrl+"']").parent().addClass("active");
+		}
 	} else {
 		//$("#apartmentBrand").show();
 		$("#backBtn").hide();
-		$(".nav li a[href='"+pathname+"']").parent().addClass("active");
+		$("#navMenu .nav li a[href='"+pathname+"']").parent().addClass("active");
 	}
 });
 function back(){

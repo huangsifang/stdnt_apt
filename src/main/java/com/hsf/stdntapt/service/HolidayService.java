@@ -29,6 +29,10 @@ public interface HolidayService {
 
 	public List<HoliRecord> findApartAllSchoolRecords(int holiId, int apartId);
 
+	public List<HoliRecord> findApartAllHomeRecordsByPage(int start, int size, int holiId, int apartId);
+
+	public List<HoliRecord> findApartAllSchoolRecordsByPage(int start, int size, int holiId, int apartId);
+
 	public int createHoliRecord(HoliRecord record);
 
 	public int deleteHoliRecord(int holiId, int stdId);

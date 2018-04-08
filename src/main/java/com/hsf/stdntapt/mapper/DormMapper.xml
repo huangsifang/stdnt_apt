@@ -29,6 +29,7 @@
 	        )and deleted=0
         )and deleted=0 
         group by dorm_id 
+        order by avgScore desc 
         limit 10
     </select>
     <select id="getApartDayTopScores" resultType="DormScore">
@@ -41,6 +42,7 @@
 	        )and deleted=0 
         )and create_time like #{day} and deleted=0 
         group by dorm_id 
+        order by avgScore desc 
         limit 10
     </select>
     <insert id="createDormScore" parameterType="DormScore" useGeneratedKeys="true" keyProperty="dormScore.id">

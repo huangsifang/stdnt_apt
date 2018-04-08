@@ -76,7 +76,7 @@ public class RepairController {
 		} else {
 			apartList = apartmentService.findStaffAparts(Integer.parseInt(username));
 		}
-		if (apartList != null && permissions.contains("repair:*")) {
+		if (apartList != null && !apartList.isEmpty() && permissions.contains("repair:*")) {
 			int apartId = apartList.get(0).getApartId();
 			final List<Repair> repairList = repairService.getApartRepairsByPage(start, size, apartId);
 			for (Repair repair : repairList) {

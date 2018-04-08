@@ -91,7 +91,7 @@ public interface ApartmentDao {
 
 	public List<StaffRota> findApartRotaAll(@Param("apartId") int apartId);
 
-	public void deleteStaffRota(@Param("apartId") int apartId, @Param("staffId") int staffId);
+	public void deleteStaffRota(@Param("apartId") int apartId, @Param("staffId") int staffId, @Param("week") int week);
 
 	public int createStaffRota(@Param("rota") StaffRota rota);
 

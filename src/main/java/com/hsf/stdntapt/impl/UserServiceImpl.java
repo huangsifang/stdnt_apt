@@ -13,14 +13,6 @@ import com.hsf.stdntapt.service.PasswordHelper;
 import com.hsf.stdntapt.service.RoleService;
 import com.hsf.stdntapt.service.UserService;
 
-/**
- * <p>
- * User: Zhang Kaitao
- * <p>
- * Date: 14-1-28
- * <p>
- * Version: 1.0
- */
 @Service
 
 public class UserServiceImpl implements UserService {

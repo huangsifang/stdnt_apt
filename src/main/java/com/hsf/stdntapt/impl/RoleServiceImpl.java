@@ -12,14 +12,6 @@ import com.hsf.stdntapt.entity.Role;
 import com.hsf.stdntapt.service.ResourceService;
 import com.hsf.stdntapt.service.RoleService;
 
-/**
- * <p>
- * User: Zhang Kaitao
- * <p>
- * Date: 14-1-28
- * <p>
- * Version: 1.0
- */
 @Service
 
 public class RoleServiceImpl implements RoleService {

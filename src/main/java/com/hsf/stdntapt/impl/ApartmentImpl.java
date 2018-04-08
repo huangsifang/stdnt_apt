@@ -216,8 +216,8 @@ public class ApartmentImpl implements ApartmentService {
 	}
 
 	@Override
-	public void deleteStaffRota(int apartId, int staffId) {
-		apartmentDao.deleteStaffRota(apartId, staffId);
+	public void deleteStaffRota(int apartId, int staffId, int week) {
+		apartmentDao.deleteStaffRota(apartId, staffId, week);
 	}
 
 	@Override

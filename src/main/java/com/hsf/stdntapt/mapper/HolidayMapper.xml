@@ -60,6 +60,16 @@
         select holi_id as holiId, std_id as stdId, start_time as startTime, end_time as endTime, in_home as inHome, is_out as isOut from holi_record 
         where apart_id=#{apartId}  and holi_id=#{holiId} and in_home=false and deleted=0
     </select>
+    <select id="findApartAllHomeRecordsByPage" parameterType="int" resultType="HoliRecord">
+        select holi_id as holiId, std_id as stdId, start_time as startTime, end_time as endTime, in_home as inHome, address from holi_record 
+        where apart_id=#{apartId}  and holi_id=#{holiId} and in_home=true and deleted=0 
+        order by id desc limit #{start},#{size}
+    </select>
+    <select id="findApartAllSchoolRecordsByPage" parameterType="int" resultType="HoliRecord">
+        select holi_id as holiId, std_id as stdId, start_time as startTime, end_time as endTime, in_home as inHome, is_out as isOut from holi_record 
+        where apart_id=#{apartId}  and holi_id=#{holiId} and in_home=false and deleted=0 
+        order by id desc limit #{start},#{size}
+    </select>
     <insert id="createHoliRecord" parameterType="HoliRecord" useGeneratedKeys="true" keyProperty="record.id">
         INSERT INTO holi_record(
         	<if test="record.holiId != null">holi_id,</if>

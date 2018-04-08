@@ -2,6 +2,7 @@ package com.hsf.stdntapt.controller;
 
 import javax.annotation.Resource;
 
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,7 @@ public class StudentController {
 	@Resource
 	ClassService classService;
 
-	@RequiresPermissions("user:view")
+	@RequiresPermissions(value = { "user:view", "userStudent:view" }, logical = Logical.OR)
 	@RequestMapping(value = "/stdName", method = RequestMethod.GET, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
 	public String studentName(@RequestParam(value = "stdId") int stdId) {
@@ -31,7 +32,7 @@ public class StudentController {
 		return std.getStdName();
 	}
 
-	@RequiresPermissions("user:view")
+	@RequiresPermissions(value = { "user:view", "userStudent:view" }, logical = Logical.OR)
 	@RequestMapping(value = "/{stdId}", method = RequestMethod.GET)
 	@ResponseBody
 	public Student staff(@PathVariable(value = "stdId") int stdId) {

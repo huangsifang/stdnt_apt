@@ -117,7 +117,7 @@
 	                   <div class="form-group row">
 	                      <label class="col-sm-4 control-label">备注：</label>
 	                      <div class="col-sm-8">
-	                         <span>${repair.remark}</span>
+	                         <p style="width:200px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis"><a href="#" class="tooltip-test" data-toggle="tooltip" title="${repair.remark}">${repair.remark}</a></p>
 	                      </div>
 	                   </div>
 					</fieldset>
@@ -148,7 +148,7 @@
 				<div class="card">
 				    <div class="change_link">
 					    <div class="header">
-					    	<h4>维修信息</h4>
+					    	<h4>维修人员信息</h4>
 					    </div>
 				    </div>
 				    <div class="content">

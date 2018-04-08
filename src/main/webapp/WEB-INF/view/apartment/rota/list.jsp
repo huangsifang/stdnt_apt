@@ -83,7 +83,7 @@
 				                <c:forEach items="${rota.staffs}" var="staff">
 				                	<div style="margin:5px 0">
 					                	${staff.staffId}:${staff.staffName}——${staff.staffTel}
-					                	<button class="btn btn-danger" onClick="deleteStaffRota(${rota.apartId},${staff.staffId})"><i class="fa fa-trash-o"></i></button>
+					                	<button class="btn btn-danger" onClick="deleteStaffRota(${rota.apartId},${staff.staffId},${rota.week})"><i class="fa fa-trash-o"></i></button>
 				                	</div>
 				                </c:forEach>
 			                </td>
@@ -99,7 +99,7 @@
 </div>
 </body>
 <script>
-function deleteStaffRota(apartId, staffId) {
+function deleteStaffRota(apartId, staffId, week) {
 	swal({ 
 		title: "确定删除吗？", 
 		text: "", 
@@ -114,7 +114,7 @@ function deleteStaffRota(apartId, staffId) {
 		$.ajax({
 			type: "POST",
 			datatype: "json",
-			url: getRootPath() + "/apartment/"+apartId+"/staffRota/"+staffId+"/delete",
+			url: getRootPath() + "/apartment/"+apartId+"/week/"+week+"/staffRota/"+staffId+"/delete",
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
 				if(data == "success") {

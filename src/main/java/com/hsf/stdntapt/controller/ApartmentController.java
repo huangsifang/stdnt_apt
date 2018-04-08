@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -96,7 +97,6 @@ public class ApartmentController {
 	public String create(@RequestParam(value = "apartId") int apartId,
 			@RequestParam(value = "apartName") String apartName, @RequestParam(value = "floorNum") int floorNum,
 			@RequestParam(value = "aFloorDormNum") int aFloorDormNum,
-			@RequestParam(value = "aDormBedNum") int aDormBedNum,
 			@RequestParam(value = "aStdYearFee") BigDecimal aStdYearFee) {
 		String msg = "";
 		try {
@@ -110,11 +110,11 @@ public class ApartmentController {
 					dorm.setFee(aStdYearFee);
 					dorm.setLeaderId(1);
 					apartmentService.createDorm(dorm);
-					for (int z = 0; z < aDormBedNum; z++) {
-						Bed bed = new Bed(z + 1, dorm.getId());
-						bed.setStdId(1);
-						apartmentService.createBed(bed);
-					}
+					// for (int z = 0; z < aDormBedNum; z++) {
+					// Bed bed = new Bed(z + 1, dorm.getId());
+					// bed.setStdId(1);
+					// apartmentService.createBed(bed);
+					// }
 				}
 			}
 			msg = "success";
@@ -237,12 +237,13 @@ public class ApartmentController {
 	}
 
 	@RequiresPermissions("apartment:delete")
-	@RequestMapping(value = "/{apartId}/staffRota/{staffId}/delete", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
+	@RequestMapping(value = "/{apartId}/week/{week}/staffRota/{staffId}/delete", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
-	public String deleteStaffRota(@PathVariable("apartId") int apartId, @PathVariable("staffId") int staffId) {
+	public String deleteStaffRota(@PathVariable("apartId") int apartId, @PathVariable("week") int week,
+			@PathVariable("staffId") int staffId) {
 		String msg = "";
 		try {
-			apartmentService.deleteStaffRota(apartId, staffId);
+			apartmentService.deleteStaffRota(apartId, staffId, week);
 			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -460,7 +461,7 @@ public class ApartmentController {
 		return msg;
 	}
 
-	@RequiresPermissions("apartment:view")
+	@RequiresPermissions(value = { "apartment:view", "score:view" }, logical = Logical.OR)
 	@RequestMapping(value = "{apartId}/floorDormId/{floorDormId}/check", method = RequestMethod.GET, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
 	public String checkDormDetail(@PathVariable("apartId") int apartId, @PathVariable("floorDormId") int floorDormId,

@@ -88,7 +88,7 @@ public interface ApartmentService {
 
 	public List<StaffRota> findApartRotaAll(int apartId);
 
-	public void deleteStaffRota(int apartId, int staffId);
+	public void deleteStaffRota(int apartId, int staffId, int week);
 
 	public int createStaffRota(StaffRota rota);
 

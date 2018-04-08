@@ -201,7 +201,7 @@
     	group by week
     </select>
     <delete id="deleteStaffRota" parameterType="int">
-		delete from staff_rota where apart_id=#{apartId} and staff_id=#{staffId} and deleted=0
+		delete from staff_rota where apart_id=#{apartId} and staff_id=#{staffId} and week=#{week} and deleted=0
 	</delete>
 	<insert id="createStaffRota" parameterType="StaffRota" useGeneratedKeys="true" keyProperty="rota.rotaId">
         INSERT INTO staff_rota(

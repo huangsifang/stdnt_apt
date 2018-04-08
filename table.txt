@@ -48,6 +48,7 @@ insert into resource values(12, '用户新增', 'button', '', 11, '0/1/11/', 'user:c
 insert into resource values(13, '用户修改', 'button', '', 11, '0/1/11/', 'user:update', true);
 insert into resource values(14, '用户删除', 'button', '', 11, '0/1/11/', 'user:delete', true);
 insert into resource values(15, '用户查看', 'button', '', 11, '0/1/11/', 'user:view', true);
+insert into resource values(16, '学生管理', 'menu', '/user/role/5', 1, '0/1/', 'userStudent:*', true);
 insert into resource values(21, '公寓管理', 'menu', '/apartment', 1, '0/1/', 'apartment:*', true);
 insert into resource values(22, '公寓新增', 'button', '', 21, '0/1/21/', 'apartment:create', true);
 insert into resource values(23, '公寓修改', 'button', '', 21, '0/1/21/', 'apartment:update', true);
@@ -279,7 +280,7 @@ create table holi_back(
 	foreign key(std_id) references student(std_id)
 );
 
-create table vacation_record(
+/*create table vacation_record(
 	id int(20) unsigned not null primary key auto_increment,
 	std_id int(20) unsigned not null,
 	apart_id int(3) unsigned,
@@ -289,7 +290,7 @@ create table vacation_record(
 	deleted bit not null default 0,
 	foreign key(std_id) references student(std_id),
 	foreign key(apart_id) references apartment(apart_id)
-);
+);*/
 
 create table vacation_sign(
 	id int(20) unsigned not null primary key auto_increment,

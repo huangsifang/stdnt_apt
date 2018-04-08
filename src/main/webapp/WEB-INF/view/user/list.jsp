@@ -39,7 +39,7 @@
 								<input class="form-control" type="password" name="password"/>
 					    	</div>
 						</div>
-						<div class="form-group">
+						<div class="form-group" id="roleIdsForm">
 							<label for="roleIds" class="col-sm-3 control-label">角色列表：</label>
 							<div class="col-sm-8">
 								<select multiple class="form-control" name="roleIds" id="roleIds">
@@ -158,21 +158,32 @@
 	
 	<div class="card">
 		<div class="header">
+			<c:if test="${not empty roleList}">
 			<ul class="nav nav-tabs" id="roleUl">
+			</c:if>
 				<c:forEach items="${roleList}" var="role">
 					<li><a href="${pageContext.request.contextPath}/user/role/${role.id}">${role.description}</a></li>
 			    </c:forEach>
 			    <shiro:hasPermission name="user:create">
 					<button class="btn btn-default pull-right" data-toggle="modal" data-target="#userModal" onClick="addUser()">用户新增</button>
 				</shiro:hasPermission>
+				<shiro:hasPermission name="userStudent:create">
+					<h4 class="pull-left" style="padding-left:10px">学生信息表</h4>
+					<button class="btn btn-default pull-right" data-toggle="modal" data-target="#userModal" onClick="addStudent()">学生新增</button>
+				</shiro:hasPermission>
+			<c:if test="${not empty roleList}">
 			</ul>
+			</c:if>
 		</div>
 		<div class="content table-responsive">
 			<table class="table">
 			    <thead>
 			        <tr>
 			            <th>用户名</th>
+			            <th>姓名</th>
+			            <c:if test="${!user.isContainRoleId(1)}">
 			            <th>角色</th>
+			            </c:if>
 			            <th>操作</th>
 			        </tr>
 			    </thead>
@@ -185,6 +196,9 @@
 			        <c:forEach items="${userList}" var="user">
 			            <tr>
 			                <td>${user.username}</td>
+			                <c:if test="${!user.isContainRoleId(1)}">
+			                <td>${user.name}</td>
+			                </c:if>
 			                <td>
 			                <c:forEach items="${user.roles}" var="role">
 			                	${role.description}<br />
@@ -192,18 +206,37 @@
 			                </td>
 			                <td>
 			                    <shiro:hasPermission name="user:update">
-			                    	<c:if test="${user.username != 'admin'}">
+			                    	<c:if test="${!user.isContainRoleId(1)}">
 			                    		<button class="btn btn-default" data-toggle="modal" data-target="#userModal" onClick="updateUser(${user.id}, ${user.username}, ${user.roleIds})"><i class="fa fa-edit"></i></button>
 			                    	</c:if>
 			                    </shiro:hasPermission>
+			                    <c:if test="${user.isContainRoleId(4)}">
+			                    	<shiro:hasPermission name="userStudent:update">
+				                    	<c:if test="${!user.isContainRoleId(1)}">
+				                    		<button class="btn btn-default" data-toggle="modal" data-target="#userModal" onClick="updateUser(${user.id}, ${user.username}, ${user.roleIds})"><i class="fa fa-edit"></i></button>
+				                    	</c:if>
+			                    	</shiro:hasPermission>
+			                    </c:if>
 			
 			                    <shiro:hasPermission name="user:delete">
 			                    	<button class="btn btn-danger" onClick="deleteUser(${user.id},${user.username},'${user.roleIdsStr}')"><i class="fa fa-trash-o"></i></button>
 			                    </shiro:hasPermission>
+			                    
+			                    <c:if test="${user.isContainRoleId(4)}">
+			                    	<shiro:hasPermission name="userStudent:update">
+				                    	<button class="btn btn-danger" onClick="deleteUser(${user.id},${user.username},'${user.roleIdsStr}')"><i class="fa fa-trash-o"></i></button>
+			                    	</shiro:hasPermission>
+			                    </c:if>
 			
 			                    <shiro:hasPermission name="user:update">
 			                    	<button class="btn btn-warning" data-toggle="modal" data-target="#passwordModal" onClick="changePasswordUser(${user.id})"><i class="fa fa-unlock"></i>&nbsp;&nbsp;改密</button>
 			                    </shiro:hasPermission>
+			                    
+			                    <c:if test="${user.isContainRoleId(4)}">
+			                    	<shiro:hasPermission name="userStudent:update">
+				                    	<button class="btn btn-warning" data-toggle="modal" data-target="#passwordModal" onClick="changePasswordUser(${user.id})"><i class="fa fa-unlock"></i>&nbsp;&nbsp;改密</button>
+			                    	</shiro:hasPermission>
+			                    </c:if>
 			                </td>
 			            </tr>
 			        </c:forEach>
@@ -355,6 +388,22 @@
 		$("#isPartyForm").hide();
 		$("#speciIdForm").hide();
 		$("#classIdForm").hide();
+		$("#repairTypeForm").hide();
+	}
+	function addStudent() {
+		$("#userModalLabel").text("新增学生");
+		$("#operationType").val("add");
+		$("#username").val('');
+		$("#roleIds option").attr("selected",false);
+		$("#roleIds").val(4);
+		$("#roleIdsForm").hide();
+		$('#usernameForm').show(); 
+		$("#passwordForm").show();
+		$("#userInfo").show();
+		$("#hiredateForm").show();
+		$("#isPartyForm").show();
+		$("#speciIdForm").show();
+		$("#classIdForm").show();
 		$("#repairTypeForm").hide();
 	}
 	function updateUser(id, username, roleIds) {

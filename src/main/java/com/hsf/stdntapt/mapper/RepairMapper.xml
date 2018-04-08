@@ -96,6 +96,7 @@
     <select id="findDormRepairs" parameterType="int" resultType="Repair">
         select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark from repair 
         where dorm_id=#{dormId} and deleted=0
+        order by apply_time desc
     </select>
     
     <select id="findRepairTypeName" parameterType="int" resultType="String">

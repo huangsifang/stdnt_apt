@@ -73,6 +73,16 @@ public class HolidayImpl implements HolidayService {
 	}
 
 	@Override
+	public List<HoliRecord> findApartAllHomeRecordsByPage(int start, int size, int holiId, int apartId) {
+		return holidayDao.findApartAllHomeRecordsByPage(start, size, holiId, apartId);
+	}
+
+	@Override
+	public List<HoliRecord> findApartAllSchoolRecordsByPage(int start, int size, int holiId, int apartId) {
+		return holidayDao.findApartAllSchoolRecordsByPage(start, size, holiId, apartId);
+	}
+
+	@Override
 	public int createHoliRecord(HoliRecord holiRecord) {
 		return holidayDao.createHoliRecord(holiRecord);
 	}

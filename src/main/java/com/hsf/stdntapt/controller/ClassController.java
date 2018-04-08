@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,7 @@ public class ClassController {
 	@Resource
 	ClassService classService;
 
-	@RequiresPermissions("user:view")
+	@RequiresPermissions(value = { "user:view", "userStudent:view" }, logical = Logical.OR)
 	@RequestMapping(value = "/{speciId}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Class> speciClass(@PathVariable(value = "speciId") int speciId) {

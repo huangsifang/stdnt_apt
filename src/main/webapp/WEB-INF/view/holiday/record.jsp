@@ -21,7 +21,7 @@
 			<div class="row" style="padding:20px 20px 0 20px">
 				<h4 class="pull-left">学士假期返家留校记录</h4>
 				<div class="pull-right">
-					<a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record">共${allCount}条记录</a>，
+					<a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record">共${allHomeSchoolCount}条记录</a>，
 					<a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?type=home">返家${homeRecordNum}人</a>，
 					<a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?type=school">留校${schoolRecordNum}人</a>
 					  |  公寓共${apartStdNum}学生
@@ -38,9 +38,13 @@
 			            <th>学生姓名</th>
 			            <th>公寓号</th>
 			            <th>留校&返家</th>
-			            <th>是否外出</th>
+			            <c:if test="${type == 'all' || type == 'school'}">
+			            <th>在校期间是否外出</th>
+			            </c:if>
+			            <c:if test="${type == 'all' || type == 'home'}">
 			            <th>外出地址</th>
 			            <th>是否返校</th>
+			            </c:if>
 			            <shiro:hasPermission name="record:delete">
 			            	<th>操作</th>
 			            </shiro:hasPermission>
@@ -59,7 +63,10 @@
 			                <td>${record.stdName}</td>
 			                <td>${record.apartId}</td>
 			                <td>${record.homeOrSchool}</td>
+			                <c:if test="${type == 'all' || type == 'school'}">
 			                <td>${record.isOutStr}</td>
+			                </c:if>
+			                <c:if test="${type == 'all' || type == 'home'}">
 			                <td>${record.address}</td>
 			                <td>
 			                	<c:if test="${record.inHome}">
@@ -71,6 +78,7 @@
 									</c:if>
 								</c:if>
 			                </td>
+			                </c:if>
 			                <shiro:hasPermission name="record:delete">
 				                <td>
 				                	<button class="btn btn-danger btn-md" type="button" onClick="deleteRecord(${record.holiId},${record.stdId})"><i class="fa fa-trash-o"></i></button>
@@ -82,11 +90,11 @@
 			</table>
 			<c:if test="${allCount != 0}">
 				<ul class="pagination tablePage">
-				    <li><a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?start=${start-10}">&laquo;</a></li>
+				    <li><a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?type=${type}&start=${start-10}">&laquo;</a></li>
 				    <c:forEach begin="0" end="${allCount-1}" var="item" step="10">
-				    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
+				    	<li value="${item/10+1}"><a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?type=${type}&start=${item}"><fmt:formatNumber type="number" value="${item/10+1}" maxFractionDigits="0"/></a></li>
 				    </c:forEach>
-				    <li><a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?start=${start+10}">&raquo;</a></li>
+				    <li><a href="${pageContext.request.contextPath}/holiday/${holiId}/apart/${apartId}/record?type=${type}&start=${start+10}">&raquo;</a></li>
 				</ul>
 			</c:if>
 		</div>
