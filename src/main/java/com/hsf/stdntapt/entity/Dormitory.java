@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 public class Dormitory {
 	private int id;
+	private int apartId;
 	private int dormNo;
 	private int floorId;
 	private int floorNo;
@@ -26,6 +27,14 @@ public class Dormitory {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public int getApartId() {
+		return apartId;
+	}
+
+	public void setApartId(int apartId) {
+		this.apartId = apartId;
 	}
 
 	public int getDormNo() {

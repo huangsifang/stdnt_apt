@@ -320,7 +320,7 @@
 					if(data == 'errorFloor') {
 						swal("失败！", "未找到对应楼层", "warning");
 					} else if(data == 'errorDorm') {
-						swal("成功！", "未找到对应寝室", "warning");
+						swal("失败！", "未找到对应寝室", "warning");
 					} else if(data == 'success') {
 						$("#dormFindForm").attr("action", getRootPath()+"/score/"+apartId+"/dorm/"+floorDormId);
 						$("#dormFindForm").submit();

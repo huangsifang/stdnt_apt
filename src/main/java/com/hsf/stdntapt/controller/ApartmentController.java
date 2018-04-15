@@ -417,9 +417,11 @@ public class ApartmentController {
 				}
 			}
 		}
+		int floorDormId = dorm.getFloorNo() * 100 + dorm.getDormNo();
 		model.addAttribute("bedList", bedList);
 		model.addAttribute("apartId", apartId);
 		model.addAttribute("dormId", dormId);
+		model.addAttribute("floorDormId", floorDormId);
 		return "apartment/floor/dorm";
 	}
 
@@ -502,7 +504,28 @@ public class ApartmentController {
 			}
 		}
 		model.addAttribute("bedList", bedList);
+		model.addAttribute("apartId", apartId);
+		model.addAttribute("dormId", dorm.getId());
+		model.addAttribute("floorDormId", floorDormId);
 		return "apartment/floor/dorm";
+	}
+
+	@RequiresPermissions(value = { "apartment:view", "score:view" }, logical = Logical.OR)
+	@RequestMapping(value = "student/{stdId}/dorm", method = RequestMethod.GET)
+	@ResponseBody
+	public Dormitory stdDorm(@PathVariable("stdId") int stdId, Model model) {
+		Dormitory dorm = apartmentService.findStdDorm(stdId);
+		if (dorm == null) {
+			return null;
+		} else {
+			Apartment apartment = apartmentService.findApartFromFloorId(dorm.getFloorId());
+			if (apartment == null) {
+				return null;
+			} else {
+				dorm.setApartId(apartment.getApartId());
+			}
+		}
+		return dorm;
 	}
 
 	@RequiresPermissions("apartment:update")
@@ -610,6 +633,15 @@ public class ApartmentController {
 			@RequestParam("bedId") int bedId) {
 		String msg = "";
 		try {
+			Bed bed = apartmentService.findBed(bedId, dormId);
+			int leaderId = 1;
+			if (bed != null) {
+				leaderId = bed.getStdId();
+			}
+			int currentLeaderId = apartmentService.findDormLeader(dormId);
+			if (currentLeaderId == leaderId) {
+				apartmentService.updateDormLeader(dormId, 1);
+			}
 			apartmentService.deleteBed(dormId, bedId);
 			msg = "success";
 		} catch (Exception e) {

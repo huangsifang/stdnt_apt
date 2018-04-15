@@ -146,6 +146,16 @@ public class ApartmentImpl implements ApartmentService {
 	}
 
 	@Override
+	public List<Dormitory> findDormByLeaderId(int stdId) {
+		return apartmentDao.findDormByLeaderId(stdId);
+	}
+
+	@Override
+	public int findDormLeader(int dormId) {
+		return apartmentDao.findDormLeader(dormId);
+	}
+
+	@Override
 	public List<Bed> findBedsFromDorm(int dormId) {
 		return apartmentDao.findBedsFromDorm(dormId);
 	}

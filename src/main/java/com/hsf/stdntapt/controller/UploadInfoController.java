@@ -8,8 +8,8 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -87,7 +87,7 @@ public class UploadInfoController {
 	}
 
 	/** 接收上传的文件 */
-	@RequiresRoles("admin")
+	@RequiresPermissions(value = { "upload:create", "score:create" }, logical = Logical.OR)
 	@RequestMapping(value = "uploadInfoFromType", produces = "text/html;charset=UTF-8;")
 	@ResponseBody
 	public String uploadInfo(@RequestParam(value = "filename") MultipartFile file,
@@ -154,9 +154,19 @@ public class UploadInfoController {
 			} else if (type.equals("studentBed")) {
 				List<StudentBed> stdBedList = infoService.getStudentBedInfo(name, file);
 				for (int i = 0; i < stdBedList.size(); i++) {
+					Student std = studentService.findOneStd(stdBedList.get(i).getStdId());
+					if (std == null) {
+						return "errorNoStd";
+					}
 					Floor floor = apartmentService.findFloorByApartIdFloorNo(stdBedList.get(i).getApartId(),
 							stdBedList.get(i).getFloorNo());
+					if (floor == null) {
+						return "errorNoFloor";
+					}
 					Dormitory dorm = apartmentService.findByDormNoFloorId(stdBedList.get(i).getDormNo(), floor.getId());
+					if (dorm == null) {
+						return "errorNoDorm";
+					}
 					Bed bed = new Bed(stdBedList.get(i).getBedId(), dorm.getId());
 					bed.setStdId(stdBedList.get(i).getStdId());
 					apartmentService.createBed(bed);

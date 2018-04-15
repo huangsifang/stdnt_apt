@@ -359,6 +359,10 @@ public class HolidayController {
 	public String deleteRecord(@RequestParam("holiId") int holiId, @RequestParam("stdId") int stdId) {
 		String msg = "";
 		try {
+			List<HoliBack> backList = holidayService.findStdHoliBack(holiId, stdId);
+			if (backList.size() != 0) {
+				holidayService.deleteHoliBack(holiId, stdId);
+			}
 			holidayService.deleteHoliRecord(holiId, stdId);
 			msg = "success";
 		} catch (Exception e) {

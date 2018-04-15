@@ -85,7 +85,7 @@
 								    <tbody>
 								    	<c:if test="${empty oneDormScores}">
 								    		<tr>
-								    			<td colspan="4" style="text-align:center">寝室该没有任何得分j！</td>
+								    			<td colspan="5" style="text-align:center">寝室该没有任何得分j！</td>
 								    		</tr>
 								    	</c:if>
 								        <c:forEach items="${oneDormScores}" var="score">

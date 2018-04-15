@@ -203,4 +203,9 @@
     		deleted = 1 
     		where repair_id = #{repairId} and deleted=0
     </update>
+    
+    <select id="findRepairByApplicantId" parameterType="int" resultType="Repair">
+        select id, dorm_id as dormId, applicant_id as applicantId, repair_type as repairType, apply_time as applyTime, remark from repair 
+        where applicant_id=#{applicantId} and deleted=0
+    </select>
 </mapper>

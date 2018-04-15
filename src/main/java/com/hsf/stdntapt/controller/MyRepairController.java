@@ -57,11 +57,22 @@ public class MyRepairController {
 		List<RepairRecord> myRepairRecordList = repairService.findMyRepairRecordListByPage(start, size, repairmanId);
 		for (RepairRecord record : myRepairRecordList) {
 			Repair repair = repairService.findOneRepair(record.getRepairId());
-			int dormId = repair.getDormId();
+			if (repair == null) {
+				continue;
+			}
+			int dormId = 1;
+			if (repair != null) {
+				dormId = repair.getDormId();
+			}
 			Dormitory dorm = apartmentService.findOneDorm(dormId);
-			Floor floor = apartmentService.findOneFloor(dorm.getFloorId());
-			repair.setDormNo(floor.getFloorNo() * 100 + dorm.getDormNo());
-			Apartment apart = apartmentService.findOne(floor.getApartId());
+			Floor floor = null;
+			int apartId = 1;
+			if (dorm != null) {
+				floor = apartmentService.findOneFloor(dorm.getFloorId());
+				repair.setDormNo(floor.getFloorNo() * 100 + dorm.getDormNo());
+				apartId = floor.getApartId();
+			}
+			Apartment apart = apartmentService.findOne(apartId);
 			repair.setApartName(apart.getApartName());
 			Student std = studentService.findOneStd(repair.getApplicantId());
 			if (std != null) {

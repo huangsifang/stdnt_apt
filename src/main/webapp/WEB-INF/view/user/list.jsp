@@ -411,6 +411,7 @@
 		$("#operationType").val("update");
 		$("#userId").val(id);
 		$("#username").val(username);
+		$("#roleIdsForm").hide();
 		$('#usernameForm').hide();
 		$("#passwordForm").hide();
 		$("#repairTypeForm").hide();
@@ -549,7 +550,7 @@
 	function deleteUser(userId, username, roleIdsStr) {
 		swal({ 
 			title: "确定删除吗？", 
-			text: "你将无法恢复该用户！", 
+			text: "请确保该用户没有任何关联信息", 
 			type: "warning",
 			showCancelButton: true, 
 			confirmButtonColor: "#DD6B55",
@@ -565,7 +566,15 @@
 				data: {"username":username,"roleIdsStr":roleIdsStr},
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
-					if(data == "success") {
+					if(data == "errorDorm") {
+						swal("失败！", "该学生已关联床位，请先行删除", "warning");
+					} else if(data == "errorDormLeader") {
+						swal("失败！", "该学生已关联寝室长，清先行删除", "warning");
+					} else if(data == "errorRepair") {
+						swal("失败！", "该学生存在维修记录，清先行删除", "warning");
+					} else if(data == "errorHoliRecord") {
+						swal("失败！", "该学生存在假期记录，清先行删除", "warning");
+					} else if(data == "success") {
 						swal("成功！", "删除成功", "success");
 					} else {
 						swal("失败！", "删除失败", "error");

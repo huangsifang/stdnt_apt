@@ -157,4 +157,9 @@ public class RepairImpl implements RepairService {
 	public int deleteRepairRecord(long repairId) {
 		return repairDao.deleteRepairRecord(repairId);
 	}
+
+	@Override
+	public List<Repair> findRepairByApplicantId(int applicantId) {
+		return repairDao.findRepairByApplicantId(applicantId);
+	}
 }

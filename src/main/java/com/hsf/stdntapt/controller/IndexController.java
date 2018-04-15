@@ -42,8 +42,9 @@ public class IndexController {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 		int w = cal.get(Calendar.DAY_OF_WEEK) - 1;
-		if (w < 0)
+		if (w <= 0) {
 			w = 7;
+		}
 		for (Apartment apart : apartList) {
 			List<StaffRota> rotaList = apartmentService.findApartRotaAllByWeek(apart.getApartId(), w);
 			for (StaffRota rota : rotaList) {

@@ -139,7 +139,7 @@ function deleteRecord(holiId, stdId) {
 				url: getRootPath() + "/holiday/record/delete",
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
-					if(data != "success") {
+					if(data == "success") {
 						swal("成功！", "删除成功", "success");
 					} else {
 						swal("失败！", "删除失败！", "error");

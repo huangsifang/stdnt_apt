@@ -2,7 +2,7 @@ package com.hsf.stdntapt.controller;
 
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.Resource;
 
@@ -48,7 +48,7 @@ public class RepairController {
 	@Resource
 	ResourceService resourceService;
 
-	ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+	ReentrantLock lock = new ReentrantLock();
 
 	@RequiresPermissions("user:view")
 	@RequestMapping(value = "/repairman/{repairmanId}", method = RequestMethod.GET)
@@ -320,19 +320,23 @@ public class RepairController {
 			List<String> types = repairService.findRepairmanTypes(repairmanId);
 			if (types.contains(String.valueOf(repairType))) {
 				RepairRecord currentRecord = repairService.findOneRepairRecordFromRepairId(repairId);
+				Repair currentRepair = repairService.findOneRepair(repairId);
 				if (currentRecord != null) {
 					msg = "errorExist";
+				} else if (currentRepair == null) {
+					msg = "errorDelete";
 				} else {
 					RepairRecord record = new RepairRecord(repairId, repairmanId);
 					record.setState(1);
 
-					boolean writeLock = lock.isWriteLocked();
-					if (!writeLock) {
-						lock.writeLock().lock();
+					boolean isLock = lock.isLocked();
+					if (!isLock) {
+						lock.lock();
 						try {
+							// Thread.sleep(10000);
 							repairService.createRepairRecord(record);
 						} finally {
-							lock.writeLock().unlock();
+							lock.unlock();
 						}
 						msg = "success";
 					} else {

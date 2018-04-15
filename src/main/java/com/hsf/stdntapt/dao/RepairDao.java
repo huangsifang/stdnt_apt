@@ -70,4 +70,6 @@ public interface RepairDao {
 	public int deleteRepair(@Param("repairId") long repairId);
 
 	public int deleteRepairRecord(@Param("repairId") long repairId);
+
+	public List<Repair> findRepairByApplicantId(@Param("applicantId") int applicantId);
 }

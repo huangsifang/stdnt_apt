@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hsf.stdntapt.entity.Class;
 import com.hsf.stdntapt.entity.Consellor;
+import com.hsf.stdntapt.entity.Dormitory;
+import com.hsf.stdntapt.entity.HoliRecord;
+import com.hsf.stdntapt.entity.Repair;
 import com.hsf.stdntapt.entity.RepairType;
 import com.hsf.stdntapt.entity.Repairman;
 import com.hsf.stdntapt.entity.Resource;
@@ -26,8 +29,10 @@ import com.hsf.stdntapt.entity.Speciality;
 import com.hsf.stdntapt.entity.Staff;
 import com.hsf.stdntapt.entity.Student;
 import com.hsf.stdntapt.entity.User;
+import com.hsf.stdntapt.service.ApartmentService;
 import com.hsf.stdntapt.service.ClassService;
 import com.hsf.stdntapt.service.ConsellorService;
+import com.hsf.stdntapt.service.HolidayService;
 import com.hsf.stdntapt.service.RepairService;
 import com.hsf.stdntapt.service.ResourceService;
 import com.hsf.stdntapt.service.RoleService;
@@ -66,6 +71,12 @@ public class UserController {
 
 	@Autowired
 	private ResourceService resourceService;
+
+	@Autowired
+	private ApartmentService apartmentService;
+
+	@Autowired
+	private HolidayService holidayService;
 
 	@RequiresPermissions("user:view")
 	@RequestMapping(method = RequestMethod.GET)
@@ -193,7 +204,8 @@ public class UserController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
 	public String create(@RequestParam(value = "username") String username,
-			@RequestParam(value = "password") String password, @RequestParam(value = "roleIds") String roleIds,
+			@RequestParam(value = "password") String password,
+			@RequestParam(value = "roleIds", required = false, defaultValue = "4") String roleIds,
 			@RequestParam(value = "name") String name, @RequestParam(value = "sex") String sex,
 			@RequestParam(value = "tel") String tel, @RequestParam(value = "hiredate") String hiredate,
 			@RequestParam(value = "isParty") String isParty, @RequestParam(value = "classId") int classId,
@@ -241,7 +253,8 @@ public class UserController {
 	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
 	public String update(@PathVariable("id") Long id, @RequestParam(value = "username") String username,
-			@RequestParam(value = "password") String password, @RequestParam(value = "roleIds") String roleIds,
+			@RequestParam(value = "password") String password,
+			@RequestParam(value = "roleIds", required = false, defaultValue = "4") String roleIds,
 			@RequestParam(value = "name") String name, @RequestParam(value = "sex") String sex,
 			@RequestParam(value = "tel") String tel, @RequestParam(value = "hiredate") String hiredate,
 			@RequestParam(value = "isParty") String isParty, @RequestParam(value = "classId") int classId,
@@ -366,14 +379,33 @@ public class UserController {
 			@RequestParam(value = "roleIdsStr") String roleIdsStr) {
 		String msg = "";
 		try {
-			userService.deleteUser(id);
 			if (roleIdsStr.contains("2")) {
+				userService.deleteUser(id);
 				staffService.deleteOne(username);
 			} else if (roleIdsStr.contains("3")) {
+				userService.deleteUser(id);
 				consellorService.deleteOne(username);
 			} else if (roleIdsStr.contains("4")) {
+				Dormitory dorm = apartmentService.findStdDorm(username);
+				if (dorm != null) {
+					return "errorDorm";
+				}
+				List<Dormitory> dormList = apartmentService.findDormByLeaderId(username);
+				if (dormList.size() != 0) {
+					return "errorDormLeader";
+				}
+				List<Repair> repairList = repairService.findRepairByApplicantId(username);
+				if (repairList.size() != 0) {
+					return "errorRepair";
+				}
+				List<HoliRecord> holiRecordList = holidayService.findStdAllHoliRecord(username);
+				if (holiRecordList.size() != 0) {
+					return "errorHoliRecord";
+				}
+				userService.deleteUser(id);
 				studentService.deleteOne(username);
 			} else if (roleIdsStr.contains("5")) {
+				userService.deleteUser(id);
 				repairService.deleteOneRepairman(username);
 				repairService.deleteRepairmanAllType(username);
 			}

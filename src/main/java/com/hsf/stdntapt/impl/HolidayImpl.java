@@ -102,4 +102,14 @@ public class HolidayImpl implements HolidayService {
 		return holidayDao.createHoliBack(back);
 	}
 
+	@Override
+	public List<HoliRecord> findStdAllHoliRecord(int stdId) {
+		return holidayDao.findStdAllHoliRecord(stdId);
+	}
+
+	@Override
+	public int deleteHoliBack(int holiId, int stdId) {
+		return holidayDao.deleteHoliBack(holiId, stdId);
+	}
+
 }

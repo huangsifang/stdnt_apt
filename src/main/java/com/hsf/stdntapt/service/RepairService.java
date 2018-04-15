@@ -64,4 +64,6 @@ public interface RepairService {
 	public int deleteRepair(long repairId);
 
 	public int deleteRepairRecord(long repairId);
+
+	public List<Repair> findRepairByApplicantId(int applicantId);
 }

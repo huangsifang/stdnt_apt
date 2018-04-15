@@ -148,16 +148,21 @@
 				</form>
 			</div>
 			<div class="col-sm-6">
-				<form action="upload/uploadInfoFromType.do" method="post" name="formApart" id="formApart" onsubmit="return validate(formApart)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
-				     导入公寓信息： 
-					<a href="javascript:;" class="file">选择文件
-					    <input type="file" name="filename" id="importApartFile" accept="xlsx" onchange="importFileFun(importApartFile, apartFileName)"/>
-					</a>
-					<input class="fileName" id="apartFileName" value="未选择文件" disabled/>
-					<input type="hidden" name="filetype" value="apartment"/>
-					<input type="submit" name="Submit" value="确定" class="btn btn-primary importFileBtn"/> 
-					<input type="reset" name="Submit2" value="重置" class="btn btn-default importFileBtn"/>
-				</form>
+				<shiro:hasRole name="consellor">
+					<div class="fileForm">公寓信息只能由管理员添加，必须先导入公寓才能导入学生床位信息</div>
+				</shiro:hasRole>
+				<shiro:hasRole name="admin">
+					<form action="upload/uploadInfoFromType.do" method="post" name="formApart" id="formApart" onsubmit="return validate(formApart)" enctype="multipart/form-data"  class="fileForm uploadForm pull-left">
+					     导入公寓信息： 
+						<a href="javascript:;" class="file">选择文件
+						    <input type="file" name="filename" id="importApartFile" accept="xlsx" onchange="importFileFun(importApartFile, apartFileName)"/>
+						</a>
+						<input class="fileName" id="apartFileName" value="未选择文件" disabled/>
+						<input type="hidden" name="filetype" value="apartment"/>
+						<input type="submit" name="Submit" value="确定" class="btn btn-primary importFileBtn"/> 
+						<input type="reset" name="Submit2" value="重置" class="btn btn-default importFileBtn"/>
+					</form>
+				</shiro:hasRole>
 			</div>
 		</div>
 		<div class="row">
@@ -180,32 +185,34 @@
 				</form>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-sm-6">
-				<form action="upload/uploadInfoFromType" method="post" name="formStaff" id="formStaff" onsubmit="return validate(formStaff)" enctype="multipart/form-data" class="fileForm uploadForm pull-left">
-					导入工作人员信息： 
-					<a href="javascript:;" class="file">选择文件
-					    <input type="file" name="filename" id="importStaffFile" accept="xlsx" onchange="importFileFun(importStaffFile, staffFileName)"/>
-					</a>
-					<input class="fileName" id="staffFileName" value="未选择文件" disabled/>
-					<input type="hidden" name="filetype" value="staff"/>
-					<input type="submit" name="Submit" value="确定" class="btn btn-primary importFileBtn"/> 
-					<input type="reset" name="Submit2" value="重置" class="btn btn-default importFileBtn"/>
-				</form>
+		<shiro:hasRole name="admin">
+			<div class="row">
+				<div class="col-sm-6">
+					<form action="upload/uploadInfoFromType" method="post" name="formStaff" id="formStaff" onsubmit="return validate(formStaff)" enctype="multipart/form-data" class="fileForm uploadForm pull-left">
+						导入工作人员信息： 
+						<a href="javascript:;" class="file">选择文件
+						    <input type="file" name="filename" id="importStaffFile" accept="xlsx" onchange="importFileFun(importStaffFile, staffFileName)"/>
+						</a>
+						<input class="fileName" id="staffFileName" value="未选择文件" disabled/>
+						<input type="hidden" name="filetype" value="staff"/>
+						<input type="submit" name="Submit" value="确定" class="btn btn-primary importFileBtn"/> 
+						<input type="reset" name="Submit2" value="重置" class="btn btn-default importFileBtn"/>
+					</form>
+				</div>
+				<div class="col-sm-6">
+					<form action="upload/uploadInfoFromType" method="post" name="formRepairman" id="formRepairman" onsubmit="return validate(formRepairman)" enctype="multipart/form-data" class="fileForm uploadForm pull-left">
+						导入维修人员信息： 
+						<a href="javascript:;" class="file">选择文件
+						    <input type="file" name="filename" id="importRepairmanFile" accept="xlsx" onchange="importFileFun(importRepairmanFile, repairmanFileName)"/>
+						</a>
+						<input class="fileName" id="repairmanFileName" value="未选择文件" disabled/>
+						<input type="hidden" name="filetype" value="repairman"/>
+						<input type="submit" name="Submit" value="确定" class="btn btn-primary importFileBtn"/> 
+						<input type="reset" name="Submit2" value="重置" class="btn btn-default importFileBtn"/>
+					</form>
+				</div>
 			</div>
-			<div class="col-sm-6">
-				<form action="upload/uploadInfoFromType" method="post" name="formRepairman" id="formRepairman" onsubmit="return validate(formRepairman)" enctype="multipart/form-data" class="fileForm uploadForm pull-left">
-					导入维修人员信息： 
-					<a href="javascript:;" class="file">选择文件
-					    <input type="file" name="filename" id="importRepairmanFile" accept="xlsx" onchange="importFileFun(importRepairmanFile, repairmanFileName)"/>
-					</a>
-					<input class="fileName" id="repairmanFileName" value="未选择文件" disabled/>
-					<input type="hidden" name="filetype" value="repairman"/>
-					<input type="submit" name="Submit" value="确定" class="btn btn-primary importFileBtn"/> 
-					<input type="reset" name="Submit2" value="重置" class="btn btn-default importFileBtn"/>
-				</form>
-			</div>
-		</div>
+		</shiro:hasRole>
 	</div>
 </div>
 </body>
@@ -222,8 +229,10 @@
 					swal("失败！", "新增失败", "error");
 				} else if(data == 'errorEmpty'){
 					swal("失败！", "请检查文件中内容是否有空", "error");
+				} else if(data == 'errorNoStd'){
+					swal("失败！", "找不到对应学生", "warning");
 				} else if(data == 'errorNoFloor'){
-					swal("失败！", "找不到对应楼层", "warning");
+					swal("失败！", "找不到对应公寓或楼层", "warning");
 				} else if(data == 'errorNoDorm'){
 					swal("失败！", "找不到对应寝室", "warning");
 				} else {

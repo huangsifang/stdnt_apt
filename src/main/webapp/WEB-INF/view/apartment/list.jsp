@@ -132,22 +132,34 @@
 				</form>
 			</div>
 		</shiro:hasPermission>
-		
-		<form id="dormFindForm" method="get">
-			<div class="row">
-				<div class="col-sm-4">
-					<label for="apartId" class="control-label">公寓号：</label>
-					<input class="form-control" type="number" id="findApartId" />
-				</div>
-				<div class="col-sm-4">
-					<label for="apartId" class="control-label">寝室号：</label>
-					<input class="form-control" type="number" id="findFloorDormId" />
-				</div>
-				<div class="col-sm-4" style="padding-top:25px">
-					<button class="btn btn-default" type="button" id="dormFindBtn">查看</button>
-				</div>
+		<div class="row" style="margin-top:10px">
+			<div class="col-sm-6">
+				<form id="dormFindForm" method="get">
+					<div class="col-sm-4">
+						<label for="apartId" class="control-label">公寓号：</label>
+						<input class="form-control" type="number" id="findApartId" />
+					</div>
+					<div class="col-sm-4">
+						<label for="apartId" class="control-label">寝室号：</label>
+						<input class="form-control" type="number" id="findFloorDormId" />
+					</div>
+					<div class="col-sm-4" style="padding-top:25px">
+						<button class="btn btn-default" type="button" id="dormFindBtn">查看</button>
+					</div>
+				</form>
 			</div>
-		</form>
+			<div class="col-sm-6">
+				<form id="stdDormFindForm" method="get">
+					<div class="col-sm-4">
+						<label for="stdId" class="control-label">学生工号：</label>
+						<input class="form-control" type="number" id="stdId" />
+					</div>
+					<div class="col-sm-4" style="padding-top:25px">
+						<button class="btn btn-default" type="button" id="stdDormFindBtn">查找</button>
+					</div>
+				</form>
+			</div>
+		</div>
 		
 		<div class="card">
 			<div class="header">
@@ -219,6 +231,26 @@
 					} else if(data == 'success') {
 						$("#dormFindForm").attr("action", getRootPath()+"/apartment/"+apartId+"/floorDormId/"+floorDormId);
 						$("#dormFindForm").submit();
+					}
+				},
+				error: function() {
+					swal("错误！", "发生错误", "error");
+		        }
+			});
+		});
+		
+		$("#stdDormFindBtn").click(function() {
+			var stdId = $("#stdId").val();
+			$.ajax({
+				type: "GET",
+				datatype: "text",
+				url: "apartment/student/"+stdId+"/dorm",
+				contentType: "application/x-www-form-urlencoded",
+				success: function(data) {
+					if(data.apartId == undefined || data.id == undefined) {
+						swal("失败！", "该学生不属于任何一个寝室", "warning");
+					} else {
+						window.location.href = getRootPath()+"/apartment/"+data.apartId+"/dorm/"+data.id;
 					}
 				},
 				error: function() {

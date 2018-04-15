@@ -60,6 +60,10 @@ public interface ApartmentService {
 
 	public int updateDorm(Dormitory dorm);
 
+	public List<Dormitory> findDormByLeaderId(int stdId);
+
+	public int findDormLeader(int dormId);
+
 	List<Bed> findBedsFromDorm(int dormId);
 
 	Bed findBed(int bedId, int dormId);

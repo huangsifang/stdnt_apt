@@ -126,10 +126,10 @@
 	                      	<label class="col-sm-4 control-label">状态：</label>
 	                      	<div class="col-sm-8">
 								<c:if test="${repair.state == 0}">
-				                		<span><span class="label label-warning">未接单 </span></span>
-				                		<shiro:hasPermission name="repair:delete"> 
-											<button style="margin-left:5px" class="btn btn-danger" onClick="deleteRepair(${repair.id})">取消订单</button>
-										</shiro:hasPermission>
+			                		<span><span class="label label-warning">未接单 </span></span>
+			                		<shiro:hasPermission name="repair:delete"> 
+										<button style="margin-left:5px" class="btn btn-danger" onClick="deleteRepair(${repair.id})">取消订单</button>
+									</shiro:hasPermission>
 				                </c:if>
 				                <c:if test="${repair.state == 1}">
 				                	<span><span class="label label-info">已接单</span></span>
@@ -264,7 +264,7 @@ function deleteRepair(repairId) {
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
 				if(data == "") {
-					swal("删除！", "您没有权限删除该维修!", "error");
+					swal("删除！", "只有本人才可以删除哦!", "error");
 				} else if(data == "删除成功!") {
 					swal({ 
 					  title: "成功", 

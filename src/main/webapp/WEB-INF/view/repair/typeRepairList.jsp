@@ -101,7 +101,9 @@ function takeOrder(repairId, repairType) {
 		text: "接单后请尽快前往", 
 		type: "info", 
 		showCancelButton: true, 
-		closeOnConfirm: false
+		closeOnConfirm: false,
+		cancelButtonText: "取消",
+		confirmButtonText: "确定"
 	},
 	function(){
 		$.ajax({
@@ -117,6 +119,8 @@ function takeOrder(repairId, repairType) {
 					swal("失败！", "接单失败", "error");
 				} else if(data == "errorNoPower") {
 					swal("失败！", "您没有权限接受该类维修!", "error");
+				} else if(data == "errorDelete") {
+					swal("失败！", "改订单已被取消", "warning");
 				} else if(data == "errorAgain") {
 					swal("失败！", "请再次尝试!", "warning");
 				} else if(data == "errorExist") {

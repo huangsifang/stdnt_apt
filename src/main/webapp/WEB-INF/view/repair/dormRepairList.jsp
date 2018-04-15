@@ -66,7 +66,7 @@
 <div class="container">
 	
 	<c:if test="${not empty error}">
-		<div class="panel">
+		<div class="panel" style="margin-top:20px">
 			<div class="panel-body">
 				<span>您还未加入任何寝室，请联系公寓管理员</span>
 			</div>

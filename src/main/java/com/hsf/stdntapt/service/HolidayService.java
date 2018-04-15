@@ -40,4 +40,8 @@ public interface HolidayService {
 	public List<HoliBack> findStdHoliBack(int holiId, int stdId);
 
 	public int createHoliBack(HoliBack back);
+
+	public List<HoliRecord> findStdAllHoliRecord(int stdId);
+
+	public int deleteHoliBack(int holiId, int stdId);
 }

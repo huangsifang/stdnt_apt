@@ -331,8 +331,18 @@ public class ScoreController {
 		final List<DormScore> dayTopScoreList = dormService.getApartDayTopScores(apartId,
 				df.format(System.currentTimeMillis()) + "%");
 		for (DormScore score : dayTopScoreList) {
+			int dayFloorNo = 0;
+			int dayDormNo = 0;
+			Dormitory dayDorm = apartmentService.findOneDorm(score.getDormId());
+			if (dayDorm != null) {
+				dayDormNo = dayDorm.getDormNo();
+				Floor dayFloor = apartmentService.findOneFloor(dayDorm.getFloorId());
+				if (dayFloor != null) {
+					dayFloorNo = dayFloor.getFloorNo();
+				}
+			}
 			score.setApartId(apartId);
-			score.setFloorDormNo(floorNo * 100 + dormNo);
+			score.setFloorDormNo(dayFloorNo * 100 + dayDormNo);
 		}
 		model.addAttribute("dayTopScoreList", dayTopScoreList);
 

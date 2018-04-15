@@ -45,4 +45,8 @@ public interface HolidayDao {
 	public List<HoliBack> findStdHoliBack(@Param("holiId") int holiId, @Param("stdId") int stdId);
 
 	public int createHoliBack(@Param("back") HoliBack back);
+
+	public List<HoliRecord> findStdAllHoliRecord(@Param("stdId") int stdId);
+
+	public int deleteHoliBack(@Param("holiId") int holiId, @Param("stdId") int stdId);
 }

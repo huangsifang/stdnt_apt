@@ -85,10 +85,15 @@
 </div>
 
 <div class="container" style="margin-top:50px">
-	<button class="btn btn-default" onClick="addBed(${dormId})">新增床位</button>
-	<button class="btn btn-default" data-toggle="modal" data-target="#dormFeeModal">修改寝室费用</button>
-	<button class="btn btn-danger" onClick="deleteDorm(${dormId})">删除寝室</button>
-	<div class="row" style="padding: 20px">
+	<div class="row">
+		<h4 class="col-sm-2">${apartId}号楼，${floorDormId}寝室</h4>
+		<div class="col-sm-8">
+			<button class="btn btn-default" onClick="addBed(${dormId},${apartId})">新增床位</button>
+			<button class="btn btn-default" data-toggle="modal" data-target="#dormFeeModal">修改寝室费用</button>
+			<button class="btn btn-danger" onClick="deleteDorm(${dormId},${apartId})">删除寝室</button>
+		</div>
+	</div>
+	<div class="row" style="padding-top: 20px">
 		<c:if test="${empty bedList}">
 			<div class="panel panel-default">
 			    <div class="panel-body" style="text-align:center">
@@ -128,9 +133,9 @@
 	                   <div class="form-group row">
 	                      <div class="col-sm-8 col-sm-offset-4">
 	                         <button class="btn btn-default" type="button" data-toggle="modal" data-target="#bedStdModal" onClick="changeBedStd(${bed.bedId}, ${bed.dormId}, ${bed.stdId}, '${bed.stdName}')"><i class="fa fa-edit"></i></button>
-	                         <button class="btn btn-danger" onClick="deleteBed(${bed.bedId}, ${bed.dormId})"><i class="fa fa-trash-o"></i></button>
+	                         <button class="btn btn-danger" onClick="deleteBed(${bed.bedId}, ${bed.dormId}, ${apartId})"><i class="fa fa-trash-o"></i></button>
 	                         <c:if test="${bed.stdId != dorm.leaderId && bed.stdId != 1}">
-	                         	<button style="margin-top:5px" class="btn btn-default" onClick="updateDormLeader(${bed.dormId}, ${bed.stdId}, '${bed.stdName}')">设为寝室长</button>
+	                         	<button style="margin-top:5px" class="btn btn-default" onClick="updateDormLeader(${bed.dormId}, ${bed.stdId}, '${bed.stdName}',${apartId})">设为寝室长</button>
 	                      	 </c:if>
 	                      </div>
 	                   </div>
@@ -149,7 +154,7 @@
 		$("#stdName").text(stdName);
 	}
 	
-	function updateDormLeader(dormId, stdId, stdName) {
+	function updateDormLeader(dormId, stdId, stdName, apartId) {
 		swal({ 
 			title: "确定将该学生设为寝室长吗", 
 			text: stdName, 
@@ -163,7 +168,7 @@
 			$.ajax({
 				type: "POST",
 				datatype: "json",
-				url: "leader/update",
+				url: getRootPath()+"/apartment/"+apartId+"/dorm/leader/update",
 				data: {"dormId":dormId, "stdId":stdId},
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
@@ -187,11 +192,11 @@
 		});
 	}
 	
-	function addBed(dormId) {
+	function addBed(dormId, apartId) {
 		$.ajax({
 			type: "POST",
 			datatype: "json",
-			url: "bed/create",
+			url: getRootPath()+"/apartment/"+apartId+"/dorm/bed/create",
 			data: {"dormId":dormId},
 			contentType: "application/x-www-form-urlencoded",
 			success: function(data) {
@@ -214,7 +219,7 @@
 		});
 	}
 	
-	function deleteBed(bedId, dormId) {
+	function deleteBed(bedId, dormId, apartId) {
 		swal({ 
 			title: "确定删除该床位吗", 
 			text: "同时将删除该床位关联的学生", 
@@ -228,7 +233,7 @@
 			$.ajax({
 				type: "POST",
 				datatype: "json",
-				url: "bed/delete",
+				url: getRootPath()+"/apartment/"+apartId+"/dorm/bed/delete",
 				data: {"dormId":dormId, "bedId":bedId},
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
@@ -254,10 +259,11 @@
 	
 	$(function() {
 		$("#dormUpdateBtn").click(function() {
+			var apartId = ${apartId};
 			$.ajax({
 				type: "POST",
 				datatype: "text",
-				url: "update",
+				url: getRootPath()+"/apartment/"+apartId+"/dorm/update",
 				data: $("#dormForm").serializeArray(),
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
@@ -281,10 +287,11 @@
 			});
 		});
 		$("#dormStdChangeBtn").click(function() {
+			var apartId = ${apartId};
 			$.ajax({
 				type: "POST",
 				datatype: "text",
-				url: "student/update",
+				url: getRootPath()+"/apartment/"+apartId+"/dorm/student/update",
 				data: $("#dormStdForm").serializeArray(),
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
@@ -341,7 +348,7 @@
 		});
     });
 	
-	function deleteDorm(dormId) {
+	function deleteDorm(dormId, apartId) {
 		swal({ 
 			title: "确定删除该寝室吗？", 
 			text: "请确定该公寓下没有任何关联", 
@@ -355,7 +362,7 @@
 			$.ajax({
 				type: "POST",
 				datatype: "json",
-				url: dormId+"/delete",
+				url: getRootPath()+"/apartment/"+apartId+"/dorm/"+dormId+"/delete",
 				contentType: "application/x-www-form-urlencoded",
 				success: function(data) {
 					if(data == 'errorScore') {
