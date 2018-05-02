@@ -62,7 +62,7 @@
         
         #loginInfo {
         	position:absolute;
-        	right:30px;
+        	right:10px;
         	top:50px;
         	color:#777;
         	font-family: "微软雅黑";

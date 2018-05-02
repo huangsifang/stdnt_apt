@@ -55,7 +55,7 @@
     <select id="findStaffAparts" resultType="Apartment">
     	select apart_id as apartId, apart_name as apartName from apartment where deleted=0 and apart_id in(
     		select apart_id from apart_staff_relation where staff_id=#{staffId}
-    	)
+    	) order by apart_id
     </select>
     
     <insert id="createFloor" parameterType="Floor" useGeneratedKeys="true" keyProperty="floor.id">
@@ -181,6 +181,7 @@
     	select id, dorm_no as dormNo, floor_id as floorId, fee, leader_id as leaderId from dormitory where id in(
         	select dorm_id from bed where std_id=#{stdId} and deleted=0
        	) and deleted=0
+       	limit 1
     </select>
     <select id="findApartStdNum" resultType="int">
     	select count(*) from bed where std_id!=1 and dorm_id in(

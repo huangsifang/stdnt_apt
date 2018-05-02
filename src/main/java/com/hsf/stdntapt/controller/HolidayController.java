@@ -99,10 +99,10 @@ public class HolidayController {
 			holiday.setStartTime(startTime);
 			holiday.setEndTime(endTime);
 			holidayService.createHoliday(holiday);
-			msg = "新增成功!";
+			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();
-			msg = "新增失败！";
+			msg = "error";
 		}
 		return msg;
 	}

@@ -82,33 +82,41 @@
 					<a href="${pageContext.request.contextPath}/repair/${repair.id}/record">
 						<div class="col-md-4 col-sm-6">
 							<div class="panel panel-default">
-								<div class="panel-body" style="height:290px">
-									<div class="form-group row">
+								<div class="panel-body" style="height:290px;padding-top:25px">
+									<!-- <div class="form-group row">
 				                      <label class="col-sm-4 control-label">公寓号：</label>
 				                      <div class="col-sm-8">
 				                         <span>${repair.dormId}</span>
 				                      </div>
-				                   </div>
+				                   </div> -->
 				                   <div class="form-group row">
-				                      <label class="col-sm-4 control-label">申请者：</label>
-				                      <div class="col-sm-8">
+				                      <label class="col-sm-5 control-label">申请者：</label>
+				                      <div class="col-sm-7">
 				                         <span>${repair.applicantName}</span>
 				                      </div>
 				                   </div>
 				                   <div class="form-group row">
-				                      <label class="col-sm-4 control-label">维修类型：</label>
-				                      <div class="col-sm-8">
+				                      <label class="col-sm-5 control-label">维修类型：</label>
+				                      <div class="col-sm-7">
 				                         <span>${repair.repairTypeName}</span>
 				                      </div>
 				                   </div>
 				                   <div class="form-group row">
-				                      <label class="col-sm-4 control-label">申请时间：</label>
-				                      <div class="col-sm-8">
+				                      <label class="col-sm-5 control-label">申请时间：</label>
+				                      <div class="col-sm-7">
 				                         <span><fmt:formatDate value="${repair.applyTime}" pattern="yyyy-MM-dd HH:mm" /></span>
 				                      </div>
 				                   </div>
 				                   <div class="form-group row">
-				                      <div class="col-sm-offset-4 col-sm-8">
+				                      <label class="col-sm-5 control-label">备注：</label>
+				                      <div class="col-sm-7">
+				                         <a href="#" class="tooltip-test" data-toggle="tooltip" title="${repair.remark}">
+				                         	<p style="width: 100%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">${repair.remark}</p>
+				                         </a>
+				                      </div>
+				                   </div>
+				                   <div class="form-group row">
+				                      <div class="col-sm-offset-5 col-sm-7">
 				                         <span>
 				                         	<c:if test="${repair.state == 0}">
 							                	<td><span class="label label-warning">未接单</span></td>
@@ -120,14 +128,6 @@
 							                	<td><span class="label label-success">已结束</span></td>
 							                </c:if>
 				                         </span>
-				                      </div>
-				                   </div>
-				                   <div class="form-group row">
-				                      <label class="col-sm-4 control-label">备注：</label>
-				                      <div class="col-sm-8">
-				                         <a href="#" class="tooltip-test" data-toggle="tooltip" title="${repair.remark}">
-				                         	<p style="width: 100%;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">${repair.remark}</p>
-				                         </a>
 				                      </div>
 				                   </div>
 								</div>

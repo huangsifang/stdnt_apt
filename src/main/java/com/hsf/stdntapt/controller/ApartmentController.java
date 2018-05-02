@@ -276,7 +276,7 @@ public class ApartmentController {
 		return msg;
 	}
 
-	@RequiresPermissions("apartment:delete")
+	@RequiresPermissions(value = { "apartment:delete", "apartment:update" }, logical = Logical.OR)
 	@RequestMapping(value = "/{apartId}/floor/{floorId}/delete", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
 	public String deleteFloor(@PathVariable("apartId") int apartId, @PathVariable("floorId") int floorId) {
@@ -425,7 +425,7 @@ public class ApartmentController {
 		return "apartment/floor/dorm";
 	}
 
-	@RequiresPermissions("apartment:delete")
+	@RequiresPermissions(value = { "apartment:delete", "apartment:update" }, logical = Logical.OR)
 	@RequestMapping(value = "{apartId}/dorm/{dormId}/delete", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
 	public String deleteDorm(@PathVariable("apartId") int apartId, @PathVariable("dormId") int dormId) {
@@ -626,7 +626,7 @@ public class ApartmentController {
 		return msg;
 	}
 
-	@RequiresPermissions("apartment:delete")
+	@RequiresPermissions(value = { "apartment:delete", "apartment:update" }, logical = Logical.OR)
 	@RequestMapping(value = "{apartId}/dorm/bed/delete", method = RequestMethod.POST, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
 	public String deleteBed(@PathVariable("apartId") int apartId, @RequestParam("dormId") int dormId,

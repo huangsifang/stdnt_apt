@@ -41,7 +41,7 @@ input[type="file"] {
 	background-color: transparent;
     border: 0;
 }
-@media screen and (max-width: 1065px) {
+@media screen and (max-width: 1023px) {
 	.fileName {
 		padding-top: 10px;
 		width: 60%;

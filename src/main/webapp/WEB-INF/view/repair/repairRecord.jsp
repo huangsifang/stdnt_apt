@@ -65,7 +65,7 @@
 <div class="container">
 
 	<div class="row">
-		<div class="col-md-offset-1 col-md-4">
+		<div class="col-md-4">
 			<div class="card">
 				<div class="change_link">
 				    <div class="header">
@@ -144,7 +144,7 @@
 	  		</div>
 	    </div>
 	    <c:if test="${not empty repairman}">
-		    <div class="col-md-3">
+		    <div class="col-md-4">
 				<div class="card">
 				    <div class="change_link">
 					    <div class="header">
@@ -172,7 +172,15 @@
 		                   <div class="form-group row">
 		                      <label class="col-sm-4 control-label">性别：</label>
 		                      <div class="col-sm-8">
-		                         <span>${repairman.repairmanSex}</span>
+			                      <c:if test="${repairman.repairmanSex == 1}">
+			                      	<span>男</span>
+			                      </c:if>
+			                      <c:if test="${repairman.repairmanSex == 2}">
+			                      	<span>女</span>
+			                      </c:if>
+			                      <c:if test="${repairman.repairmanSex == 0}">
+			                      	<span>未知</span>
+			                      </c:if>
 		                      </div>
 		                   </div>
 						</fieldset>
@@ -188,7 +196,7 @@
 				</div>
 			</div>
 		</c:if>
-	    <div class="col-md-3">
+	    <div class="col-md-4">
 		  	<div class="row">
 		    	<div class="col-md-12">
 		      		<div class="VivaTimeline">

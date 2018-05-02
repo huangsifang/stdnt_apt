@@ -24,7 +24,6 @@ public class StudentController {
 	@Resource
 	ClassService classService;
 
-	@RequiresPermissions(value = { "user:view", "userStudent:view" }, logical = Logical.OR)
 	@RequestMapping(value = "/stdName", method = RequestMethod.GET, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
 	public String studentName(@RequestParam(value = "stdId") int stdId) {

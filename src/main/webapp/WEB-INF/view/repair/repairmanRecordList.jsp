@@ -87,8 +87,8 @@
 			                </c:if>
 		                	<td>
 		                		<c:if test="${record.state == 1}">
-			                		<button style="margin-left:5px" class="btn btn-primary" data-toggle="modal" data-target="#repairRecordModal" type="button" onClick="finishOrder(${record.repairId})"><i class="fa fa-check-square-o"></i>  完成</button>
-				                	<button class="btn btn-danger" onClick="deleteRepairRecord(${record.repairId})"><i class="fa fa-trash-o"></i></button>
+			                		<button style="margin-top:5px;margin-left:5px" class="btn btn-primary" data-toggle="modal" data-target="#repairRecordModal" type="button" onClick="finishOrder(${record.repairId})"><i class="fa fa-check-square-o"></i>  完成</button>
+				                	<button style="margin-top:5px" class="btn btn-danger" onClick="deleteRepairRecord(${record.repairId})"><i class="fa fa-trash-o"></i></button>
 			                	</c:if>
 		                	</td>
 			                
@@ -191,11 +191,11 @@ function getRootPath() {//获得根目录
 
 $("#repairTime").datetimepicker({
 	language:  'zh-CN', 
-	format:'yyyy-mm-dd', 
+	format:'yyyy-mm-dd hh:ii', 
 	weekStart: 1, /*以星期一为一星期开始*/
 	todayBtn:  1,
 	autoclose: 1, 
-	minView:2, /*精确到天*/
+	minView:0, /*精确到天*/
 	pickerPosition: "bottom-left" 
 }).on("changeDate",function(ev){  //值改变事件
 	

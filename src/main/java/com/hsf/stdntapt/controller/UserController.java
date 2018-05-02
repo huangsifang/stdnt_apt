@@ -218,7 +218,6 @@ public class UserController {
 		try {
 			User user = new User(username, password);
 			user.setRoleIdsStr(roleIds);
-			userService.createUser(user);
 
 			int usernameInt = Integer.parseInt(username);
 			int sexInt = 1;
@@ -241,6 +240,7 @@ public class UserController {
 					}
 				}
 			}
+			userService.createUser(user);
 			msg = "success";
 		} catch (Exception e) {
 			e.printStackTrace();

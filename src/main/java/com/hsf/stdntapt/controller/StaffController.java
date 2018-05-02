@@ -19,7 +19,6 @@ public class StaffController {
 	@Resource
 	StaffService staffService;
 
-	@RequiresPermissions("user:view")
 	@RequestMapping(value = "/staffName", method = RequestMethod.GET, produces = "text/html;charset=UTF-8;")
 	@ResponseBody
 	public String staffName(@RequestParam(value = "staffId") int staffId) {
